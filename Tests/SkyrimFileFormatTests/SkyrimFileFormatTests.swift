@@ -10,9 +10,8 @@ import XCTestExtensions
 
 final class SkyrimFileFormatTests: XCTestCase {
     func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(SkyrimFileFormat().text, "Hello, World!")
+        let url = Bundle.module.url(forResource: "Example/Example", withExtension: "esp")!
+        let file = SkyrimFile(url)
+        print(file)
     }
 }
