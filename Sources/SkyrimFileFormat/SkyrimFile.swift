@@ -25,9 +25,9 @@ struct SkyrimFile {
     
     func process(action: @escaping Action) async {
         let configuration = Configuration(records: recordTypes)
-        let processor = RecordProcessor(iterator: url.resourceBytes, configuration: configuration)
+        let processor = RecordProcessor(configuration: configuration)
         do {
-            try await processor.process(action: action)
+            try await processor.process(bytes: url.resourceBytes, action: action)
         } catch {
             print(error)
         }

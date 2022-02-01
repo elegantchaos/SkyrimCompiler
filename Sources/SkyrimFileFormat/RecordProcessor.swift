@@ -26,19 +26,16 @@ struct ASBProvider<I>: ByteProvider where I: AsyncIteratorProtocol, I.Element ==
     }
 }
 
-class RecordProcessor<S> where S: AsyncSequence, S.Element == UInt8 {
-
-    internal init(iterator: S, configuration: Configuration) {
-        self.bytes = iterator
+class RecordProcessor {
+    internal init(configuration: Configuration) {
         self.configuration = configuration
     }
     
-    var bytes: S
     let configuration: Configuration
     
     typealias Action = (Record) -> ()
 
-    func process(action: @escaping Action) async throws {
+    func process<I>(bytes: I, action: @escaping Action) async throws where I: AsyncSequence, I.Element == Byte {
         let records = bytes.iteratorMap { iterator -> Record in
             let header = try await Record.Header(&iterator)
             let provider = ASBProvider(iterator: iterator, configuration: self.configuration)
@@ -47,8 +44,7 @@ class RecordProcessor<S> where S: AsyncSequence, S.Element == UInt8 {
         
         for try await record in records {
             action(record)
-            let childProcessor = RecordProcessor<BytesAsyncSequence>(iterator: record.children, configuration: configuration)
-            try await childProcessor.process(action: action)
+            try await process(bytes: record.children, action: action)
         }
     }
     

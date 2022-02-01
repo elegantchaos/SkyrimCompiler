@@ -28,5 +28,9 @@ extension Record {
 extension TES4Record {
     @objc override func test() {
         XCTAssertEqual(header.version, 44)
+//        
+//        for field in fields {
+//            
+//        }
     }
 }
