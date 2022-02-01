@@ -24,36 +24,12 @@ struct SkyrimFile {
     typealias Action = (Record) -> ()
     
     func process(action: @escaping Action) async {
-        let sequence = url.resourceBytes
+        let configuration = Configuration(records: recordTypes)
+        let processor = RecordProcessor(iterator: url.resourceBytes, configuration: configuration)
         do {
-            try await process(sequence, action: action)
+            try await processor.process(action: action)
         } catch {
             print(error)
         }
-    }
-    
-    func process<S>(_ bytes: S, action: @escaping Action) async throws where S: AsyncSequence, S.Element == UInt8 {
-        let records = bytes.iteratorMap { iterator -> Record in
-            let header = try await Record.Header(&iterator)
-            return try await inflate(header: header, iterator: &iterator)
-        }
-        
-        for try await record in records {
-            action(record)
-            try await process(record.children, action: action)
-        }
-    }
-    
-    func inflate<S>(header: Record.Header, iterator: inout AsyncBufferedIterator<S>) async throws -> Record where S.Element == UInt8 {
-        do {
-            if let kind = recordTypes[header.type] {
-                return try await kind.init(header: header, iterator: &iterator)
-            }
-        } catch {
-            print("Error unpacking \(header.type). Falling back to basic record.\n\n\(error)")
-        }
-        
-        return try await Record(header: header, iterator: &iterator)
-
     }
 }

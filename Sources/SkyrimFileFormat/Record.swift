@@ -8,18 +8,19 @@ import Bytes
 import Foundation
 
 class Record: CustomStringConvertible {
-    required init<S>(header: Header, iterator: inout AsyncBufferedIterator<S>) async throws where S.Element == UInt8 {
+    required init<P: ByteProvider>(header: Header, provider: inout P) async throws {
         self.header = header
 
         // TODO: alternate mechanism allowing deferral of data read?
         
         let size = Int(header.isGroup ? header.size - 24 : header.size)
-        self.data = try await iterator.next(bytes: Bytes.self, count: size)
+        self.data = try await provider.iterator.next(bytes: Bytes.self, count: size)
+        print("unpacked")
     }
     
     let header: Header
     let data: Bytes
-//    let fields: [Field]
+    lazy var fields = makeFieldsSequence()
 
     var description: String {
         return "«\(header.type) \(String(format: "0x%08X", header.id))»"
@@ -27,6 +28,13 @@ class Record: CustomStringConvertible {
     
     var children: BytesAsyncSequence {
         return BytesAsyncSequence(bytes: [])
+    }
+    
+    func makeFieldsSequence() -> AsyncThrowingIteratorMapSequence<BytesAsyncSequence, Field> {
+        let bytes = BytesAsyncSequence(bytes: data)
+        return bytes.iteratorMap { iterator -> Field in
+            return try await Field(&iterator)
+        }
     }
 }
 

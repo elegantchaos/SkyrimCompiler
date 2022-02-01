@@ -23,10 +23,10 @@ class TES4Group: Record {
     
     let groupType: GroupType
     
-    required init<S>(header: Header, iterator: inout AsyncBufferedIterator<S>) async throws where S.Element == UInt8 {
+    required init<P: ByteProvider>(header: Header, provider: inout P) async throws {
         guard let groupType = GroupType(rawValue: header.id) else { throw SkyrimFileError.badGroupType }
         self.groupType = groupType
-        try await super.init(header: header, iterator: &iterator)
+        try await super.init(header: header, provider: &provider)
     }
 
     var recordType: Tag? {
