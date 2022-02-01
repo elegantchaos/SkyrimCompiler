@@ -21,7 +21,7 @@ struct SkyrimFile {
         self.url = url
     }
     
-    typealias Action = (Record) -> ()
+    typealias Action = (Record) async -> ()
     
     func process(action: @escaping Action) async {
         let configuration = Configuration(records: recordTypes)

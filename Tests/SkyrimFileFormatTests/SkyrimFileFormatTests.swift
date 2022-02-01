@@ -13,24 +13,32 @@ final class SkyrimFileFormatTests: XCTestCase {
         let url = Bundle.module.url(forResource: "Example/Example", withExtension: "esp")!
         let file = SkyrimFile(url)
         await file.process { record in
-            record.test()
+            do {
+                try await record.test()
+            } catch {
+                print(error)
+            }
         }
     }
     
 }
 
 extension Record {
-    @objc func test() {
+    @objc func test() async throws {
         print("Testing \(self)")
     }
 }
 
 extension TES4Record {
-    @objc override func test() {
+    @objc override func test() async throws {
+        try await super.test()
+        
         XCTAssertEqual(header.version, 44)
-//        
-//        for field in fields {
-//            
-//        }
+
+        for try await field in fields {
+            print(field)
+//            action(record)
+//            try await process(bytes: record.children, action: action)
+        }
     }
 }

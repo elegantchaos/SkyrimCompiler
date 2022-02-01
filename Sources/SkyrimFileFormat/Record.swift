@@ -7,15 +7,17 @@ import AsyncSequenceReader
 import Bytes
 import Foundation
 
+protocol ByteIterator: AsyncIteratorProtocol where Element == Byte {
+}
+
 class Record: CustomStringConvertible {
-    required init<P: ByteProvider>(header: Header, iterator: inout P.Iterator, provider: P) async throws {
+    required init<S>(header: Header, iterator: inout AsyncBufferedIterator<S>, configuration: Configuration) async throws where S.Element == Byte {
         self.header = header
 
         // TODO: alternate mechanism allowing deferral of data read?
         
         let size = Int(header.isGroup ? header.size - 24 : header.size)
         self.data = try await iterator.next(bytes: Bytes.self, count: size)
-        print("unpacked")
     }
     
     let header: Header

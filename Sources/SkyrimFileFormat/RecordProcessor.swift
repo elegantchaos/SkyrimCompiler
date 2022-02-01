@@ -33,32 +33,31 @@ class RecordProcessor {
     
     let configuration: Configuration
     
-    typealias Action = (Record) -> ()
+    typealias Action = (Record) async -> ()
 
     func process<I>(bytes: I, action: @escaping Action) async throws where I: AsyncSequence, I.Element == Byte {
         let records = bytes.iteratorMap { iterator -> Record in
             let header = try await Record.Header(&iterator)
-            let provider = ASBProvider(iterator: iterator, configuration: self.configuration)
-            return try await self.inflate(header: header, iterator: &iterator, provider: provider)
+//            let provider = ASBProvider(iterator: iterator, configuration: self.configuration)
+            return try await self.inflate(header: header, iterator: &iterator)
         }
         
         for try await record in records {
-            action(record)
+            await action(record)
             try await process(bytes: record.children, action: action)
         }
     }
     
-    func inflate<P: ByteProvider>(header: Record.Header, iterator: inout P.Iterator, provider: P) async throws -> Record {
-        print("inflating \(header.type)")
+    func inflate<I>(header: Record.Header, iterator: inout AsyncBufferedIterator<I>) async throws -> Record where I.Element == Byte {
         do {
             if let kind = configuration.records[header.type] {
-                return try await kind.init(header: header, iterator: &iterator, provider: provider)
+                return try await kind.init(header: header, iterator: &iterator, configuration: configuration)
             }
         } catch {
             print("Error unpacking \(header.type). Falling back to basic record.\n\n\(error)")
         }
         
-        return try await Record(header: header, iterator: &iterator, provider: provider)
+        return try await Record(header: header, iterator: &iterator, configuration: configuration)
     }
 
 }
