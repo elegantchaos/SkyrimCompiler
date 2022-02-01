@@ -21,7 +21,7 @@ final class SkyrimFileFormatTests: XCTestCase {
 
 extension Record {
     @objc func test() {
-        
+        print("Testing \(self)")
     }
 }
 

@@ -8,13 +8,13 @@ import Bytes
 import Foundation
 
 class Record: CustomStringConvertible {
-    required init<P: ByteProvider>(header: Header, provider: inout P) async throws {
+    required init<P: ByteProvider>(header: Header, iterator: inout P.Iterator, provider: P) async throws {
         self.header = header
 
         // TODO: alternate mechanism allowing deferral of data read?
         
         let size = Int(header.isGroup ? header.size - 24 : header.size)
-        self.data = try await provider.iterator.next(bytes: Bytes.self, count: size)
+        self.data = try await iterator.next(bytes: Bytes.self, count: size)
         print("unpacked")
     }
     
