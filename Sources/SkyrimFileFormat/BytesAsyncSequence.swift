@@ -6,6 +6,16 @@
 import Bytes
 import Foundation
 
+
+protocol AsyncByteIterator: AsyncIteratorProtocol where Element == Byte {
+}
+
+protocol ByteSequence: AsyncSequence where Element == Byte {
+}
+
+extension URL.AsyncBytes: ByteSequence {
+}
+
 struct BytesAsyncSequence: AsyncSequence {
     let bytes: [UInt8]
     
@@ -15,6 +25,10 @@ struct BytesAsyncSequence: AsyncSequence {
     
     typealias AsyncIterator = BytesAsyncIterator
     typealias Element = UInt8
+}
+
+extension BytesAsyncSequence: ByteSequence {
+    
 }
 
 struct BytesAsyncIterator: AsyncIteratorProtocol {

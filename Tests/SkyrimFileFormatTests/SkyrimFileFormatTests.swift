@@ -8,13 +8,17 @@ import XCTestExtensions
 
 @testable import SkyrimFileFormat
 
+@objc class Context: NSObject {
+    let processor = Processor(configuration: Configuration())
+}
+
 final class SkyrimFileFormatTests: XCTestCase {
     func testExample() async {
+        let context = Context()
         let url = Bundle.module.url(forResource: "Example/Example", withExtension: "esp")!
-        let file = SkyrimFile(url)
-        await file.process { record in
+        await context.processor.process(url: url) { record, processor in
             do {
-                try await record.test()
+                try await record.test(context)
             } catch {
                 print(error)
             }
@@ -24,18 +28,18 @@ final class SkyrimFileFormatTests: XCTestCase {
 }
 
 extension Record {
-    @objc func test() async throws {
+    @objc func test(_ context: Context) async throws {
         print("Testing \(self)")
     }
 }
 
 extension TES4Record {
-    @objc override func test() async throws {
-        try await super.test()
+    @objc override func test(_ context: Context) async throws {
+        try await super.test(context)
         
         XCTAssertEqual(header.version, 44)
 
-        for try await field in fields {
+        for try await field in context.processor.fields(bytes: fieldData) {
             print(field)
 //            action(record)
 //            try await process(bytes: record.children, action: action)

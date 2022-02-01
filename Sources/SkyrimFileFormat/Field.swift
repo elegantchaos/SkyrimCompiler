@@ -8,22 +8,28 @@ import Bytes
 import Foundation
 
 class Field: CustomStringConvertible {
-    let type: Tag
-    let size: UInt16
+    let header: Header
     let data: Bytes
 
-    init<S: AsyncIteratorProtocol>(_ iterator: inout AsyncBufferedIterator<S>) async throws where S.Element == UInt8 {
-        let tag = try await iterator.next(littleEndian: UInt32.self)
-        self.type = Tag(tag)
-        self.size = try await iterator.next(littleEndian: UInt16.self)
-        self.data = try await iterator.next(bytes: Bytes.self, count: Int(size))
+    required init<S: AsyncIteratorProtocol>(header: Header, iterator: inout AsyncBufferedIterator<S>, configuration: Configuration) async throws where S.Element == UInt8 {
+        self.header = header
+        self.data = try await iterator.next(bytes: Bytes.self, count: Int(header.size))
     }
 
     var description: String {
-        return "«field \(type)»"
+        return "«field \(header.type)»"
     }
-    
-    var children: BytesAsyncSequence {
-        return BytesAsyncSequence(bytes: [])
+}
+
+extension Field {
+    struct Header {
+        let type: Tag
+        let size: UInt16
+
+        init<S: AsyncIteratorProtocol>(_ iterator: inout AsyncBufferedIterator<S>) async throws where S.Element == UInt8 {
+            let tag = try await iterator.next(littleEndian: UInt32.self)
+            self.type = Tag(tag)
+            self.size = try await iterator.next(littleEndian: UInt16.self)
+        }
     }
 }

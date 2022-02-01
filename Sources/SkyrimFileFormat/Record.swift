@@ -22,21 +22,17 @@ class Record: CustomStringConvertible {
     
     let header: Header
     let data: Bytes
-    lazy var fields = makeFieldsSequence()
 
     var description: String {
         return "«\(header.type) \(String(format: "0x%08X", header.id))»"
     }
     
-    var children: BytesAsyncSequence {
+    var childData: BytesAsyncSequence {
         return BytesAsyncSequence(bytes: [])
     }
-    
-    func makeFieldsSequence() -> AsyncThrowingIteratorMapSequence<BytesAsyncSequence, Field> {
-        let bytes = BytesAsyncSequence(bytes: data)
-        return bytes.iteratorMap { iterator -> Field in
-            return try await Field(&iterator)
-        }
+
+    var fieldData: BytesAsyncSequence {
+        return BytesAsyncSequence(bytes: data)
     }
 }
 

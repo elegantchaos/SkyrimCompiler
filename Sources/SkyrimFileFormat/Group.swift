@@ -39,10 +39,14 @@ class TES4Group: Record {
         }
     }
     
-    override var children: BytesAsyncSequence {
+    override var childData: BytesAsyncSequence {
         return data.asyncBytes
     }
     
+    override var fieldData: BytesAsyncSequence {
+        return BytesAsyncSequence(bytes: [])
+    }
+
     override var description: String {
         if let type = recordType {
             return "«group of \(type) records»"
