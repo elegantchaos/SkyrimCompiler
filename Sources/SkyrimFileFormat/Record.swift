@@ -4,17 +4,25 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import AsyncSequenceReader
+import Bytes
 import Foundation
 
 class Record: CustomStringConvertible {
-    internal init(header: Header) {
+    required init<S>(header: Header, iterator: inout AsyncBufferedIterator<S>) async throws where S.Element == UInt8 {
         self.header = header
+
+        // TODO: alternate mechanism allowing deferral of data read?
+        
+        let size = Int(header.isGroup ? header.size - 24 : header.size)
+        self.data = try await iterator.next(bytes: Bytes.self, count: size)
     }
     
     let header: Header
+    let data: Bytes
+//    let fields: [Field]
 
     var description: String {
-        return "«record \(header.type)»"
+        return "«\(header.type) \(String(format: "0x%08X", header.id))»"
     }
     
     var children: BytesAsyncSequence {

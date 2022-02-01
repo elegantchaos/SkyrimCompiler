@@ -21,9 +21,5 @@ struct Tag {
     }
 }
 
-extension Tag: Equatable {
-}
-
-extension Tag {
-    static let group: Self = "GRUP"
+extension Tag: Equatable, Hashable {
 }

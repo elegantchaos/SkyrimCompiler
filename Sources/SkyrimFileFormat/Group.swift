@@ -3,6 +3,7 @@
 //  All code (c) 2022 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import AsyncSequenceReader
 import Bytes
 import Foundation
 
@@ -21,13 +22,11 @@ class TES4Group: Record {
     }
     
     let groupType: GroupType
-    let data: Bytes
     
-    init(header: Header, data: [UInt8]) throws {
+    required init<S>(header: Header, iterator: inout AsyncBufferedIterator<S>) async throws where S.Element == UInt8 {
         guard let groupType = GroupType(rawValue: header.id) else { throw SkyrimFileError.badGroupType }
         self.groupType = groupType
-        self.data = data
-        super.init(header: header)
+        try await super.init(header: header, iterator: &iterator)
     }
 
     var recordType: Tag? {
@@ -51,4 +50,8 @@ class TES4Group: Record {
             return "«group of \(groupType)»"
         }
     }
+}
+
+extension Tag {
+    static let group: Self = "GRUP"
 }

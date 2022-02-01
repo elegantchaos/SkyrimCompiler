@@ -12,6 +12,11 @@ import Bytes
 struct SkyrimFile {
     let url: URL
     
+    let recordTypes: [Tag:Record.Type] = [
+        .group: TES4Group.self,
+        .tes4: TES4Record.self
+    ]
+
     init(_ url: URL) {
         self.url = url
     }
@@ -30,9 +35,7 @@ struct SkyrimFile {
     func process<S>(_ bytes: S, action: @escaping Action) async throws where S: AsyncSequence, S.Element == UInt8 {
         let records = bytes.iteratorMap { iterator -> Record in
             let header = try await Record.Header(&iterator)
-            let size = header.isGroup ? header.size - 24 : header.size
-            let data = try await iterator.next(bytes: [UInt8].self, count: Int(size))
-            return inflate(header: header, data: data)
+            return try await inflate(header: header, iterator: &iterator)
         }
         
         for try await record in records {
@@ -41,20 +44,16 @@ struct SkyrimFile {
         }
     }
     
-    func inflate(header: Record.Header, data: [UInt8]) -> Record {
+    func inflate<S>(header: Record.Header, iterator: inout AsyncBufferedIterator<S>) async throws -> Record where S.Element == UInt8 {
         do {
-            switch header.type {
-                case .group:
-                    return try TES4Group(header: header, data: data)
-                    
-                default:
-                    break
+            if let kind = recordTypes[header.type] {
+                return try await kind.init(header: header, iterator: &iterator)
             }
         } catch {
             print("Error unpacking \(header.type). Falling back to basic record.\n\n\(error)")
         }
         
-        return Record(header: header)
+        return try await Record(header: header, iterator: &iterator)
 
     }
 }
