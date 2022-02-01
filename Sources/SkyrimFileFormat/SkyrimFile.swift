@@ -30,21 +30,21 @@ struct SkyrimFile {
     func process<S>(_ bytes: S, action: @escaping Action) async throws where S: AsyncSequence, S.Element == UInt8 {
         let records = bytes.iteratorMap { iterator -> Record in
             let header = try await Record.Header(&iterator)
-            let size = header.type == "GRUP" ? header.size - 24 : header.size
+            let size = header.isGroup ? header.size - 24 : header.size
             let data = try await iterator.next(bytes: [UInt8].self, count: Int(size))
             return inflate(header: header, data: data)
         }
         
         for try await record in records {
             action(record)
-            try await process(record.children(), action: action)
+            try await process(record.children, action: action)
         }
     }
     
     func inflate(header: Record.Header, data: [UInt8]) -> Record {
         do {
             switch header.type {
-                case "GRUP":
+                case .group:
                     return try TES4Group(header: header, data: data)
                     
                 default:

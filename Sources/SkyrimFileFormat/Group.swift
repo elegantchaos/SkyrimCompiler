@@ -30,22 +30,25 @@ class TES4Group: Record {
         super.init(header: header)
     }
 
-    var recordType: String {
+    var recordType: Tag? {
         switch groupType {
             case .top:
-                return String(bytes: header.flags.littleEndianBytes, encoding: .ascii) ?? "top (bad type)"
+                return Tag(header.flags)
                 
             default:
-                return "\(groupType)"
+                return nil
         }
     }
     
-    override func children() -> BytesSequence {
-        return BytesSequence(bytes: data)
+    override var children: BytesAsyncSequence {
+        return data.asyncBytes
     }
     
     override var description: String {
-        return "«group of \(recordType)»"
+        if let type = recordType {
+            return "«group of \(type) records»"
+        } else {
+            return "«group of \(groupType)»"
+        }
     }
-
 }
