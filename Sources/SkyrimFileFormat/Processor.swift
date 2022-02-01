@@ -7,6 +7,22 @@ import AsyncSequenceReader
 import Bytes
 import Foundation
 
+protocol ProcessorProtocol {
+    associatedtype BaseIterator: AsyncIteratorProtocol where BaseIterator.Element == Byte
+    typealias Iterator = AsyncBufferedIterator<BaseIterator>
+    var configuration: Configuration { get }
+}
+
+struct ProcessorShim: ProcessorProtocol {
+    typealias BaseIterator = URL.AsyncBytes.AsyncIterator
+    let configuration: Configuration
+}
+
+struct ProcessorShim2: ProcessorProtocol {
+    typealias BaseIterator = BytesAsyncIterator
+    let configuration: Configuration
+}
+
 class Processor {
     internal init(configuration: Configuration) {
         self.configuration = configuration
@@ -37,13 +53,13 @@ class Processor {
     func inflate<I>(header: Record.Header, iterator: inout AsyncBufferedIterator<I>) async throws -> Record where I.Element == Byte {
         do {
             if let kind = configuration.records[header.type] {
-                return try await kind.init(header: header, iterator: &iterator, configuration: configuration)
+                return try await kind.init(header: header, iterator: &iterator, processor: ProcessorShim(configuration: configuration))
             }
         } catch {
             print("Error unpacking \(header.type). Falling back to basic record.\n\n\(error)")
         }
         
-        return try await Record(header: header, iterator: &iterator, configuration: configuration)
+        return try await Record(header: header, iterator: &iterator, processor: ProcessorShim2(configuration: configuration))
     }
 
     func records<I>(bytes: I) -> AsyncThrowingIteratorMapSequence<I, Record> where I: AsyncSequence, I.Element == Byte {

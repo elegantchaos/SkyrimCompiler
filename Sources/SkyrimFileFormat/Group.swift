@@ -7,7 +7,7 @@ import AsyncSequenceReader
 import Bytes
 import Foundation
 
-class TES4Group: Record {
+class Group: Record {
     enum GroupType: UInt32 {
         case top
         case worldChildren
@@ -23,10 +23,10 @@ class TES4Group: Record {
     
     let groupType: GroupType
     
-    required init<S>(header: Header, iterator: inout AsyncBufferedIterator<S>, configuration: Configuration) async throws where S.Element == Byte {
+    required init<S>(header: Header, iterator: inout AsyncBufferedIterator<S>, processor: ProcessorProtocol) async throws where S.Element == Byte {
         guard let groupType = GroupType(rawValue: header.id) else { throw SkyrimFileError.badGroupType }
         self.groupType = groupType
-        try await super.init(header: header, iterator: &iterator, configuration: configuration)
+        try await super.init(header: header, iterator: &iterator, processor: processor)
     }
 
     var recordType: Tag? {

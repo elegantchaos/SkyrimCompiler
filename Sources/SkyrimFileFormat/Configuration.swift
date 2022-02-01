@@ -10,7 +10,7 @@ typealias FieldsMap = [Tag:Field.Type]
 
 struct Configuration {
     static let defaultRecordMap: RecordMap = [
-        .group: TES4Group.self,
+        .group: Group.self,
         .tes4: TES4Record.self
     ]
     
