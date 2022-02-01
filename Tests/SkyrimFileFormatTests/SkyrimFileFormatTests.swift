@@ -13,7 +13,7 @@ final class SkyrimFileFormatTests: XCTestCase {
         let url = Bundle.module.url(forResource: "Example/Example", withExtension: "esp")!
         let file = SkyrimFile(url)
         await file.process { record in
-            print(record.type)
+            print(record)
         }
     }
 }
