@@ -18,12 +18,17 @@ let package = Package(
             targets: ["SkyrimFileFormat"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/elegantchaos/XCTestExtensions.git", from: "1.4.2")
+        .package(url: "https://github.com/elegantchaos/XCTestExtensions.git", from: "1.4.2"),
+        .package(url: "https://github.com/mochidev/AsyncSequenceReader.git", from: "0.1.0"),
+        .package(url: "https://github.com/mochidev/Bytes.git", from: "0.2.2")
     ],
     targets: [
         .target(
             name: "SkyrimFileFormat",
-            dependencies: []
+            dependencies: [
+                "AsyncSequenceReader",
+                "Bytes"
+            ]
         ),
         
         .testTarget(
