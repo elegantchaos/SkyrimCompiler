@@ -23,7 +23,7 @@ class Group: Record {
     
     let groupType: GroupType
     
-    required init<S>(header: Header, iterator: inout AsyncBufferedIterator<S>, processor: ProcessorProtocol) async throws where S.Element == Byte {
+    required init<S: AsyncByteIterator>(header: Header, iterator: inout AsyncBufferedIterator<S>, processor: ProcessorProtocol) async throws {
         guard let groupType = GroupType(rawValue: header.id) else { throw SkyrimFileError.badGroupType }
         self.groupType = groupType
         try await super.init(header: header, iterator: &iterator, processor: processor)

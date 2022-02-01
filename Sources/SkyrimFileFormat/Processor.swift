@@ -41,7 +41,7 @@ class Processor {
         }
     }
     
-    func process<I: ByteSequence>(bytes: I, action: @escaping RecordAction) async throws {
+    func process<I: AsyncByteSequence>(bytes: I, action: @escaping RecordAction) async throws {
         let records = records(bytes: bytes)
         
         for try await record in records {
@@ -50,19 +50,7 @@ class Processor {
         }
     }
     
-    func inflate<I>(header: Record.Header, iterator: inout AsyncBufferedIterator<I>) async throws -> Record where I.Element == Byte {
-        do {
-            if let kind = configuration.records[header.type] {
-                return try await kind.init(header: header, iterator: &iterator, processor: ProcessorShim(configuration: configuration))
-            }
-        } catch {
-            print("Error unpacking \(header.type). Falling back to basic record.\n\n\(error)")
-        }
-        
-        return try await Record(header: header, iterator: &iterator, processor: ProcessorShim2(configuration: configuration))
-    }
-
-    func records<I>(bytes: I) -> AsyncThrowingIteratorMapSequence<I, Record> where I: AsyncSequence, I.Element == Byte {
+    func records<I: AsyncByteSequence>(bytes: I) -> AsyncThrowingIteratorMapSequence<I, Record> {
         let records = bytes.iteratorMap { iterator -> Record in
             let header = try await Record.Header(&iterator)
             return try await self.inflate(header: header, iterator: &iterator)
@@ -80,6 +68,18 @@ class Processor {
         return sequence
     }
     
+    func inflate<I: AsyncByteIterator>(header: Record.Header, iterator: inout AsyncBufferedIterator<I>) async throws -> Record {
+        do {
+            if let kind = configuration.records[header.type] {
+                return try await kind.init(header: header, iterator: &iterator, processor: ProcessorShim(configuration: configuration))
+            }
+        } catch {
+            print("Error unpacking \(header.type). Falling back to basic record.\n\n\(error)")
+        }
+        
+        return try await Record(header: header, iterator: &iterator, processor: ProcessorShim2(configuration: configuration))
+    }
+
     func inflate<I>(header: Field.Header, iterator: inout AsyncBufferedIterator<I>) async throws -> Field where I.Element == Byte {
         do {
             if let kind = configuration.fields[header.type] {

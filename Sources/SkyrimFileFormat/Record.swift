@@ -11,7 +11,7 @@ protocol ByteIterator: AsyncIteratorProtocol where Element == Byte {
 }
 
 class Record: CustomStringConvertible {
-    required init<S>(header: Header, iterator: inout AsyncBufferedIterator<S>, processor: ProcessorProtocol) async throws where S.Element == Byte {
+    required init<S: AsyncByteIterator>(header: Header, iterator: inout AsyncBufferedIterator<S>, processor: ProcessorProtocol) async throws {
         self.header = header
 
         // TODO: alternate mechanism allowing deferral of data read?

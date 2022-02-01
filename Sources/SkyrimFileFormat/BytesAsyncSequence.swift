@@ -3,6 +3,7 @@
 //  All code (c) 2022 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import AsyncSequenceReader
 import Bytes
 import Foundation
 
@@ -10,13 +11,18 @@ import Foundation
 protocol AsyncByteIterator: AsyncIteratorProtocol where Element == Byte {
 }
 
-protocol ByteSequence: AsyncSequence where Element == Byte {
+protocol AsyncByteSequence: AsyncSequence where AsyncIterator: AsyncByteIterator {
 }
 
-extension URL.AsyncBytes: ByteSequence {
+typealias ASBX = AsyncBufferedIterator<URL.AsyncBytes.AsyncIterator>
+
+extension URL.AsyncBytes.AsyncIterator: AsyncByteIterator {
 }
 
-struct BytesAsyncSequence: AsyncSequence {
+extension URL.AsyncBytes: AsyncByteSequence {
+}
+
+struct BytesAsyncSequence: AsyncByteSequence {
     let bytes: [UInt8]
     
     func makeAsyncIterator() -> BytesAsyncIterator {
@@ -27,11 +33,7 @@ struct BytesAsyncSequence: AsyncSequence {
     typealias Element = UInt8
 }
 
-extension BytesAsyncSequence: ByteSequence {
-    
-}
-
-struct BytesAsyncIterator: AsyncIteratorProtocol {
+struct BytesAsyncIterator: AsyncByteIterator {
     let bytes: Bytes
     var index = 0
     mutating func next() async throws -> UInt8? {
