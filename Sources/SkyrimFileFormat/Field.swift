@@ -26,6 +26,10 @@ class Field: CustomStringConvertible {
     var description: String {
         return "«\(header.type) field»"
     }
+    
+    var value: Any {
+        fatalError("subclasses should override this")
+    }
 }
 
 extension Field {

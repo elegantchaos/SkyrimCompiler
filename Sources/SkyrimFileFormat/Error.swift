@@ -9,4 +9,9 @@ enum SkyrimFileError: Error {
     case badTag
     case badGroupType
     case badString
+    case wrongPropertyType
+    case nonListPropertyRepeated
+    case requiredPropertyMissing
+    case listPropertyMissing
+    case requiredPropertyWrongType
 }

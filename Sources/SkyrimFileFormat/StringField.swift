@@ -8,7 +8,7 @@ import Bytes
 import Foundation
 
 class StringField: Field {
-    let value: String
+    let string: String
 
     required init<S>(header: Field.Header, iterator: inout AsyncBufferedIterator<S>, configuration: Configuration) async throws where S : AsyncIteratorProtocol, S.Element == UInt8 {
         guard let bytes = try await iterator.collect(upToIncluding: 0, throwsIfOver: 512),
@@ -17,11 +17,15 @@ class StringField: Field {
             throw SkyrimFileError.badString
         }
 
-        self.value = string
+        self.string = string
         super.init(header: header)
     }
 
     override var description: String {
-        "«\(header.type) \(value)»"
+        "«\(header.type) \(string)»"
+    }
+    
+    override var value: Any {
+        return string
     }
 }

@@ -7,7 +7,7 @@ import AsyncSequenceReader
 import Bytes
 import Foundation
 
-extension Tag {
+private extension Tag {
     static let header: Self = "HEDR"
     static let author: Self = "CNAM"
     static let description: Self = "SNAM"
@@ -45,7 +45,7 @@ class TES4Record: Record {
                 case .header: headerField = field as? HEDRField
                 case .author: authorField = field as? StringField
                 case .description: descField = field as? StringField
-                case .master: masters.append((field as? StringField)?.value ?? "")
+                case .master: masters.append((field as? StringField)?.string ?? "")
                 default: unprocessed.append(field)
             }
         }
@@ -54,8 +54,8 @@ class TES4Record: Record {
         self.version = headerField.version
         self.count = UInt(headerField.number)
         self.nextID = UInt(headerField.nextID)
-        self.author = authorField?.value ?? ""
-        self.desc = descField?.value ?? ""
+        self.author = authorField?.string ?? ""
+        self.desc = descField?.string ?? ""
         self.masters = masters
         self.unproccessedFields = unprocessed
         

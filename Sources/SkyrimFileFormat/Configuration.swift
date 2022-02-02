@@ -9,7 +9,12 @@ typealias RecordMap = [Tag:Record.Type]
 typealias FieldsMap = [Tag:Field.Type]
 
 struct Configuration {
-    static let defaultRecords = [Group.self, TES4Record.self]
+    static let defaultRecords = [
+        Group.self,
+        TES4Record.self,
+        ARMORecord.self
+    ]
+    
     static let defaultRecordMap = RecordMap(uniqueKeysWithValues: defaultRecords.map { ($0.tag, $0) })
 
     let records: RecordMap
