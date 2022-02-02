@@ -10,17 +10,21 @@ import Foundation
 protocol ProcessorProtocol {
     associatedtype BaseIterator: AsyncIteratorProtocol where BaseIterator.Element == Byte
     typealias Iterator = AsyncBufferedIterator<BaseIterator>
-    var configuration: Configuration { get }
+    var processor: Processor { get }
+}
+
+extension ProcessorProtocol {
+    var configuration: Configuration { processor.configuration }
 }
 
 struct ProcessorShim: ProcessorProtocol {
     typealias BaseIterator = URL.AsyncBytes.AsyncIterator
-    let configuration: Configuration
+    let processor: Processor
 }
 
 struct ProcessorShim2: ProcessorProtocol {
     typealias BaseIterator = BytesAsyncIterator
-    let configuration: Configuration
+    let processor: Processor
 }
 
 class Processor {
@@ -53,36 +57,41 @@ class Processor {
     func records<I: AsyncByteSequence>(bytes: I) -> AsyncThrowingIteratorMapSequence<I, Record> {
         let records = bytes.iteratorMap { iterator -> Record in
             let header = try await Record.Header(&iterator)
-            return try await self.inflate(header: header, iterator: &iterator)
+            let data = try await header.payload(&iterator) // TODO: allow the payload read to be deferred
+            return try await self.inflate(header: header, data: data)
         }
 
         return records
     }
 
-    func fields<I>(bytes: I) -> AsyncThrowingIteratorMapSequence<I, Field> where I: AsyncSequence, I.Element == Byte {
+    func fields<I>(bytes: inout I) -> AsyncThrowingIteratorMapSequence<I, Field> where I: AsyncSequence, I.Element == Byte {
+        return fields(bytes: &bytes, types: configuration.fields)
+    }
+
+    func fields<I>(bytes: inout I, types: FieldsMap) -> AsyncThrowingIteratorMapSequence<I, Field> where I: AsyncSequence, I.Element == Byte {
         let sequence = bytes.iteratorMap { iterator -> Field in
             let header = try await Field.Header(&iterator)
-            return try await self.inflate(header: header, iterator: &iterator)
+            return try await self.inflate(header: header, types: types, iterator: &iterator)
         }
         
         return sequence
     }
     
-    func inflate<I: AsyncByteIterator>(header: Record.Header, iterator: inout AsyncBufferedIterator<I>) async throws -> Record {
+    func inflate(header: Record.Header, data: Bytes) async throws -> Record {
         do {
             if let kind = configuration.records[header.type] {
-                return try await kind.init(header: header, iterator: &iterator, processor: ProcessorShim(configuration: configuration))
+                return try await kind.init(header: header, data: data, processor: ProcessorShim(processor: self))
             }
         } catch {
             print("Error unpacking \(header.type). Falling back to basic record.\n\n\(error)")
         }
         
-        return try await Record(header: header, iterator: &iterator, processor: ProcessorShim2(configuration: configuration))
+        return try await Record(header: header, data: data, processor: ProcessorShim2(processor: self))
     }
 
-    func inflate<I>(header: Field.Header, iterator: inout AsyncBufferedIterator<I>) async throws -> Field where I.Element == Byte {
+    func inflate<I>(header: Field.Header, types: FieldsMap, iterator: inout AsyncBufferedIterator<I>) async throws -> Field where I.Element == Byte {
         do {
-            if let kind = configuration.fields[header.type] {
+            if let kind = types[header.type] {
                 return try await kind.init(header: header, iterator: &iterator, configuration: configuration)
             }
         } catch {

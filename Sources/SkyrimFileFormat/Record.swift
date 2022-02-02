@@ -13,13 +13,9 @@ protocol ByteIterator: AsyncIteratorProtocol where Element == Byte {
 class Record: CustomStringConvertible {
     class var tag: Tag { "????" }
     
-    required init<S: AsyncByteIterator>(header: Header, iterator: inout AsyncBufferedIterator<S>, processor: ProcessorProtocol) async throws {
+    required init(header: Header, data: Bytes, processor: ProcessorProtocol) async throws {
         self.header = header
-
-        // TODO: alternate mechanism allowing deferral of data read?
-        
-        let size = Int(header.isGroup ? header.size - 24 : header.size)
-        self.data = try await iterator.next(bytes: Bytes.self, count: size)
+        self.data = data
     }
     
     let header: Header
@@ -63,7 +59,6 @@ extension Record {
         
         init<S: AsyncIteratorProtocol>(_ iterator: inout AsyncBufferedIterator<S>) async throws where S.Element == UInt8 {
             let tag = try await iterator.next(littleEndian: UInt32.self)
-//            guard let type = RecordType(tag) else { throw SkyrimFileError.badTag }
             self.type = Tag(tag)
             self.size = try await iterator.next(littleEndian: UInt32.self)
             self.flags = try await iterator.next(littleEndian: UInt32.self)
@@ -76,6 +71,11 @@ extension Record {
         
         var isGroup: Bool {
             return type == Group.tag
+        }
+        
+        func payload<S>(_ iterator: inout AsyncBufferedIterator<S>) async throws -> Bytes  where S.Element == UInt8 {
+            let size = Int(isGroup ? self.size - 24 : self.size)
+            return try await iterator.next(bytes: Bytes.self, count: size)
         }
     }
 

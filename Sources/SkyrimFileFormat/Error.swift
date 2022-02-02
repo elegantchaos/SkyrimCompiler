@@ -8,4 +8,5 @@ import Foundation
 enum SkyrimFileError: Error {
     case badTag
     case badGroupType
+    case badString
 }

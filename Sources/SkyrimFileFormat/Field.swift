@@ -24,7 +24,7 @@ class Field: CustomStringConvertible {
     }
     
     var description: String {
-        return "«field \(header.type)»"
+        return "«\(header.type) field»"
     }
 }
 
