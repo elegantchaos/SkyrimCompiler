@@ -23,3 +23,7 @@ struct Tag {
 
 extension Tag: Equatable, Hashable {
 }
+
+extension Tag: Decodable {
+    
+}

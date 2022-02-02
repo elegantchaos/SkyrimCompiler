@@ -8,6 +8,8 @@ import Bytes
 import Foundation
 
 class Field: CustomStringConvertible {
+    class var tag: Tag { "????" }
+    
     let header: Header
     let data: Bytes
 
@@ -16,6 +18,11 @@ class Field: CustomStringConvertible {
         self.data = try await iterator.next(bytes: Bytes.self, count: Int(header.size))
     }
 
+    init(header: Header) {
+        self.header = header
+        self.data = []
+    }
+    
     var description: String {
         return "«field \(header.type)»"
     }

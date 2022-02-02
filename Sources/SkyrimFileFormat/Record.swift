@@ -11,6 +11,8 @@ protocol ByteIterator: AsyncIteratorProtocol where Element == Byte {
 }
 
 class Record: CustomStringConvertible {
+    class var tag: Tag { "????" }
+    
     required init<S: AsyncByteIterator>(header: Header, iterator: inout AsyncBufferedIterator<S>, processor: ProcessorProtocol) async throws {
         self.header = header
 
@@ -49,7 +51,7 @@ extension Tag: CustomStringConvertible {
 
 extension Record {
     
-    struct Header {
+    struct Header: Decodable {
         let type: Tag
         let size: UInt32
         let flags: UInt32
@@ -73,7 +75,7 @@ extension Record {
         }
         
         var isGroup: Bool {
-            return type == .group
+            return type == Group.tag
         }
     }
 

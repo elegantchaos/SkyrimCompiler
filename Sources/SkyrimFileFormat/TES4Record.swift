@@ -6,9 +6,5 @@
 import Foundation
 
 class TES4Record: Record {
-    
-}
-
-extension Tag {
-    static let tes4: Self = "TES4"
+    override class var tag: Tag { "TES4" }
 }

@@ -39,10 +39,18 @@ extension TES4Record {
         
         XCTAssertEqual(header.version, 44)
 
+        var index: [Tag:[Field]] = [:]
         for try await field in context.processor.fields(bytes: fieldData) {
-            print(field)
-//            action(record)
-//            try await process(bytes: record.children, action: action)
+            var list = index[type(of: field).tag] ?? []
+            list.append(field)
+            index[type(of: field).tag] = list
         }
+        
+        XCTAssertEqual(index[HEDRField.tag]?.count, 1)
+        let header = index[HEDRField.tag]?.first as! HEDRField
+        print(header)
+        XCTAssertEqual(header.version, Float32(1.7))
+        XCTAssertEqual(header.number, 12)
+        XCTAssertEqual(header.nextID, 0x1d8c)
     }
 }
