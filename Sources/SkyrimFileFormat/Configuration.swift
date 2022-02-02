@@ -11,16 +11,12 @@ typealias FieldsMap = [Tag:Field.Type]
 struct Configuration {
     static let defaultRecords = [Group.self, TES4Record.self]
     static let defaultRecordMap = RecordMap(uniqueKeysWithValues: defaultRecords.map { ($0.tag, $0) })
-    
-    static let defaultFields = [HEDRField.self, CNAMField.self]
-    static let defaultFieldMap: FieldsMap = FieldsMap(uniqueKeysWithValues: defaultFields.map { ($0.tag, $0) })
 
-    internal init(records: RecordMap = Self.defaultRecordMap, fields: FieldsMap = Self.defaultFieldMap) {
+    let records: RecordMap
+
+    internal init(records: RecordMap = Self.defaultRecordMap) {
         self.records = records
-        self.fields = fields
     }
     
-    let records: RecordMap
-    let fields: FieldsMap
 }
 

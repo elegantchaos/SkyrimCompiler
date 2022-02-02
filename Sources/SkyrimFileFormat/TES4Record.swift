@@ -9,32 +9,44 @@ import Foundation
 
 extension Tag {
     static let header: Self = "HEDR"
-    
+    static let author: Self = "CNAM"
+    static let description: Self = "SNAM"
+    static let master: Self = "MAST"
 }
+
 class TES4Record: Record {
     override class var tag: Tag { "TES4" }
     
     let version: Float
     let count: UInt
     let nextID: UInt
-    
+    let desc: String
+    let author: String
+    let masters: [String]
+    let unproccessedFields: [Field]
+
     static var fieldTypes: FieldsMap = [
         .header: HEDRField.self,
-        "CNAM": StringField.self,
-        "SNAM": StringField.self
+        .author: StringField.self,
+        .description: StringField.self,
+        .master: StringField.self
     ]
     
     required init(header: Record.Header, data: Bytes, processor: ProcessorProtocol) async throws {
         var bytes = BytesAsyncSequence(bytes: data)
         var headerField: HEDRField?
-        
-        for try await field in processor.processor.fields(bytes: &bytes) {
+        var descField: StringField?
+        var authorField: StringField?
+        var masters: [String] = []
+        var unprocessed: [Field] = []
+        for try await field in processor.processor.fields(bytes: &bytes, types: Self.fieldTypes) {
+            print(field)
             switch field.header.type {
-                case .header:
-                    headerField = field as? HEDRField
-                    
-                default:
-                    break
+                case .header: headerField = field as? HEDRField
+                case .author: authorField = field as? StringField
+                case .description: descField = field as? StringField
+                case .master: masters.append((field as? StringField)?.value ?? "")
+                default: unprocessed.append(field)
             }
         }
 
@@ -42,7 +54,11 @@ class TES4Record: Record {
         self.version = headerField.version
         self.count = UInt(headerField.number)
         self.nextID = UInt(headerField.nextID)
-
+        self.author = authorField?.value ?? ""
+        self.desc = descField?.value ?? ""
+        self.masters = masters
+        self.unproccessedFields = unprocessed
+        
         try await super.init(header: header, data: bytes.bytes, processor: processor)
     }
 }

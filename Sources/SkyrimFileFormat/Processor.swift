@@ -64,10 +64,6 @@ class Processor {
         return records
     }
 
-    func fields<I>(bytes: inout I) -> AsyncThrowingIteratorMapSequence<I, Field> where I: AsyncSequence, I.Element == Byte {
-        return fields(bytes: &bytes, types: configuration.fields)
-    }
-
     func fields<I>(bytes: inout I, types: FieldsMap) -> AsyncThrowingIteratorMapSequence<I, Field> where I: AsyncSequence, I.Element == Byte {
         let sequence = bytes.iteratorMap { iterator -> Field in
             let header = try await Field.Header(&iterator)
