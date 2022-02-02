@@ -6,7 +6,6 @@
 import Foundation
 
 typealias RecordMap = [Tag:Record.Type]
-typealias FieldsMap = [Tag:Field.Type]
 
 struct Configuration {
     static let defaultRecords = [

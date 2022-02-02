@@ -88,7 +88,7 @@ class Processor {
     func inflate<I>(header: Field.Header, types: FieldsMap, iterator: inout AsyncBufferedIterator<I>) async throws -> Field where I.Element == Byte {
         do {
             if let kind = types[header.type] {
-                return try await kind.init(header: header, iterator: &iterator, configuration: configuration)
+                return try await kind.field.init(header: header, iterator: &iterator, configuration: configuration)
             }
         } catch {
             print("Error unpacking \(header.type). Falling back to basic field.\n\n\(error)")

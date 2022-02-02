@@ -26,10 +26,10 @@ class TES4Record: Record {
     let unproccessedFields: [Field]
 
     static var fieldTypes: FieldsMap = [
-        .header: HEDRField.self,
-        .author: StringField.self,
-        .description: StringField.self,
-        .master: StringField.self
+        .header: .init(type: .required, field: HEDRField.self),
+        .author: .init(type: .optional, field: StringField.self),
+        .description: .init(type: .optional, field: StringField.self),
+        .master: .init(type: .list, field: StringField.self)
     ]
     
     required init(header: Record.Header, data: Bytes, processor: ProcessorProtocol) async throws {
