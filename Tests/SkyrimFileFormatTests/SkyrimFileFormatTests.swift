@@ -42,25 +42,15 @@ final class SkyrimFileFormatTests: XCTestCase {
         let output = temporaryFile(named: url.deletingPathExtension().lastPathComponent, extension: "esps")
         let fm = FileManager.default
         
-        try? fm.createDirectory(at: output, withIntermediateDirectories: true)
-
-        var index = 0
         do {
-            let records = context.processor.records(bytes: url.resourceBytes)
-            for try await record in records {
-                do {
-                    let name = String(format: "%04d %@", index, record.header.type.description)
-                    try record.pack(to: output.appendingPathComponent(name))
-                } catch {
-                    print(error)
-                }
-                index += 1
-            }
+            try? fm.createDirectory(at: output, withIntermediateDirectories: true)
+            try await context.processor.pack(bytes: url.resourceBytes, to: output)
         } catch {
             print(error)
         }
-        
+
         show(output)
+
     }
 }
 

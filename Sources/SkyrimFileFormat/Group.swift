@@ -56,4 +56,16 @@ class Group: Record {
             return "«group of \(groupType)»"
         }
     }
+    
+    override func pack(to url: URL, processor: Processor) async throws {
+        let groupURL = url.appendingPathExtension("epsg")
+        try FileManager.default.createDirectory(at: groupURL, withIntermediateDirectories: true)
+        
+        let headerURL = groupURL.appendingPathComponent("header.json")
+        let header = PackedHeader(header)
+        let encoded = try JSONEncoder().encode(header)
+        try encoded.write(to: headerURL, options: .atomic)
+
+        try await processor.pack(bytes: childData, to: groupURL)
+    }
 }

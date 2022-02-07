@@ -97,5 +97,18 @@ class Processor {
         return try await Field(header: header, iterator: &iterator, configuration: configuration)
     }
 
+    func pack<I: AsyncByteSequence>(bytes: I, to url: URL) async throws {
+        let records = records(bytes: bytes)
+        var index = 0
+        for try await record in records {
+            do {
+                let name = String(format: "%04d %@", index, record.header.type.description)
+                try await record.pack(to: url.appendingPathComponent(name), processor: self)
+            } catch {
+                print(error)
+            }
+            index += 1
+        }
+    }
 }
 

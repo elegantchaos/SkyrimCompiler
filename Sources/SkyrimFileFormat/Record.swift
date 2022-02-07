@@ -32,6 +32,17 @@ class Record: CustomStringConvertible {
     var fieldData: BytesAsyncSequence {
         return BytesAsyncSequence(bytes: data)
     }
+
+    func pack(to url: URL, processor: Processor) async throws {
+        let header = PackedHeader(header)
+        let packed = PackedRecord(header: header)
+        let encoded = try JSONEncoder().encode(packed)
+        try encoded.write(to: url.appendingPathExtension("json"), options: .atomic)
+        if data.count > 0 {
+            let raw = Data(bytes: data, count: data.count)
+            try raw.write(to: url.appendingPathExtension("raw"), options: .atomic)
+        }
+    }
 }
 
 
@@ -95,18 +106,5 @@ struct PackedHeader: Codable {
         self.versionInfo = record.versionInfo == 0 ? nil : record.versionInfo
         self.version = record.version == 44 ? nil : record.version
         self.unused = record.unused == 0 ? nil : record.unused
-    }
-}
-
-extension Record {
-    func pack(to url: URL) throws {
-        let header = PackedHeader(header)
-        let packed = PackedRecord(header: header)
-        let encoded = try JSONEncoder().encode(packed)
-        try encoded.write(to: url.appendingPathExtension("json"), options: .atomic)
-        if data.count > 0 {
-            let raw = Data(bytes: data, count: data.count)
-            try raw.write(to: url.appendingPathExtension("raw"), options: .atomic)
-        }
     }
 }
