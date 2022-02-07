@@ -77,7 +77,10 @@ class FieldProcessor {
         for entry in spec {
             switch entry.value.type {
                 case .required:
-                    if values[entry.key] == nil { throw SkyrimFileError.requiredPropertyMissing }
+                    if values[entry.key] == nil {
+                        throw SkyrimFileError.requiredPropertyMissing
+                        
+                    }
                 default:
                     break
             }

@@ -9,6 +9,8 @@ import Foundation
 
 private extension Tag {
     static let editorID: Self = "EDID"
+    static let maleArmour: Self = "MOD2"
+    static let femaleArmour: Self = "MOD4"
 }
 
 struct ARMORecord: Encodable, RecordProperties {
@@ -16,12 +18,16 @@ struct ARMORecord: Encodable, RecordProperties {
     
     let header: UnpackedHeader
     let editorID: String
+    let maleArmour: String
+    let femaleArmour: String?
     let fields: [UnpackedField]
     
     init(header: RecordHeader, fields: FieldProcessor) throws {
         self.header = UnpackedHeader(header)
         self.fields = fields.unprocessed.map { UnpackedField($0) }
         self.editorID = fields.values[.editorID] as! String
+        self.maleArmour = fields.values[.maleArmour] as! String
+        self.femaleArmour = fields.values[.femaleArmour] as? String
     }
 
     static func unpack(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data {

@@ -1,3 +1,5 @@
     [
-        { "name": "editorID", "tag": "EDID", "type": "String", "role": "required" }
+        { "name": "editorID", "tag": "EDID", "type": "String", "role": "required" },
+        { "name": "male model", "tag": "MOD2", "type": "String", "role": "required" },
+        { "name": "female model", "tag": "MOD4", "type": "String", "role": "optional" }
     ]
