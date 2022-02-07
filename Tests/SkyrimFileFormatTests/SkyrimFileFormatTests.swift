@@ -9,8 +9,15 @@ import XCTestExtensions
 #if canImport(AppKit)
 import AppKit
 
-func show(_ url: URL) {
-    NSWorkspace.shared.activateFileViewerSelecting([url])
+func show(_ url: URL) async {
+    let config = NSWorkspace.OpenConfiguration()
+    config.activates = true
+    
+    await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) -> Void in
+        NSWorkspace.shared.open([url], withApplicationAt: URL(fileURLWithPath: "/Applications/Visual Studio Code.app"), configuration: config) { application, error in
+            continuation.resume()
+        }
+    }
 }
 #else
 func show(_ url: URL) {
@@ -49,7 +56,7 @@ final class SkyrimFileFormatTests: XCTestCase {
             print(error)
         }
 
-        show(output)
+        await show(output)
 
     }
 }

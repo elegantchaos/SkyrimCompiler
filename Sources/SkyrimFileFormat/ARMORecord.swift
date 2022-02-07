@@ -19,7 +19,7 @@ class ARMORecord: Record {
 
     required init(header: Record.Header, data: Bytes, processor: ProcessorProtocol) async throws {
         let fp = FieldProcessor(try processor.configuration.fields(forRecord: "ARMO"))
-        let remainder = try await fp.process(data: data, processor: processor)
+        let remainder = try await fp.process(data: data, processor: processor.processor)
 
         self.editorID = try fp.unpack(.editorID)
         self.unproccessedFields = fp.unprocessed

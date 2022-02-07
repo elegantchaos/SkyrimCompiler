@@ -56,16 +56,6 @@ class TES4Record: Record {
         try await super.init(header: header, data: bytes.bytes, processor: processor)
     }
     
-    struct PackedField: Codable {
-        let type: String
-        let data: String
-        
-        init(_ field: Field) {
-            self.type = field.header.type.description
-            self.data = field.data.map({ String(format: "%02X", $0)}).joined(separator: "")
-        }
-    }
-    
     struct PackedRecord: Codable {
         let header: PackedHeader
         let version: Float

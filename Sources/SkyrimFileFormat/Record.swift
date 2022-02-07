@@ -41,8 +41,11 @@ class Record: CustomStringConvertible {
         let rawURL = url.appendingPathExtension("epsr")
         try FileManager.default.createDirectory(at: rawURL, withIntermediateDirectories: true)
 
-        let header = PackedHeader(header)
-        let encoded = try JSONEncoder().encode(header)
+        let fp = FieldProcessor(FieldsMap())
+        let remainder = try await fp.process(data: data, processor: processor)
+        
+        let record = PackedRecord(header, fields: fp.unprocessed)
+        let encoded = try processor.encoder.encode(record)
         try encoded.write(to: rawURL.appendingPathComponent("header.json"), options: .atomic)
         if data.count > 0 {
             let raw = Data(bytes: data, count: data.count)
@@ -88,25 +91,3 @@ extension Record {
 
 }
 
-
-struct PackedHeader: Codable {
-    let type: String
-    let size: UInt32
-    let flags: UInt32?
-    let id: UInt32
-    let timestamp: UInt16
-    let versionInfo: UInt16?
-    let version: UInt16?
-    let unused: UInt16?
-    
-    init(_ record: Record.Header) {
-        self.type = record.type.description
-        self.size = record.size
-        self.flags = record.flags == 0 ? nil : record.flags
-        self.id = record.id
-        self.timestamp = record.timestamp
-        self.versionInfo = record.versionInfo == 0 ? nil : record.versionInfo
-        self.version = record.version == 44 ? nil : record.version
-        self.unused = record.unused == 0 ? nil : record.unused
-    }
-}
