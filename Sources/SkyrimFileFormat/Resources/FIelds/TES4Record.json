@@ -1,0 +1,6 @@
+[
+    { "name": "header", "tag": "HEDR", "type": "HEDR", "role": "required" },
+    { "name": "author", "tag": "CNAM", "type": "String", "role": "optional" },
+    { "name": "description", "tag": "SNAM", "type": "String", "role": "optional" },
+    { "name": "master", "tag": "MAST", "type": "String", "role": "list" }
+]

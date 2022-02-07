@@ -11,6 +11,13 @@ extension Tag: ExpressibleByStringLiteral {
         let tag = try! UInt32(littleEndianBytes: value.utf8Bytes)
         self.init(tag)
     }
+
+    public init(_ value: String) {
+        assert(value.count == 4)
+        let tag = try! UInt32(littleEndianBytes: value.utf8Bytes)
+        self.init(tag)
+    }
+
 }
 
 struct Tag {

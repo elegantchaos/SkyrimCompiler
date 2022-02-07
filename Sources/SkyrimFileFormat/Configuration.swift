@@ -6,6 +6,7 @@
 import Foundation
 
 typealias RecordMap = [Tag:Record.Type]
+typealias FieldClassesMap = [String:Field.Type]
 
 struct Configuration {
     static let defaultRecords = [
@@ -14,12 +15,20 @@ struct Configuration {
         ARMORecord.self
     ]
     
+    static let defaultFields = [
+        HEDRField.self,
+        StringField.self
+    ]
+    
     static let defaultRecordMap = RecordMap(uniqueKeysWithValues: defaultRecords.map { ($0.tag, $0) })
+    static let defaultFieldClassesMap = FieldClassesMap(uniqueKeysWithValues: defaultFields.map { (String(describing: $0), $0) })
 
     let records: RecordMap
-
-    internal init(records: RecordMap = Self.defaultRecordMap) {
+    let fields: FieldClassesMap
+    
+    internal init(records: RecordMap = Self.defaultRecordMap, fields: FieldClassesMap = Self.defaultFieldClassesMap) {
         self.records = records
+        self.fields = fields
     }
     
 }

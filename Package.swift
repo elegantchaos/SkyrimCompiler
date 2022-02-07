@@ -15,7 +15,8 @@ let package = Package(
     products: [
         .library(
             name: "SkyrimFileFormat",
-            targets: ["SkyrimFileFormat"]),
+            targets: ["SkyrimFileFormat"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/elegantchaos/XCTestExtensions.git", from: "1.4.2"),
@@ -28,6 +29,9 @@ let package = Package(
             dependencies: [
                 "AsyncSequenceReader",
                 "Bytes"
+            ],
+            resources: [
+                .copy("Resources/Fields")
             ]
         ),
         
