@@ -19,12 +19,12 @@ class ARMORecord: Record {
 
     required init(header: Record.Header, data: Bytes, processor: ProcessorProtocol) async throws {
         let fp = FieldProcessor(try processor.configuration.fields(forRecord: "ARMO"))
-        let remainder = try await fp.process(data: data, processor: processor.processor)
+        try await fp.process(data: data, processor: processor.processor)
 
         self.editorID = try fp.unpack(.editorID)
         self.unproccessedFields = fp.unprocessed
         
-        try await super.init(header: header, data: remainder, processor: processor)
+        try await super.init(header: header, data: [], processor: processor)
     }
     
     override var description: String {

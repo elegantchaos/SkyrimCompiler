@@ -43,15 +43,15 @@ class FieldProcessor {
         self.unprocessed = []
     }
     
-    func process(data: Bytes, processor: Processor) async throws -> Bytes {
+    func process(data: Bytes, processor: Processor) async throws {
         var bytes = BytesAsyncSequence(bytes: data)
         
-        for try await field in processor.fields(bytes: &bytes, types: spec) {
+        let fields = processor.fields(bytes: &bytes, types: spec)
+        for try await field in fields {
             try add(field)
         }
         
         try validate()
-        return bytes.bytes
     }
     
     func add(_ field: Field) throws {

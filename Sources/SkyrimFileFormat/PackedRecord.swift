@@ -15,4 +15,8 @@ struct PackedRecord: Codable {
         self.header = PackedHeader(header)
         self.fields = fields.map { PackedField($0) }
     }
+    
+    var containsRawFields: Bool {
+        return false
+    }
 }
