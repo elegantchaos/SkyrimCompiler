@@ -74,12 +74,3 @@ extension TES4Record {
 
     }
 }
-
-
-extension Record {
-    func packed() throws -> Data {
-        let header = PackedHeader(header)
-        let packed = PackedRecord(header: header)
-        return try JSONEncoder().encode(packed)
-    }
-}

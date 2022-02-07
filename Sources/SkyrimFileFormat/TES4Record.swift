@@ -55,4 +55,42 @@ class TES4Record: Record {
         
         try await super.init(header: header, data: bytes.bytes, processor: processor)
     }
+    
+    struct PackedField: Codable {
+        let type: String
+        let data: String
+        
+        init(_ field: Field) {
+            self.type = field.header.type.description
+            self.data = field.data.map({ String(format: "%02X", $0)}).joined(separator: "")
+        }
+    }
+    
+    struct PackedRecord: Codable {
+        let header: PackedHeader
+        let version: Float
+        let count: UInt
+        let nextID: UInt
+        let desc: String
+        let author: String
+        let masters: [String]
+        let fields: [PackedField]
+        
+        init(_ record: TES4Record) {
+            self.header = PackedHeader(record.header)
+            self.version = record.version
+            self.count = record.count
+            self.nextID = record.nextID
+            self.desc = record.desc
+            self.author = record.author
+            self.masters = record.masters
+            self.fields = record.unproccessedFields.map { PackedField($0) }
+        }
+    }
+
+    override func pack(to url: URL, processor: Processor) async throws {
+        let record = PackedRecord(self)
+        let encoded = try processor.encoder.encode(record)
+        try encoded.write(to: url.appendingPathExtension("json"), options: .atomic)
+    }
 }

@@ -89,10 +89,6 @@ extension Record {
 }
 
 
-struct PackedRecord: Codable {
-    let header: PackedHeader
-}
-
 struct PackedHeader: Codable {
     let type: String
     let size: UInt32

@@ -30,9 +30,12 @@ struct ProcessorShim2: ProcessorProtocol {
 class Processor {
     internal init(configuration: Configuration) {
         self.configuration = configuration
+        self.encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted]
     }
     
     let configuration: Configuration
+    let encoder: JSONEncoder
     
     typealias RecordAction = (Record, Processor) async -> ()
     typealias FieldAction = (Field, Processor) async -> ()
