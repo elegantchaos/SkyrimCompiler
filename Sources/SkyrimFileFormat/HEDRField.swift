@@ -20,4 +20,8 @@ class HEDRField: Field {
         self.nextID = try await iterator.next(littleEndian: UInt32.self)
         super.init(header: header)
     }
+    
+    override var value: Any {
+        self
+    }
 }

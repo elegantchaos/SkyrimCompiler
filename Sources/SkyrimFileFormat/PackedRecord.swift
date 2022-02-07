@@ -1,13 +1,11 @@
-//
-//  File.swift
-//  
-//
-//  Created by Sam Deane on 07/02/2022.
-//
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+//  Created by Sam Deane on 07/02/22.
+//  All code (c) 2022 - present day, Elegant Chaos Limited.
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import Foundation
 
-struct PackedRecord: Codable {
+struct PackedRecord: Encodable {
     let header: PackedHeader
     let fields: [PackedField]
     

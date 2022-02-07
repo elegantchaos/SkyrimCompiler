@@ -37,23 +37,16 @@ class Record: CustomStringConvertible {
         header.type.description
     }
     
-    func pack(to url: URL, processor: Processor) async throws {
+    func makePackedRecord(processor: Processor) async throws -> Data {
         let fp = FieldProcessor(FieldsMap())
         try await fp.process(data: data, processor: processor)
         let record = PackedRecord(header, fields: fp.unprocessed)
-        let encoded = try processor.encoder.encode(record)
-        if !record.containsRawFields {
-            try encoded.write(to: url.appendingPathExtension("json"), options: .atomic)
-        } else {
-            let rawURL = url.appendingPathExtension("epsr")
-            try FileManager.default.createDirectory(at: rawURL, withIntermediateDirectories: true)
-            try encoded.write(to: rawURL.appendingPathComponent("header.json"), options: .atomic)
-            if data.count > 0 {
-                let raw = Data(bytes: data, count: data.count)
-                try raw.write(to: rawURL.appendingPathComponent("data.bin"), options: .atomic)
-            }
-        }
-
+        return try processor.encoder.encode(record)
+    }
+    
+    func pack(to url: URL, processor: Processor) async throws {
+        let encoded = try await makePackedRecord(processor: processor)
+        try encoded.write(to: url.appendingPathExtension("json"), options: .atomic)
     }
 }
 

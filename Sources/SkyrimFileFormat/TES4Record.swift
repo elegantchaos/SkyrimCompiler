@@ -56,7 +56,18 @@ class TES4Record: Record {
         try await super.init(header: header, data: bytes.bytes, processor: processor)
     }
     
-    struct PackedRecord: Codable {
+    struct TES4PackedRecord: Encodable {
+        internal init(_ header: Record.Header, version: Float, count: UInt, nextID: UInt, desc: String, author: String, masters: [String], fields: [Field]) {
+            self.header = PackedHeader(header)
+            self.version = version
+            self.count = count
+            self.nextID = nextID
+            self.desc = desc
+            self.author = author
+            self.masters = masters
+            self.fields = fields.map { PackedField($0) }
+        }
+        
         let header: PackedHeader
         let version: Float
         let count: UInt
@@ -65,22 +76,33 @@ class TES4Record: Record {
         let author: String
         let masters: [String]
         let fields: [PackedField]
-        
-        init(_ record: TES4Record) {
-            self.header = PackedHeader(record.header)
-            self.version = record.version
-            self.count = record.count
-            self.nextID = record.nextID
-            self.desc = record.desc
-            self.author = record.author
-            self.masters = record.masters
-            self.fields = record.unproccessedFields.map { PackedField($0) }
-        }
     }
 
-    override func pack(to url: URL, processor: Processor) async throws {
-        let record = PackedRecord(self)
-        let encoded = try processor.encoder.encode(record)
-        try encoded.write(to: url.appendingPathExtension("json"), options: .atomic)
+    override func makePackedRecord(processor: Processor) async throws -> Data {
+        let fp = try FieldProcessor(processor.configuration.fields(forRecord: "TES4"))
+        try await fp.process(data: data, processor: processor)
+
+        guard let headerField = fp.values[.header] as? HEDRField else { throw SkyrimFileError.badTag }
+        let desc = fp.values[.description] as! String
+        let author = fp.values[.author] as! String
+        let masters = fp.lists[.master] as! [String]
+
+        let record = TES4PackedRecord(
+            header,
+            version: headerField.version,
+            count: UInt(headerField.number),
+            nextID: UInt(headerField.nextID),
+            desc: desc,
+            author: author,
+            masters: masters,
+            fields: fp.unprocessed
+        )
+
+        return try processor.encoder.encode(record)
     }
+//    override func pack(to url: URL, processor: Processor) async throws {
+//        let record = PackedRecord(self)
+//        let encoded = try processor.encoder.encode(record)
+//        try encoded.write(to: url.appendingPathExtension("json"), options: .atomic)
+//    }
 }
