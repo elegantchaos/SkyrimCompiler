@@ -70,3 +70,43 @@ extension Record {
     }
 
 }
+
+
+struct PackedRecord: Codable {
+    let header: PackedHeader
+}
+
+struct PackedHeader: Codable {
+    let type: String
+    let size: UInt32
+    let flags: UInt32?
+    let id: UInt32
+    let timestamp: UInt16
+    let versionInfo: UInt16?
+    let version: UInt16?
+    let unused: UInt16?
+    
+    init(_ record: Record.Header) {
+        self.type = record.type.description
+        self.size = record.size
+        self.flags = record.flags == 0 ? nil : record.flags
+        self.id = record.id
+        self.timestamp = record.timestamp
+        self.versionInfo = record.versionInfo == 0 ? nil : record.versionInfo
+        self.version = record.version == 44 ? nil : record.version
+        self.unused = record.unused == 0 ? nil : record.unused
+    }
+}
+
+extension Record {
+    func pack(to url: URL) throws {
+        let header = PackedHeader(header)
+        let packed = PackedRecord(header: header)
+        let encoded = try JSONEncoder().encode(packed)
+        try encoded.write(to: url.appendingPathExtension("json"), options: .atomic)
+        if data.count > 0 {
+            let raw = Data(bytes: data, count: data.count)
+            try raw.write(to: url.appendingPathExtension("raw"), options: .atomic)
+        }
+    }
+}

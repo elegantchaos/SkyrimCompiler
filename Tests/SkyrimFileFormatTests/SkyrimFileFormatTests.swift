@@ -45,16 +45,19 @@ final class SkyrimFileFormatTests: XCTestCase {
         try? fm.createDirectory(at: output, withIntermediateDirectories: true)
 
         var index = 0
-        await context.processor.process(url: url) { record, processor in
-            do {
-                let data = try record.packed()
-                let name = String(format: "%04d %@", index, record.header.type.description)
-                let recordURL = output.appendingPathComponent(name).appendingPathExtension("json")
-                try data.write(to: recordURL, options: .atomic)
+        do {
+            let records = context.processor.records(bytes: url.resourceBytes)
+            for try await record in records {
+                do {
+                    let name = String(format: "%04d %@", index, record.header.type.description)
+                    try record.pack(to: output.appendingPathComponent(name))
+                } catch {
+                    print(error)
+                }
                 index += 1
-            } catch {
-                print(error)
             }
+        } catch {
+            print(error)
         }
         
         show(output)
@@ -82,31 +85,6 @@ extension TES4Record {
     }
 }
 
-struct PackedRecord: Codable {
-    let header: PackedHeader
-}
-
-struct PackedHeader: Codable {
-    let type: String
-    let size: UInt32
-    let flags: UInt32?
-    let id: UInt32
-    let timestamp: UInt16
-    let versionInfo: UInt16?
-    let version: UInt16?
-    let unused: UInt16?
-    
-    init(_ record: Record.Header) {
-        self.type = record.type.description
-        self.size = record.size
-        self.flags = record.flags == 0 ? nil : record.flags
-        self.id = record.id
-        self.timestamp = record.timestamp
-        self.versionInfo = record.versionInfo == 0 ? nil : record.versionInfo
-        self.version = record.version == 44 ? nil : record.version
-        self.unused = record.unused == 0 ? nil : record.unused
-    }
-}
 
 extension Record {
     func packed() throws -> Data {
