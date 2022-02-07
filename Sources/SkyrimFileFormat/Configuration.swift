@@ -16,7 +16,8 @@ typealias FieldClassesMap = [String:Field.Type]
 
 struct Configuration {
     static let defaultRecords: [RecordProperties.Type] = [
-        TES4PackedRecord.self
+        ARMORecord.self,
+        TES4Record.self
     ]
     
     static let defaultFields = [

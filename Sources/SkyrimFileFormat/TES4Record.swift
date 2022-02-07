@@ -14,7 +14,7 @@ private extension Tag {
     static let master: Self = "MAST"
 }
 
-struct TES4PackedRecord: Encodable, RecordProperties {
+struct TES4Record: Encodable, RecordProperties {
     static var tag: Tag { "TES4" }
     
     internal init(header: RecordHeader, fields: FieldProcessor) throws {
@@ -40,7 +40,7 @@ struct TES4PackedRecord: Encodable, RecordProperties {
     let fields: [PackedField]
     
     static func pack(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data {
-        let record = try TES4PackedRecord(header: header, fields: fields)
+        let record = try TES4Record(header: header, fields: fields)
         return try processor.encoder.encode(record)
     }
 }
