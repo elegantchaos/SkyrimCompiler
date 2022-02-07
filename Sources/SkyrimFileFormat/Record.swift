@@ -33,14 +33,20 @@ class Record: CustomStringConvertible {
         return BytesAsyncSequence(bytes: data)
     }
 
+    var name: String {
+        header.type.description
+    }
+    
     func pack(to url: URL, processor: Processor) async throws {
+        let rawURL = url.appendingPathExtension("epsr")
+        try FileManager.default.createDirectory(at: rawURL, withIntermediateDirectories: true)
+
         let header = PackedHeader(header)
-        let packed = PackedRecord(header: header)
-        let encoded = try JSONEncoder().encode(packed)
-        try encoded.write(to: url.appendingPathExtension("json"), options: .atomic)
+        let encoded = try JSONEncoder().encode(header)
+        try encoded.write(to: rawURL.appendingPathComponent("header.json"), options: .atomic)
         if data.count > 0 {
             let raw = Data(bytes: data, count: data.count)
-            try raw.write(to: url.appendingPathExtension("raw"), options: .atomic)
+            try raw.write(to: rawURL.appendingPathComponent("data.bin"), options: .atomic)
         }
     }
 }

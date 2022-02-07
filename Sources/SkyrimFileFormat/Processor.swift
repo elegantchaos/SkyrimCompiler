@@ -102,7 +102,8 @@ class Processor {
         var index = 0
         for try await record in records {
             do {
-                let name = String(format: "%04d %@", index, record.header.type.description)
+                let label = (record.header.id == 0) ? record.name : String(format: "%@-%08X", record.name, record.header.id)
+                let name = String(format: "%04d %@", index, label)
                 try await record.pack(to: url.appendingPathComponent(name), processor: self)
             } catch {
                 print(error)

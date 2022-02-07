@@ -49,12 +49,20 @@ class Group: Record {
         return BytesAsyncSequence(bytes: [])
     }
 
-    override var description: String {
+    var contentName: String {
         if let type = recordType {
-            return "«group of \(type) records»"
+            return "\(type)"
         } else {
-            return "«group of \(groupType)»"
+            return "\(groupType)"
         }
+    }
+
+    override var description: String {
+        return "«group of \(contentName) records»"
+    }
+    
+    override var name: String {
+        contentName
     }
     
     override func pack(to url: URL, processor: Processor) async throws {
@@ -66,6 +74,9 @@ class Group: Record {
         let encoded = try JSONEncoder().encode(header)
         try encoded.write(to: headerURL, options: .atomic)
 
-        try await processor.pack(bytes: childData, to: groupURL)
+        let childrenURL = groupURL.appendingPathComponent("records")
+        try FileManager.default.createDirectory(at: childrenURL, withIntermediateDirectories: true)
+
+        try await processor.pack(bytes: childData, to: childrenURL)
     }
 }
