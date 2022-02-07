@@ -78,9 +78,8 @@ class Processor {
     
     func inflate(header: Record.Header, data: Bytes) async throws -> Record {
         do {
-            if let kind = configuration.records[header.type] {
-                return try await kind.init(header: header, data: data, processor: ProcessorShim(processor: self))
-            }
+            let kind = header.isGroup ? Group.self : Record.self
+            return try await kind.init(header: header, data: data, processor: ProcessorShim(processor: self))
         } catch {
             print("Error unpacking \(header.type). Falling back to basic record.\n\n\(error)")
         }

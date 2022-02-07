@@ -8,8 +8,6 @@ import Bytes
 import Foundation
 
 class Group: Record {
-    override class var tag: Tag { "GRUP" }
-    
     enum GroupType: UInt32 {
         case top
         case worldChildren

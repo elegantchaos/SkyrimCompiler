@@ -5,14 +5,18 @@
 
 import Foundation
 
-typealias RecordMap = [Tag:Record.Type]
+protocol RecordProperties {
+    static var tag: Tag { get }
+    init(header: Record.Header, fields: FieldProcessor) throws
+    static func pack(header: Record.Header, fields: FieldProcessor, with processor: Processor) throws -> Data
+}
+
+typealias RecordMap = [Tag:RecordProperties.Type]
 typealias FieldClassesMap = [String:Field.Type]
 
 struct Configuration {
-    static let defaultRecords = [
-        Group.self,
-        TES4Record.self,
-        ARMORecord.self
+    static let defaultRecords: [RecordProperties.Type] = [
+        TES4PackedRecord.self
     ]
     
     static let defaultFields = [
@@ -25,6 +29,7 @@ struct Configuration {
 
     let records: RecordMap
     let fieldClasses: FieldClassesMap
+    let defaultFieldsMap = FieldsMap()
     
     internal init(records: RecordMap = Self.defaultRecordMap, fields: FieldClassesMap = Self.defaultFieldClassesMap) {
         self.records = records
@@ -32,7 +37,10 @@ struct Configuration {
     }
     
     func fields(forRecord name: String) throws -> FieldsMap {
-        let url = Bundle.module.url(forResource: name, withExtension: "json", subdirectory: "Records")!
+        guard let url = Bundle.module.url(forResource: name, withExtension: "json", subdirectory: "Records") else {
+            return defaultFieldsMap
+        }
+        
         let json = try Data(contentsOf: url)
         let entries: FieldMapEntries
         do {

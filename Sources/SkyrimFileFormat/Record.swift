@@ -11,7 +11,6 @@ protocol ByteIterator: AsyncIteratorProtocol where Element == Byte {
 }
 
 class Record: CustomStringConvertible {
-    class var tag: Tag { "????" }
     
     required init(header: Header, data: Bytes, processor: ProcessorProtocol) async throws {
         self.header = header
@@ -37,19 +36,21 @@ class Record: CustomStringConvertible {
         header.type.description
     }
     
-    func makePackedRecord(processor: Processor) async throws -> Data {
-        let fp = FieldProcessor(FieldsMap())
-        try await fp.process(data: data, processor: processor)
-        let record = PackedRecord(header, fields: fp.unprocessed)
-        return try processor.encoder.encode(record)
-    }
-    
     func pack(to url: URL, processor: Processor) async throws {
-        let encoded = try await makePackedRecord(processor: processor)
+        let map = try processor.configuration.fields(forRecord: header.type.description)
+        let fp = FieldProcessor(map)
+        try await fp.process(data: data, processor: processor)
+
+        let packed: RecordProperties.Type = processor.configuration.records[header.type] ?? PackedRecord.self
+        let encoded = try packed.pack(header: header, fields: fp, with: processor)
         try encoded.write(to: url.appendingPathExtension("json"), options: .atomic)
     }
 }
 
+
+extension Tag {
+    static let group: Tag = "GRUP"
+}
 
 extension Record {
     
@@ -76,7 +77,7 @@ extension Record {
         }
         
         var isGroup: Bool {
-            return type == Group.tag
+            return type == .group
         }
         
         func payload<S>(_ iterator: inout AsyncBufferedIterator<S>) async throws -> Bytes  where S.Element == UInt8 {

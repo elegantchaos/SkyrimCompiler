@@ -5,16 +5,23 @@
 
 import Foundation
 
-struct PackedRecord: Encodable {
+struct PackedRecord: Encodable, RecordProperties {
     let header: PackedHeader
     let fields: [PackedField]
     
-    init(_ header: Record.Header, fields: [Field]) {
+    static var tag: Tag { "???" }
+    
+    init(header: Record.Header, fields: FieldProcessor) throws {
         self.header = PackedHeader(header)
-        self.fields = fields.map { PackedField($0) }
+        self.fields = fields.unprocessed.map { PackedField($0) }
     }
     
     var containsRawFields: Bool {
         return false
+    }
+    
+    static func pack(header: Record.Header, fields: FieldProcessor, with processor: Processor) throws -> Data {
+        let record = try PackedRecord(header: header, fields: fields)
+        return try processor.encoder.encode(record)
     }
 }
