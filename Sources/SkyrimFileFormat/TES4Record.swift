@@ -20,8 +20,8 @@ struct TES4Record: Encodable, RecordProperties {
     internal init(header: RecordHeader, fields: FieldProcessor) throws {
         guard let headerField = fields.values[.header] as? HEDRField else { throw SkyrimFileError.badTag }
 
-        self.header = PackedHeader(header)
-        self.fields = fields.unprocessed.map { PackedField($0) }
+        self.header = UnpackedHeader(header)
+        self.fields = fields.unprocessed.map { UnpackedField($0) }
         self.version = headerField.version
         self.count = UInt(headerField.number)
         self.nextID = UInt(headerField.nextID)
@@ -30,16 +30,16 @@ struct TES4Record: Encodable, RecordProperties {
         self.masters = fields.lists[.master] as! [String]
     }
     
-    let header: PackedHeader
+    let header: UnpackedHeader
     let version: Float
     let count: UInt
     let nextID: UInt
     let desc: String
     let author: String
     let masters: [String]
-    let fields: [PackedField]
+    let fields: [UnpackedField]
     
-    static func pack(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data {
+    static func unpack(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data {
         let record = try TES4Record(header: header, fields: fields)
         return try processor.encoder.encode(record)
     }

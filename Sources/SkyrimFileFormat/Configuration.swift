@@ -8,7 +8,7 @@ import Foundation
 protocol RecordProperties {
     static var tag: Tag { get }
     init(header: RecordHeader, fields: FieldProcessor) throws
-    static func pack(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data
+    static func unpack(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data
 }
 
 typealias RecordMap = [Tag:RecordProperties.Type]

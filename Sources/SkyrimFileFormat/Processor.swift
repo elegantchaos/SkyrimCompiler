@@ -106,7 +106,7 @@ class Processor {
             do {
                 let label = (record.header.id == 0) ? record.name : String(format: "%@-%08X", record.name, record.header.id)
                 let name = String(format: "%04d %@", index, label)
-                try await record.pack(to: url.appendingPathComponent(name), processor: self)
+                try await record.unpack(to: url.appendingPathComponent(name), processor: self)
             } catch {
                 print(error)
             }

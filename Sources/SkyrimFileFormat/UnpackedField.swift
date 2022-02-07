@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct PackedField: Codable {
+struct UnpackedField: Codable {
     let type: String
     let data: String
     

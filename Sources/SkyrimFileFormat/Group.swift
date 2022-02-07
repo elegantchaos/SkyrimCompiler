@@ -59,13 +59,13 @@ class Group: Record {
         contentName
     }
     
-    override func pack(to url: URL, processor: Processor) async throws {
+    override func unpack(to url: URL, processor: Processor) async throws {
         let groupURL = url.appendingPathExtension("epsg")
         try FileManager.default.createDirectory(at: groupURL, withIntermediateDirectories: true)
         
         let headerURL = groupURL.appendingPathComponent("header.json")
-        let header = PackedHeader(header)
-        let encoded = try JSONEncoder().encode(header)
+        let header = UnpackedHeader(header)
+        let encoded = try processor.encoder.encode(header)
         try encoded.write(to: headerURL, options: .atomic)
 
         let childrenURL = groupURL.appendingPathComponent("records")

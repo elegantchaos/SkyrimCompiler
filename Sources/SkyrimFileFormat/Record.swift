@@ -32,13 +32,13 @@ class Record: CustomStringConvertible {
         header.type.description
     }
     
-    func pack(to url: URL, processor: Processor) async throws {
+    func unpack(to url: URL, processor: Processor) async throws {
         let map = try processor.configuration.fields(forRecord: header.type.description)
         let fp = FieldProcessor(map)
         try await fp.process(data: data, processor: processor)
 
         let packed: RecordProperties.Type = processor.configuration.records[header.type] ?? PackedRecord.self
-        let encoded = try packed.pack(header: header, fields: fp, with: processor)
+        let encoded = try packed.unpack(header: header, fields: fp, with: processor)
         try encoded.write(to: url.appendingPathExtension("json"), options: .atomic)
     }
 }

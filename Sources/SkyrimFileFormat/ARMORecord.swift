@@ -14,17 +14,17 @@ private extension Tag {
 struct ARMORecord: Encodable, RecordProperties {
     static var tag: Tag { "ARMO" }
     
-    let header: PackedHeader
+    let header: UnpackedHeader
     let editorID: String
-    let fields: [PackedField]
+    let fields: [UnpackedField]
     
     init(header: RecordHeader, fields: FieldProcessor) throws {
-        self.header = PackedHeader(header)
-        self.fields = fields.unprocessed.map { PackedField($0) }
+        self.header = UnpackedHeader(header)
+        self.fields = fields.unprocessed.map { UnpackedField($0) }
         self.editorID = fields.values[.editorID] as! String
     }
 
-    static func pack(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data {
+    static func unpack(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data {
         let record = try ARMORecord(header: header, fields: fields)
         return try processor.encoder.encode(record)
     }
