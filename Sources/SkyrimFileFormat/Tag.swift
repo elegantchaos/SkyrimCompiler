@@ -3,6 +3,7 @@
 //  All code (c) 2022 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import Bytes
 import Foundation
 
 extension Tag: ExpressibleByStringLiteral {
@@ -31,6 +32,16 @@ struct Tag {
 extension Tag: Equatable, Hashable {
 }
 
-extension Tag: Decodable {
+extension Tag: Codable {
     
+}
+
+extension Tag: CustomStringConvertible {
+    var description: String {
+        if let string = String(bytes: tag.littleEndianBytes, encoding: .ascii) {
+            return string
+        }
+        
+        return "\(tag)"
+    }
 }

@@ -31,7 +31,7 @@ let package = Package(
                 "Bytes"
             ],
             resources: [
-                .copy("Resources/Fields")
+                .copy("Resources/Records")
             ]
         ),
         

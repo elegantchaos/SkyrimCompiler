@@ -35,19 +35,9 @@ class Record: CustomStringConvertible {
 }
 
 
-extension Tag: CustomStringConvertible {
-    var description: String {
-        if let string = String(bytes: tag.littleEndianBytes, encoding: .ascii) {
-            return string
-        }
-        
-        return "\(tag)"
-    }
-}
-
 extension Record {
     
-    struct Header: Decodable {
+    struct Header: Codable {
         let type: Tag
         let size: UInt32
         let flags: UInt32

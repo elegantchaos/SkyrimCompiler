@@ -25,13 +25,6 @@ class TES4Record: Record {
     let masters: [String]
     let unproccessedFields: [Field]
 
-//    static var fieldTypes: FieldsMap = [
-//        .header: .init(type: .required, field: HEDRField.self),
-//        .author: .init(type: .optional, field: StringField.self),
-//        .description: .init(type: .optional, field: StringField.self),
-//        .master: .init(type: .list, field: StringField.self)
-//    ]
-    
     required init(header: Record.Header, data: Bytes, processor: ProcessorProtocol) async throws {
         var bytes = BytesAsyncSequence(bytes: data)
         var headerField: HEDRField?
@@ -40,7 +33,7 @@ class TES4Record: Record {
         var masters: [String] = []
         var unprocessed: [Field] = []
         
-        for try await field in processor.processor.fields(bytes: &bytes, types: try .map(named: "TES4Record", configuration: processor.configuration)) {
+        for try await field in processor.processor.fields(bytes: &bytes, types: try processor.configuration.fields(forRecord: "TES4")) {
             print(field)
             switch field.header.type {
                 case .header: headerField = field as? HEDRField

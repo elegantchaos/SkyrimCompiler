@@ -29,29 +29,6 @@ typealias FieldMapEntries = [FieldMapEntry]
 
 typealias FieldsMap = [Tag:FieldSpec]
 
-extension FieldsMap {
-    static func map(named name: String, configuration: Configuration) throws -> FieldsMap {
-        let url = Bundle.module.url(forResource: name, withExtension: "json", subdirectory: "Fields")!
-        let json = try Data(contentsOf: url)
-        let entries: FieldMapEntries
-        do {
-            entries = try JSONDecoder().decode(FieldMapEntries.self, from: json)
-        } catch {
-            print(error)
-            throw error
-        }
-        var map = FieldsMap()
-        for entry in entries {
-            if let fieldClass = configuration.fields["\(entry.type)Field"] {
-                map[Tag(entry.tag)] = FieldSpec(type: entry.role, field: fieldClass)
-            } else {
-                print("Unknown field class \(entry.type)")
-            }
-        }
-        
-        return map
-    }
-}
 
 class FieldProcessor {
     let spec: [Tag:FieldSpec]
