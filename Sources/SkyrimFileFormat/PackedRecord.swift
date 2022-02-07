@@ -11,7 +11,7 @@ struct PackedRecord: Encodable, RecordProperties {
     
     static var tag: Tag { "???" }
     
-    init(header: Record.Header, fields: FieldProcessor) throws {
+    init(header: RecordHeader, fields: FieldProcessor) throws {
         self.header = PackedHeader(header)
         self.fields = fields.unprocessed.map { PackedField($0) }
     }
@@ -20,7 +20,7 @@ struct PackedRecord: Encodable, RecordProperties {
         return false
     }
     
-    static func pack(header: Record.Header, fields: FieldProcessor, with processor: Processor) throws -> Data {
+    static func pack(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data {
         let record = try PackedRecord(header: header, fields: fields)
         return try processor.encoder.encode(record)
     }

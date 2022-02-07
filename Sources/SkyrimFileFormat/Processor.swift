@@ -50,7 +50,7 @@ class Processor {
     
     func process<I: AsyncByteSequence>(bytes: I, action: @escaping RecordAction) async throws {
         let records = records(bytes: bytes)
-        
+
         for try await record in records {
             await action(record, self)
             try await process(bytes: record.childData, action: action)
@@ -59,7 +59,7 @@ class Processor {
     
     func records<I: AsyncByteSequence>(bytes: I) -> AsyncThrowingIteratorMapSequence<I, Record> {
         let records = bytes.iteratorMap { iterator -> Record in
-            let header = try await Record.Header(&iterator)
+            let header = try await RecordHeader(&iterator)
             let data = try await header.payload(&iterator) // TODO: allow the payload read to be deferred
             return try await self.inflate(header: header, data: data)
         }
@@ -76,7 +76,7 @@ class Processor {
         return sequence
     }
     
-    func inflate(header: Record.Header, data: Bytes) async throws -> Record {
+    func inflate(header: RecordHeader, data: Bytes) async throws -> Record {
         do {
             let kind = header.isGroup ? Group.self : Record.self
             return try await kind.init(header: header, data: data, processor: ProcessorShim(processor: self))

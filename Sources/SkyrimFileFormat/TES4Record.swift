@@ -17,7 +17,7 @@ private extension Tag {
 struct TES4PackedRecord: Encodable, RecordProperties {
     static var tag: Tag { "TES4" }
     
-    internal init(header: Record.Header, fields: FieldProcessor) throws {
+    internal init(header: RecordHeader, fields: FieldProcessor) throws {
         guard let headerField = fields.values[.header] as? HEDRField else { throw SkyrimFileError.badTag }
 
         self.header = PackedHeader(header)
@@ -39,7 +39,7 @@ struct TES4PackedRecord: Encodable, RecordProperties {
     let masters: [String]
     let fields: [PackedField]
     
-    static func pack(header: Record.Header, fields: FieldProcessor, with processor: Processor) throws -> Data {
+    static func pack(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data {
         let record = try TES4PackedRecord(header: header, fields: fields)
         return try processor.encoder.encode(record)
     }

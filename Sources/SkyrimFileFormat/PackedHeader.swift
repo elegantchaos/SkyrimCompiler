@@ -15,7 +15,7 @@ struct PackedHeader: Codable {
     let version: UInt16?
     let unused: UInt16?
     
-    init(_ record: Record.Header) {
+    init(_ record: RecordHeader) {
         self.type = record.type.description
         self.size = record.size
         self.flags = record.flags == 0 ? nil : record.flags
