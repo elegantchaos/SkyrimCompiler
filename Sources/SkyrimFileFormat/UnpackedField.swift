@@ -3,6 +3,7 @@
 //  All code (c) 2022 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import Bytes
 import Foundation
 
 struct UnpackedField: Codable {
@@ -11,6 +12,7 @@ struct UnpackedField: Codable {
     
     init(_ field: Field) {
         self.type = field.header.type.description
-        self.data = field.data.map({ String(format: "%02X", $0)}).joined(separator: "")
+        let data = field.value as? Bytes ?? []
+        self.data = data.map({ String(format: "%02X", $0)}).joined(separator: "")
     }
 }

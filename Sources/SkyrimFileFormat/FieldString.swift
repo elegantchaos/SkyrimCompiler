@@ -7,25 +7,11 @@ import AsyncSequenceReader
 import Bytes
 import Foundation
 
-class FieldString: Field {
+struct FieldString: FieldProtocol, Codable {
     let string: String
-
-    required init<S>(header: Field.Header, iterator: inout AsyncBufferedIterator<S>, configuration: Configuration) async throws where S : AsyncIteratorProtocol, S.Element == UInt8 {
-        guard let bytes = try await iterator.collect(upToIncluding: 0, throwsIfOver: 512),
-              let string = String(bytes: bytes.dropLast(), encoding: .utf8)
-        else {
-            throw SkyrimFileError.badString
-        }
-
-        self.string = string
-        super.init(header: header)
-    }
-
-    override var description: String {
-        "«\(header.type) \(string)»"
-    }
     
-    override var value: Any {
-        return string
+    static func unpack(header: Field.Header, data: Bytes, with processor: Processor) throws -> Any {
+        let decoder = FieldDecoder(header: header, data: data)
+        return decoder.decode(String.self)
     }
 }

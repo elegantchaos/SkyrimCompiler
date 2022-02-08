@@ -7,28 +7,12 @@ import AsyncSequenceReader
 import Bytes
 import Foundation
 
-class Field: CustomStringConvertible {
-    class var tag: Tag { "????" }
-    
+struct Field: CustomStringConvertible {
     let header: Header
-    let data: Bytes
+    let value: Any
 
-    required init<S: AsyncIteratorProtocol>(header: Header, iterator: inout AsyncBufferedIterator<S>, configuration: Configuration) async throws where S.Element == UInt8 {
-        self.header = header
-        self.data = try await iterator.next(bytes: Bytes.self, count: Int(header.size))
-    }
-
-    init(header: Header) {
-        self.header = header
-        self.data = []
-    }
-    
     var description: String {
         return "«\(header.type) field»"
-    }
-    
-    var value: Any {
-        fatalError("subclasses should override this")
     }
 }
 

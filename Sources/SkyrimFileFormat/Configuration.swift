@@ -3,24 +3,29 @@
 //  All code (c) 2022 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import Bytes
 import Foundation
 
-protocol RecordProperties {
+protocol RecordProtocol {
     static var tag: Tag { get }
     init(header: RecordHeader, fields: FieldProcessor) throws
     static func unpack(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data
 }
 
-typealias RecordMap = [Tag:RecordProperties.Type]
-typealias FieldClassesMap = [String:Field.Type]
+protocol FieldProtocol {
+    static func unpack(header: Field.Header, data: Bytes, with processor: Processor) throws -> Any
+}
+
+typealias RecordMap = [Tag:RecordProtocol.Type]
+typealias FieldClassesMap = [String:FieldProtocol.Type]
 
 struct Configuration {
-    static let defaultRecords: [RecordProperties.Type] = [
+    static let defaultRecords: [RecordProtocol.Type] = [
         ARMORecord.self,
         TES4Record.self
     ]
     
-    static let defaultFields = [
+    static let defaultFields: [FieldProtocol.Type] = [
         FieldHEDR.self,
         FieldString.self,
         FieldInt<UInt32>.self,

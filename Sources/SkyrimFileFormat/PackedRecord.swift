@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct PackedRecord: Encodable, RecordProperties {
+struct PackedRecord: Encodable, RecordProtocol {
     let header: UnpackedHeader
     let fields: [UnpackedField]
     

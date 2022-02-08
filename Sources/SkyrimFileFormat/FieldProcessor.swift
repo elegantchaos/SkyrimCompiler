@@ -15,7 +15,7 @@ enum FieldType: String, Codable {
 
 struct FieldSpec {
     let type: FieldType
-    let field: Field.Type
+    let field: FieldProtocol.Type
     let name: String
 }
 

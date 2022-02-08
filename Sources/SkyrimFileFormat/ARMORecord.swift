@@ -13,7 +13,7 @@ private extension Tag {
     static let femaleArmour: Self = "MOD4"
 }
 
-struct ARMORecord: Encodable, RecordProperties {
+struct ARMORecord: Encodable, RecordProtocol {
     static var tag: Tag { "ARMO" }
     
     let header: UnpackedHeader

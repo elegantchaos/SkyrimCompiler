@@ -24,7 +24,7 @@ struct HEDR: Codable {
     let nextID: UInt32
 }
 
-struct TES4Record: Codable, RecordProperties {
+struct TES4Record: Codable, RecordProtocol {
     static var tag: Tag { "TES4" }
     
     internal init(header: RecordHeader, fields: FieldProcessor) throws {
@@ -64,7 +64,7 @@ struct TES4Record: Codable, RecordProperties {
     let fields: [UnpackedField]?
 
     static func unpack(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data {
-        let decoder = FieldDecoder(header: header, fields: fields)
+        let decoder = RecordDecoder(header: header, fields: fields)
         let record = try decoder.decode(TES4Record.self)
 //        let record = try TES4Record(header: header, fields: fields)
         return try processor.encoder.encode(record)

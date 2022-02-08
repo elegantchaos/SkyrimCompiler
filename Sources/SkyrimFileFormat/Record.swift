@@ -37,7 +37,7 @@ class Record: CustomStringConvertible {
         let fp = FieldProcessor(map)
         try await fp.process(data: data, processor: processor)
 
-        let packed: RecordProperties.Type = processor.configuration.records[header.type] ?? PackedRecord.self
+        let packed: RecordProtocol.Type = processor.configuration.records[header.type] ?? PackedRecord.self
         let encoded = try packed.unpack(header: header, fields: fp, with: processor)
         try encoded.write(to: url.appendingPathExtension("json"), options: .atomic)
     }

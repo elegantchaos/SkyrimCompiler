@@ -70,7 +70,8 @@ class Processor {
     func fields<I>(bytes: inout I, types: FieldsMap) -> AsyncThrowingIteratorMapSequence<I, Field> where I: AsyncSequence, I.Element == Byte {
         let sequence = bytes.iteratorMap { iterator -> Field in
             let header = try await Field.Header(&iterator)
-            return try await self.inflate(header: header, types: types, iterator: &iterator)
+            let data = try await iterator.next(bytes: Bytes.self, count: Int(header.size))
+            return try await self.inflate(header: header, data: data, types: types, iterator: &iterator)
         }
         
         return sequence
@@ -87,16 +88,17 @@ class Processor {
         return try await Record(header: header, data: data, processor: self)
     }
 
-    func inflate<I>(header: Field.Header, types: FieldsMap, iterator: inout AsyncBufferedIterator<I>) async throws -> Field where I.Element == Byte {
+    func inflate<I>(header: Field.Header, data: Bytes, types: FieldsMap, iterator: inout AsyncBufferedIterator<I>) async throws -> Field where I.Element == Byte {
         do {
             if let kind = types[header.type]?.field {
-                return try await kind.init(header: header, iterator: &iterator, configuration: configuration)
+                let unpacked = try kind.unpack(header: header, data: data, with: self)
+                return Field(header: header, value: unpacked)
             }
         } catch {
             print("Error unpacking \(header.type). Falling back to basic field.\n\n\(error)")
         }
         
-        return try await Field(header: header, iterator: &iterator, configuration: configuration)
+        return Field(header: header, value: data)
     }
 
     func pack<I: AsyncByteSequence>(bytes: I, to url: URL) async throws {

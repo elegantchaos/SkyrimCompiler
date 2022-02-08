@@ -7,21 +7,15 @@ import AsyncSequenceReader
 import Bytes
 import Foundation
 
-class FieldHEDR: Field {
-    override class var tag: Tag { "HEDR" }
-    
+struct FieldHEDR: FieldProtocol, Codable {
+    static var tag: Tag { "HEDR" }
+
     let version: Float32
     let number: UInt32
     let nextID: UInt32
-    
-    required init<S>(header: Field.Header, iterator: inout AsyncBufferedIterator<S>, configuration: Configuration) async throws where S : AsyncIteratorProtocol, S.Element == UInt8 {
-        self.version = try await iterator.next(littleEndian: Float32.self)
-        self.number = try await iterator.next(littleEndian: UInt32.self)
-        self.nextID = try await iterator.next(littleEndian: UInt32.self)
-        super.init(header: header)
-    }
-    
-    override var value: Any {
-        HEDR(version: version, number: number, nextID: nextID)
+
+    static func unpack(header: Field.Header, data: Bytes, with processor: Processor) throws -> Any {
+        let decoder = FieldDecoder(header: header, data: data)
+        return decoder.decode(FieldHEDR.self)
     }
 }

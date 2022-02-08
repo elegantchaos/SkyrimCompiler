@@ -3,23 +3,15 @@
 //  All code (c) 2022 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-import Bytes
 import Foundation
 
-class FieldDecoder: Decoder {
-    enum Error: Swift.Error {
-        case outOfData
-        case badStringEncoding
-    }
+class RecordDecoder: Decoder {
+    let header: RecordHeader
+    let fields: FieldProcessor
     
-    let header: Field.Header
-    var data: Bytes
-    var index: Bytes.Index
-    
-    internal init(header: Field.Header, data: Bytes) {
+    internal init(header: RecordHeader, fields: FieldProcessor) {
         self.header = header
-        self.data = data
-        self.index = data.startIndex
+        self.fields = fields
         self.codingPath = []
         self.userInfo = [:]
     }
@@ -30,22 +22,6 @@ class FieldDecoder: Decoder {
         } catch {
             fatalError("arse")
         }
-    }
-    
-    func read(_ count: Int) throws -> ArraySlice<Byte> {
-        let end = index.advanced(by: count)
-        guard end <= data.endIndex else { throw Error.outOfData }
-
-        let slice = data[index..<end]
-        index = end
-        return slice
-    }
-    
-    func read(until: Byte)  throws -> ArraySlice<Byte> {
-        guard let end = data.firstIndex(of: until) else { throw Error.outOfData }
-        let slice = data[index..<end]
-        index = end
-        return slice
     }
     
     var codingPath: [CodingKey]
@@ -68,9 +44,9 @@ class FieldDecoder: Decoder {
         typealias Key = K
         
         var codingPath: [CodingKey]
-        let decoder: FieldDecoder
+        let decoder: RecordDecoder
         
-        init(for decoder: FieldDecoder, path: [CodingKey]) {
+        init(for decoder: RecordDecoder, path: [CodingKey]) {
             self.decoder = decoder
             self.codingPath = path
         }
@@ -81,9 +57,8 @@ class FieldDecoder: Decoder {
         
         func contains(_ key: K) -> Bool {
             print("Contains \(key.stringValue)")
-            fatalError("to do")
-//            guard let tag = decoder.fields.tag(for: key.stringValue) else { return false }
-//            return decoder.fields.values[tag] != nil
+            guard let tag = decoder.fields.tag(for: key.stringValue) else { return false }
+            return decoder.fields.values[tag] != nil
         }
         
         func decodeNil(forKey key: K) throws -> Bool {
@@ -103,70 +78,62 @@ class FieldDecoder: Decoder {
 //            fatalError("to do")
 //        }
 //
-        func decode(_ type: Float.Type, forKey key: K) throws -> Float {
-            let bytes = try decoder.read(MemoryLayout<Float>.size)
-            let raw = try UInt32(littleEndianBytes: bytes)
-            return Float(bitPattern: raw)
-        }
-
-        func decode(_ type: Int.Type, forKey key: K) throws -> Int {
-            return try decodeInt(type, forKey: key)
-        }
-
-        func decode(_ type: Int8.Type, forKey key: K) throws -> Int8 {
-            return try decodeInt(type, forKey: key)
-        }
-
-        func decode(_ type: Int16.Type, forKey key: K) throws -> Int16 {
-            return try decodeInt(type, forKey: key)
-        }
-
-        func decode(_ type: Int32.Type, forKey key: K) throws -> Int32 {
-            return try decodeInt(type, forKey: key)
-        }
-
-        func decode(_ type: Int64.Type, forKey key: K) throws -> Int64 {
-            return try decodeInt(type, forKey: key)
-        }
-
-        func decode(_ type: UInt.Type, forKey key: K) throws -> UInt {
-            return try decodeInt(type, forKey: key)
-        }
-
-        func decode(_ type: UInt8.Type, forKey key: K) throws -> UInt8 {
-            return try decodeInt(type, forKey: key)
-        }
-
-        func decode(_ type: UInt16.Type, forKey key: K) throws -> UInt16 {
-            return try decodeInt(type, forKey: key)
-        }
-
-        func decode(_ type: UInt32.Type, forKey key: K) throws -> UInt32 {
-            return try decodeInt(type, forKey: key)
-        }
-
-        func decode(_ type: UInt64.Type, forKey key: K) throws -> UInt64 {
-            return try decodeInt(type, forKey: key)
-        }
-
-        func decodeInt<T>(_ type: T.Type, forKey key: K) throws -> T where T: FixedWidthInteger {
-            let bytes = try decoder.read(MemoryLayout<T>.size)
-            return try T(littleEndianBytes: bytes)
-        }
-
-        func decode<T>(_ type: T.Type, forKey key: K) throws -> T where T : Decodable {
-            print("decoding  \(type) \(key)")
-            fatalError("to do")
-//            switch key.stringValue {
-//                case "header":
-//                    print(T.self)
-//                    return UnpackedHeader(decoder.header) as! T
+//        func decode(_ type: Float.Type, forKey key: K) throws -> Float {
+//            fatalError("to do")
+//        }
 //
-//                default:
-//                    print("decoding \(T.self) for \(key.stringValue)")
-//                    let tag = decoder.fields.tag(for: key.stringValue)!
-//                    return decoder.fields.values[tag] as! T
-//            }
+//        func decode(_ type: Int.Type, forKey key: K) throws -> Int {
+//            print("decode \(type) for key \(key) path \(codingPath)")
+//            return 123
+//        }
+//
+//        func decode(_ type: Int8.Type, forKey key: K) throws -> Int8 {
+//            fatalError("to do")
+//        }
+//
+//        func decode(_ type: Int16.Type, forKey key: K) throws -> Int16 {
+//            fatalError("to do")
+//        }
+//
+//        func decode(_ type: Int32.Type, forKey key: K) throws -> Int32 {
+//            fatalError("to do")
+//        }
+//
+//        func decode(_ type: Int64.Type, forKey key: K) throws -> Int64 {
+//            fatalError("to do")
+//        }
+//
+//        func decode(_ type: UInt.Type, forKey key: K) throws -> UInt {
+//            fatalError("to do")
+//        }
+//
+//        func decode(_ type: UInt8.Type, forKey key: K) throws -> UInt8 {
+//            fatalError("to do")
+//        }
+//
+//        func decode(_ type: UInt16.Type, forKey key: K) throws -> UInt16 {
+//            fatalError("to do")
+//        }
+//
+//        func decode(_ type: UInt32.Type, forKey key: K) throws -> UInt32 {
+//            fatalError("to do")
+//        }
+//
+//        func decode(_ type: UInt64.Type, forKey key: K) throws -> UInt64 {
+//            fatalError("to do")
+//        }
+        
+        func decode<T>(_ type: T.Type, forKey key: K) throws -> T where T : Decodable {
+            switch key.stringValue {
+                case "header":
+                    print(T.self)
+                    return UnpackedHeader(decoder.header) as! T
+                    
+                default:
+                    print("decoding \(T.self) for \(key.stringValue)")
+                    let tag = decoder.fields.tag(for: key.stringValue)!
+                    return decoder.fields.values[tag] as! T
+            }
 //            return try decoder.decode(type)
 //            print("decode \(type) for key \(key) path \(codingPath)")
 //            decoder.codingPath.append(key)
@@ -193,7 +160,7 @@ class FieldDecoder: Decoder {
     }
 
     class UnkeyedContainer: UnkeyedDecodingContainer {
-        let decoder: FieldDecoder
+        let decoder: RecordDecoder
         
         var codingPath: [CodingKey]
         
@@ -203,7 +170,7 @@ class FieldDecoder: Decoder {
         
         var currentIndex: Int
 
-        init(for decoder: FieldDecoder) {
+        init(for decoder: RecordDecoder) {
             self.decoder = decoder
             self.codingPath = []
             self.count = nil
@@ -300,9 +267,7 @@ class FieldDecoder: Decoder {
         }
         
         func decode(_ type: String.Type) throws -> String {
-            let bytes = try decoder.read(until: 0)
-            guard let string = String(bytes: bytes, encoding: .utf8) else { throw Error.badStringEncoding }
-            return string
+            fatalError("to do")
         }
         
         func decode(_ type: Double.Type) throws -> Double {
@@ -357,9 +322,9 @@ class FieldDecoder: Decoder {
             fatalError("to do")
         }
         
-        let decoder: FieldDecoder
+        let decoder: RecordDecoder
 
-        init(for decoder: FieldDecoder, path: [CodingKey]) {
+        init(for decoder: RecordDecoder, path: [CodingKey]) {
             self.decoder = decoder
             self.codingPath = path
         }
