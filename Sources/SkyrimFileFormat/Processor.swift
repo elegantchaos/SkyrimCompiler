@@ -67,10 +67,10 @@ class Processor {
         return records
     }
 
-//    func realisedRecords<I: AsyncByteSequence>(bytes: I) -> RealisedRecordSequence<I> {
-//        let records = RealisedRecordSequence(data: bytes, processor: self)
-//        return records
-//    }
+    func realisedRecords<I: AsyncByteSequence>(bytes: I) -> RealisedRecordSequence<I> {
+        let records = RealisedRecordSequence(data: bytes, processor: self)
+        return records
+    }
 
     
     func fields<I>(bytes: inout I, types: FieldsMap) -> AsyncThrowingIteratorMapSequence<I, Field> where I: AsyncSequence, I.Element == Byte {

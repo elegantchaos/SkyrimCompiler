@@ -34,12 +34,13 @@ final class SkyrimFileFormatTests: XCTestCase {
     func testExample() async {
         let context = Context()
         let url = Bundle.module.url(forResource: "Example/Example", withExtension: "esp")!
-        await context.processor.process(url: url) { record, processor in
-            do {
-                try await record.test(context)
-            } catch {
-                print(error)
+        
+        do {
+            for try await record in context.processor.realisedRecords(bytes: url.resourceBytes) {
+                print(record)
             }
+        } catch {
+            print(error)
         }
     }
     
@@ -60,12 +61,12 @@ final class SkyrimFileFormatTests: XCTestCase {
 
     }
 }
-
-extension Record {
-    @objc func test(_ context: Context) async throws {
-        print("Testing \(self)")
-    }
-}
+//
+//extension RecordProtocol {
+//    @objc func test(_ context: Context) async throws {
+//        print("Testing \(self)")
+//    }
+//}
 //
 //extension TES4Record {
 //    @objc override func test(_ context: Context) async throws {

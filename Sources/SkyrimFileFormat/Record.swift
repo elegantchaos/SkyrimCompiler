@@ -48,10 +48,10 @@ class Record: CustomStringConvertible {
         try encoded.write(to: url.appendingPathExtension("json"), options: .atomic)
     }
 }
-
-class RawRecord: Record {
-    
-}
+//
+//class RawRecord: Record {
+//
+//}
 
 extension Tag {
     static let group: Tag = "GRUP"
