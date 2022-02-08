@@ -16,6 +16,7 @@ enum FieldType: String, Codable {
 struct FieldSpec {
     let type: FieldType
     let field: Field.Type
+    let name: String
 }
 
 struct FieldMapEntry: Codable {
@@ -33,13 +34,11 @@ typealias FieldsMap = [Tag:FieldSpec]
 class FieldProcessor {
     let spec: [Tag:FieldSpec]
     var values: [Tag:Any]
-    var lists: [Tag:[Any]]
     var unprocessed: [Field]
     
     init(_ spec: FieldsMap) {
         self.spec = spec
         self.values = [:]
-        self.lists = [:]
         self.unprocessed = []
     }
     
@@ -64,9 +63,9 @@ class FieldProcessor {
                     values[tag] = field.value
                     
                 case .list:
-                    var list = lists[tag] ?? []
+                    var list = (values[tag] as? [Any]) ?? []
                     list.append(field.value)
-                    lists[tag] = list
+                    values[tag] = list
             }
         } else {
             unprocessed.append(field)
@@ -91,4 +90,37 @@ class FieldProcessor {
         guard let value = values[tag] as? T else { throw SkyrimFileError.requiredPropertyWrongType }
         return value
     }
+    
+    func tag(for field: String) -> Tag? {
+        for f in spec {
+            if f.value.name == field {
+                return f.key
+            }
+        }
+        
+        return nil
+    }
+
+    func extract<A,B>(_ key: WritableKeyPath<A,Optional<B>>, from: inout A) {
+        if let tag = tag(for: "\(key)") {
+            from[keyPath: key] = values[tag] as? B
+        }
+    }
+
+    func extract<A,B>(_ key: WritableKeyPath<A,B>, from: inout A) {
+        if let tag = tag(for: "\(key)") {
+            from[keyPath: key] = values[tag] as! B
+        }
+    }
+    
+    func extract2<A,B>(_ key: KeyPath<A,B>) -> B {
+        let tag = tag(for: "\(key)")!
+        return values[tag] as! B
+    }
+
+    func extract3<B>(_ key: String) -> B {
+        let tag = tag(for: key)!
+        return values[tag] as! B
+    }
+
 }

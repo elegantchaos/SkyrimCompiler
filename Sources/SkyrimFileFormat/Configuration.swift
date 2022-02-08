@@ -55,7 +55,7 @@ struct Configuration {
         var map = FieldsMap()
         for entry in entries {
             if let fieldClass = fieldClasses["Field\(entry.type)"] {
-                map[Tag(entry.tag)] = FieldSpec(type: entry.role, field: fieldClass)
+                map[Tag(entry.tag)] = FieldSpec(type: entry.role, field: fieldClass, name: entry.name)
             } else {
                 print("Unknown field class \(entry.type)")
             }

@@ -22,6 +22,6 @@ class FieldHEDR: Field {
     }
     
     override var value: Any {
-        self
+        HEDR(version: version, number: number, nextID: nextID)
     }
 }

@@ -1,9 +1,9 @@
 [
-    { "name": "header", "tag": "HEDR", "type": "HEDR", "role": "required" },
+    { "name": "info", "tag": "HEDR", "type": "HEDR", "role": "required" },
     { "name": "author", "tag": "CNAM", "type": "String", "role": "optional" },
-    { "name": "description", "tag": "SNAM", "type": "String", "role": "optional" },
-    { "name": "master", "tag": "MAST", "type": "String", "role": "list" },
+    { "name": "desc", "tag": "SNAM", "type": "String", "role": "optional" },
+    { "name": "masters", "tag": "MAST", "type": "String", "role": "list" },
     { "name": "unusedData", "tag": "DATA", "type": "Int<UInt64>", "role": "list" },
-    { "name": "numTagifiedStrings", "tag": "INTV", "type": "Int<UInt32>", "role": "required" },
+    { "name": "tagifiedStringCount", "tag": "INTV", "type": "Int<UInt32>", "role": "required" },
     { "name": "unknownCounter", "tag": "INTC", "type": "Int<UInt32>", "role": "optional" }
 ]
