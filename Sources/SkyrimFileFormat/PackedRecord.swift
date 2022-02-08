@@ -20,7 +20,7 @@ struct PackedRecord: Encodable, RecordProtocol {
         return false
     }
     
-    static func unpack(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data {
+    static func asJSON(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data {
         let record = try PackedRecord(header: header, fields: fields)
         return try processor.encoder.encode(record)
     }

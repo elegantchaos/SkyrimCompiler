@@ -22,35 +22,8 @@ private extension Tag {
 struct TES4Record: Codable, RecordProtocol {
     static var tag: Tag { "TES4" }
     
-    internal init(header: RecordHeader, fields: FieldProcessor) throws {
-        guard let headerField = fields.values[.header] as? TES4Header else { throw SkyrimFileError.badTag }
-
-        self.header = UnpackedHeader(header)
-        self.fields = fields.unprocessed.count > 0 ? fields.unprocessed.map { UnpackedField($0) } : nil
-        self.info = TES4Header(version: headerField.version, number: headerField.number, nextID: headerField.nextID)
-//        self.version = headerField.version
-//        self.count = UInt(headerField.number)
-//        self.nextID = UInt(headerField.nextID)
-        self.desc = fields.values[.description] as! String
-        self.author = fields.values[.author] as! String
-        self.masters = fields.values[.master] as! [String]
-        self.tagifiedStringCount = UInt32(fields.values[asUInt: .tagifiedStringCount]!)
-        self.unknownCounter = fields.values[asUInt: .unknownCounter]
-//        fields.extract(\TES4Record.tagifiedStringCount, from: &self)
-//
-//        tagifiedStringCount = fields.extract2(\TES4Record.tagifiedStringCount)
-//
-//        let m = Mirror(reflecting: self)
-//        for element in m.children {
-//            element.value = fields.extract3(element.label!)
-//        }
-    }
-    
     let header: UnpackedHeader
     let info: TES4Header
-//    let version: Float
-//    let count: UInt
-//    let nextID: UInt
     let desc: String
     let author: String
     let masters: [String]
@@ -58,10 +31,9 @@ struct TES4Record: Codable, RecordProtocol {
     let unknownCounter: UInt?
     let fields: [UnpackedField]?
 
-    static func unpack(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data {
+    static func asJSON(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data {
         let decoder = RecordDecoder(header: header, fields: fields)
         let record = try decoder.decode(TES4Record.self)
-//        let record = try TES4Record(header: header, fields: fields)
         return try processor.encoder.encode(record)
     }
 }

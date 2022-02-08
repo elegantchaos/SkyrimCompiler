@@ -7,11 +7,17 @@ import AsyncSequenceReader
 import Bytes
 import Foundation
 
-protocol ByteIterator: AsyncIteratorProtocol where Element == Byte {
+protocol RecordItemProtocol {
+    var header: RecordHeader { get }
 }
 
-class Record: CustomStringConvertible {
+struct RecordItem: RecordItemProtocol {
+    let header: RecordHeader
     
+}
+
+
+class Record: CustomStringConvertible {
     required init(header: RecordHeader, data: Bytes, processor: Processor) async throws {
         self.header = header
         self.data = data
@@ -38,11 +44,14 @@ class Record: CustomStringConvertible {
         try await fp.process(data: data, processor: processor)
 
         let packed: RecordProtocol.Type = processor.configuration.records[header.type] ?? PackedRecord.self
-        let encoded = try packed.unpack(header: header, fields: fp, with: processor)
+        let encoded = try packed.asJSON(header: header, fields: fp, with: processor)
         try encoded.write(to: url.appendingPathExtension("json"), options: .atomic)
     }
 }
 
+class RawRecord: Record {
+    
+}
 
 extension Tag {
     static let group: Tag = "GRUP"

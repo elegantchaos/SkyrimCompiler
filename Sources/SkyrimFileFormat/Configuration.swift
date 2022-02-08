@@ -6,10 +6,9 @@
 import Bytes
 import Foundation
 
-protocol RecordProtocol {
+protocol RecordProtocol: Codable {
     static var tag: Tag { get }
-    init(header: RecordHeader, fields: FieldProcessor) throws
-    static func unpack(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data
+    static func asJSON(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data
 }
 
 protocol FieldProtocol {

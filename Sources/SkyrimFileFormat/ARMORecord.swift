@@ -13,14 +13,14 @@ private extension Tag {
     static let femaleArmour: Self = "MOD4"
 }
 
-struct ARMORecord: Encodable, RecordProtocol {
+struct ARMORecord: Codable, RecordProtocol {
     static var tag: Tag { "ARMO" }
     
     let header: UnpackedHeader
     let editorID: String
     let maleArmour: String
     let femaleArmour: String?
-    let fields: [UnpackedField]
+    let fields: [UnpackedField]?
     
     init(header: RecordHeader, fields: FieldProcessor) throws {
         self.header = UnpackedHeader(header)
@@ -30,7 +30,7 @@ struct ARMORecord: Encodable, RecordProtocol {
         self.femaleArmour = fields.values[.femaleArmour] as? String
     }
 
-    static func unpack(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data {
+    static func asJSON(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data {
         let record = try ARMORecord(header: header, fields: fields)
         return try processor.encoder.encode(record)
     }
