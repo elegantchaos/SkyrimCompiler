@@ -39,11 +39,3 @@ struct RealisedRecordSequence<I: AsyncByteSequence>: AsyncSequence {
         AsyncIterator(records: processor.records(bytes: data).makeAsyncIterator(), processor: processor)
     }
 }
-
-
-extension Bytes {
-    var RealisedRecords: BytesAsyncSequence {
-        BytesAsyncSequence(bytes: self)
-    }
-}
-

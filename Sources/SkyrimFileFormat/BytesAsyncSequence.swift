@@ -14,8 +14,6 @@ protocol AsyncByteIterator: AsyncIteratorProtocol where Element == Byte {
 protocol AsyncByteSequence: AsyncSequence where AsyncIterator: AsyncByteIterator {
 }
 
-typealias ASBX = AsyncBufferedIterator<URL.AsyncBytes.AsyncIterator>
-
 extension URL.AsyncBytes.AsyncIterator: AsyncByteIterator {
 }
 
