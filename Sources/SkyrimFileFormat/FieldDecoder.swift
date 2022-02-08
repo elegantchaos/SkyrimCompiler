@@ -47,7 +47,12 @@ class FieldDecoder: Decoder {
         index = end
         return slice
     }
-    
+
+    func readInt<T>(_ type: T.Type) throws -> T where T: FixedWidthInteger {
+        let bytes = try read(MemoryLayout<T>.size)
+        return try T(littleEndianBytes: bytes)
+    }
+
     var codingPath: [CodingKey]
     
     var userInfo: [CodingUserInfoKey : Any]
@@ -110,48 +115,43 @@ class FieldDecoder: Decoder {
         }
 
         func decode(_ type: Int.Type, forKey key: K) throws -> Int {
-            return try decodeInt(type, forKey: key)
+            return try decoder.readInt(type)
         }
 
         func decode(_ type: Int8.Type, forKey key: K) throws -> Int8 {
-            return try decodeInt(type, forKey: key)
+            return try decoder.readInt(type)
         }
 
         func decode(_ type: Int16.Type, forKey key: K) throws -> Int16 {
-            return try decodeInt(type, forKey: key)
+            return try decoder.readInt(type)
         }
 
         func decode(_ type: Int32.Type, forKey key: K) throws -> Int32 {
-            return try decodeInt(type, forKey: key)
+            return try decoder.readInt(type)
         }
 
         func decode(_ type: Int64.Type, forKey key: K) throws -> Int64 {
-            return try decodeInt(type, forKey: key)
+            return try decoder.readInt(type)
         }
 
         func decode(_ type: UInt.Type, forKey key: K) throws -> UInt {
-            return try decodeInt(type, forKey: key)
+            return try decoder.readInt(type)
         }
 
         func decode(_ type: UInt8.Type, forKey key: K) throws -> UInt8 {
-            return try decodeInt(type, forKey: key)
+            return try decoder.readInt(type)
         }
 
         func decode(_ type: UInt16.Type, forKey key: K) throws -> UInt16 {
-            return try decodeInt(type, forKey: key)
+            return try decoder.readInt(type)
         }
 
         func decode(_ type: UInt32.Type, forKey key: K) throws -> UInt32 {
-            return try decodeInt(type, forKey: key)
+            return try decoder.readInt(type)
         }
 
         func decode(_ type: UInt64.Type, forKey key: K) throws -> UInt64 {
-            return try decodeInt(type, forKey: key)
-        }
-
-        func decodeInt<T>(_ type: T.Type, forKey key: K) throws -> T where T: FixedWidthInteger {
-            let bytes = try decoder.read(MemoryLayout<T>.size)
-            return try T(littleEndianBytes: bytes)
+            return try decoder.readInt(type)
         }
 
         func decode<T>(_ type: T.Type, forKey key: K) throws -> T where T : Decodable {
@@ -314,43 +314,43 @@ class FieldDecoder: Decoder {
         }
         
         func decode(_ type: Int.Type) throws -> Int {
-            fatalError("to do")
+            return try decoder.readInt(type)
         }
         
         func decode(_ type: Int8.Type) throws -> Int8 {
-            fatalError("to do")
+            return try decoder.readInt(type)
         }
         
         func decode(_ type: Int16.Type) throws -> Int16 {
-            fatalError("to do")
+            return try decoder.readInt(type)
         }
         
         func decode(_ type: Int32.Type) throws -> Int32 {
-            fatalError("to do")
+            return try decoder.readInt(type)
         }
         
         func decode(_ type: Int64.Type) throws -> Int64 {
-            fatalError("to do")
+            return try decoder.readInt(type)
         }
         
         func decode(_ type: UInt.Type) throws -> UInt {
-            fatalError("to do")
+            return try decoder.readInt(type)
         }
         
         func decode(_ type: UInt8.Type) throws -> UInt8 {
-            fatalError("to do")
+            return try decoder.readInt(type)
         }
         
         func decode(_ type: UInt16.Type) throws -> UInt16 {
-            fatalError("to do")
+            return try decoder.readInt(type)
         }
         
         func decode(_ type: UInt32.Type) throws -> UInt32 {
-            fatalError("to do")
+            return try decoder.readInt(type)
         }
         
         func decode(_ type: UInt64.Type) throws -> UInt64 {
-            fatalError("to do")
+            return try decoder.readInt(type)
         }
         
         func decode<T>(_ type: T.Type) throws -> T where T : Decodable {

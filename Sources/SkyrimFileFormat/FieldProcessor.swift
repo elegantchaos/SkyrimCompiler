@@ -15,7 +15,7 @@ enum FieldType: String, Codable {
 
 struct FieldSpec {
     let type: FieldType
-    let field: FieldProtocol.Type
+    let field: Decodable.Type
     let name: String
 }
 
@@ -56,7 +56,9 @@ class FieldProcessor {
     func add(_ field: Field) throws {
         if let entry = spec[field.header.type] {
             let tag = field.header.type
-            guard entry.field == type(of: field) else { throw SkyrimFileError.wrongPropertyType }
+            guard entry.field == type(of: field.value) else {
+                throw SkyrimFileError.wrongPropertyType
+            }
             switch entry.type {
                 case .required, .optional:
                     guard values[tag] == nil else { throw SkyrimFileError.nonListPropertyRepeated }

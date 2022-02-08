@@ -91,7 +91,8 @@ class Processor {
     func inflate<I>(header: Field.Header, data: Bytes, types: FieldsMap, iterator: inout AsyncBufferedIterator<I>) async throws -> Field where I.Element == Byte {
         do {
             if let kind = types[header.type]?.field {
-                let unpacked = try kind.unpack(header: header, data: data, with: self)
+                let decoder = FieldDecoder(header: header, data: data)
+                let unpacked = try kind.init(from: decoder)
                 return Field(header: header, value: unpacked)
             }
         } catch {

@@ -16,12 +16,8 @@ class RecordDecoder: Decoder {
         self.userInfo = [:]
     }
     
-    func decode<T: Decodable>(_ kind: T.Type) -> T {
-        do {
-            return try T(from: self)
-        } catch {
-            fatalError("arse")
-        }
+    func decode<T: Decodable>(_ kind: T.Type) throws -> T {
+        return try T(from: self)
     }
     
     var codingPath: [CodingKey]

@@ -3,7 +3,7 @@
     { "name": "author", "tag": "CNAM", "type": "String", "role": "optional" },
     { "name": "desc", "tag": "SNAM", "type": "String", "role": "optional" },
     { "name": "masters", "tag": "MAST", "type": "String", "role": "list" },
-    { "name": "unusedData", "tag": "DATA", "type": "Int<UInt64>", "role": "list" },
-    { "name": "tagifiedStringCount", "tag": "INTV", "type": "Int<UInt32>", "role": "required" },
-    { "name": "unknownCounter", "tag": "INTC", "type": "Int<UInt32>", "role": "optional" }
+    { "name": "unusedData", "tag": "DATA", "type": "UInt64", "role": "list" },
+    { "name": "tagifiedStringCount", "tag": "INTV", "type": "UInt32", "role": "required" },
+    { "name": "unknownCounter", "tag": "INTC", "type": "UInt32", "role": "optional" }
 ]
