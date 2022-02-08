@@ -1,5 +1,5 @@
 [
-    { "name": "info", "tag": "HEDR", "type": "HEDR", "role": "required" },
+    { "name": "info", "tag": "HEDR", "type": "TES4Header", "role": "required" },
     { "name": "author", "tag": "CNAM", "type": "String", "role": "optional" },
     { "name": "desc", "tag": "SNAM", "type": "String", "role": "optional" },
     { "name": "masters", "tag": "MAST", "type": "String", "role": "list" },

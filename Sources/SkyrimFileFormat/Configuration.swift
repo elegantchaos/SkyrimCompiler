@@ -26,7 +26,7 @@ struct Configuration {
     ]
     
     static let defaultFields: [Decodable.Type] = [
-        HEDR.self,
+        TES4Header.self,
         String.self,
         UInt32.self,
         UInt64.self,

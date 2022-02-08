@@ -18,21 +18,16 @@ private extension Tag {
     static let unusedData: Self = "DATA"
 }
 
-struct HEDR: Codable {
-    let version: Float32
-    let number: UInt32
-    let nextID: UInt32
-}
 
 struct TES4Record: Codable, RecordProtocol {
     static var tag: Tag { "TES4" }
     
     internal init(header: RecordHeader, fields: FieldProcessor) throws {
-        guard let headerField = fields.values[.header] as? FieldHEDR else { throw SkyrimFileError.badTag }
+        guard let headerField = fields.values[.header] as? TES4Header else { throw SkyrimFileError.badTag }
 
         self.header = UnpackedHeader(header)
         self.fields = fields.unprocessed.count > 0 ? fields.unprocessed.map { UnpackedField($0) } : nil
-        self.info = HEDR(version: headerField.version, number: headerField.number, nextID: headerField.nextID)
+        self.info = TES4Header(version: headerField.version, number: headerField.number, nextID: headerField.nextID)
 //        self.version = headerField.version
 //        self.count = UInt(headerField.number)
 //        self.nextID = UInt(headerField.nextID)
@@ -52,7 +47,7 @@ struct TES4Record: Codable, RecordProtocol {
     }
     
     let header: UnpackedHeader
-    let info: HEDR
+    let info: TES4Header
 //    let version: Float
 //    let count: UInt
 //    let nextID: UInt
