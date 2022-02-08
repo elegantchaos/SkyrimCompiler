@@ -79,12 +79,12 @@ class Processor {
     func inflate(header: RecordHeader, data: Bytes) async throws -> Record {
         do {
             let kind = header.isGroup ? Group.self : Record.self
-            return try await kind.init(header: header, data: data, processor: ProcessorShim(processor: self))
+            return try await kind.init(header: header, data: data, processor: self)
         } catch {
             print("Error unpacking \(header.type). Falling back to basic record.\n\n\(error)")
         }
         
-        return try await Record(header: header, data: data, processor: ProcessorShim2(processor: self))
+        return try await Record(header: header, data: data, processor: self)
     }
 
     func inflate<I>(header: Field.Header, types: FieldsMap, iterator: inout AsyncBufferedIterator<I>) async throws -> Field where I.Element == Byte {

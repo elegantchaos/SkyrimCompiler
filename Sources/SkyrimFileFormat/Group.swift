@@ -23,7 +23,7 @@ class Group: Record {
     
     let groupType: GroupType
 
-    required init(header: RecordHeader, data: Bytes, processor: ProcessorProtocol) async throws {
+    required init(header: RecordHeader, data: Bytes, processor: Processor) async throws {
         guard let groupType = GroupType(rawValue: header.id) else { throw SkyrimFileError.badGroupType }
         self.groupType = groupType
         try await super.init(header: header, data: data, processor: processor)

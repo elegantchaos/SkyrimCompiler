@@ -12,7 +12,7 @@ protocol ByteIterator: AsyncIteratorProtocol where Element == Byte {
 
 class Record: CustomStringConvertible {
     
-    required init(header: RecordHeader, data: Bytes, processor: ProcessorProtocol) async throws {
+    required init(header: RecordHeader, data: Bytes, processor: Processor) async throws {
         self.header = header
         self.data = data
     }
