@@ -7,7 +7,7 @@ import AsyncSequenceReader
 import Bytes
 import Foundation
 
-class HEDRField: Field {
+class FieldHEDR: Field {
     override class var tag: Tag { "HEDR" }
     
     let version: Float32

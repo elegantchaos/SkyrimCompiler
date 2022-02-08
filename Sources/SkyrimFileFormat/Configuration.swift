@@ -21,8 +21,10 @@ struct Configuration {
     ]
     
     static let defaultFields = [
-        HEDRField.self,
-        StringField.self
+        FieldHEDR.self,
+        FieldString.self,
+        FieldInt<UInt32>.self,
+        FieldInt<UInt64>.self
     ]
     
     static let defaultRecordMap = RecordMap(uniqueKeysWithValues: defaultRecords.map { ($0.tag, $0) })
@@ -52,7 +54,7 @@ struct Configuration {
         }
         var map = FieldsMap()
         for entry in entries {
-            if let fieldClass = fieldClasses["\(entry.type)Field"] {
+            if let fieldClass = fieldClasses["Field\(entry.type)"] {
                 map[Tag(entry.tag)] = FieldSpec(type: entry.role, field: fieldClass)
             } else {
                 print("Unknown field class \(entry.type)")

@@ -7,25 +7,19 @@ import AsyncSequenceReader
 import Bytes
 import Foundation
 
-class StringField: Field {
-    let string: String
+class FieldInt<N: FixedWidthInteger>: Field {
+    let intValue: N
 
     required init<S>(header: Field.Header, iterator: inout AsyncBufferedIterator<S>, configuration: Configuration) async throws where S : AsyncIteratorProtocol, S.Element == UInt8 {
-        guard let bytes = try await iterator.collect(upToIncluding: 0, throwsIfOver: 512),
-              let string = String(bytes: bytes.dropLast(), encoding: .utf8)
-        else {
-            throw SkyrimFileError.badString
-        }
-
-        self.string = string
+        intValue = try await iterator.next(littleEndian: N.self)
         super.init(header: header)
     }
 
     override var description: String {
-        "«\(header.type) \(string)»"
+        "«\(header.type) \(intValue)»"
     }
     
     override var value: Any {
-        return string
+        return intValue
     }
 }
