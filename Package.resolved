@@ -3,7 +3,7 @@
     "pins": [
       {
         "package": "AsyncSequenceReader",
-        "repositoryURL": "https://github.com/mochidev/AsyncSequenceReader.git",
+        "repositoryURL": "https://github.com/elegantchaos/AsyncSequenceReader.git",
         "state": {
           "branch": null,
           "revision": "ad2aadf9790a6598c67b11a4a0e007087ac6aeb5",
@@ -12,7 +12,7 @@
       },
       {
         "package": "Bytes",
-        "repositoryURL": "https://github.com/mochidev/Bytes.git",
+        "repositoryURL": "https://github.com/elegantchaos/Bytes.git",
         "state": {
           "branch": null,
           "revision": "ec15d7f5ee256c3110bea1995471112e5dfd7d95",
