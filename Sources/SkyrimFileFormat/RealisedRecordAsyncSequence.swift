@@ -55,13 +55,25 @@ class RealisedRecordIterator: AsyncIteratorProtocol {
     func next() async throws -> RecordProtocol? {
         guard let record = try await nextRecord() else { return nil }
 
-        let header = record.header
-        let map = try processor.configuration.fields(forRecord: header.type.description)
-        let fp = FieldProcessor(map)
-        try await fp.process(data: record.data, processor: processor)
-        let decoder = RecordDecoder(header: header, fields: fp)
-        let kind = processor.configuration.records[header.type]!
-        return try kind.init(from: decoder)
+        do {
+            let header = record.header
+            if header.isGroup {
+                return Group(header: UnpackedHeader(record.header))
+            }
+
+            let map = try processor.configuration.fields(forRecord: header.type.description)
+            let fp = FieldProcessor(map)
+            try await fp.process(data: record.data, processor: processor)
+            let decoder = RecordDecoder(header: header, fields: fp)
+            if let kind = processor.configuration.records[header.type] {
+                return try kind.init(from: decoder)
+            } else {
+                return try UnknownRecord(header: UnpackedHeader(record.header), fields: fp.unprocessed.map { UnpackedField($0) })
+            }
+        } catch {
+            print(error)
+            throw error
+        }
     }
     
     typealias Element = RecordProtocol
