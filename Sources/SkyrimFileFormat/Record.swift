@@ -67,25 +67,26 @@ struct RecordHeader: Codable {
     let version: UInt16
     let unused: UInt16
     
-    init<S: AsyncIteratorProtocol>(_ iterator: inout AsyncBufferedIterator<S>) async throws where S.Element == UInt8 {
-        let tag = try await iterator.next(littleEndian: UInt32.self)
+    init(_ stream: DataStream) async throws {
+        let tag =
+        try await stream.read(UInt32.self)
         self.type = Tag(tag)
-        self.size = try await iterator.next(littleEndian: UInt32.self)
-        self.flags = try await iterator.next(littleEndian: UInt32.self)
-        self.id = try await iterator.next(littleEndian: UInt32.self)
-        self.timestamp = try await iterator.next(littleEndian: UInt16.self)
-        self.versionInfo = try await iterator.next(littleEndian: UInt16.self)
-        self.version = try await iterator.next(littleEndian: UInt16.self)
-        self.unused = try await iterator.next(littleEndian: UInt16.self)
+        self.size = try await stream.read(UInt32.self)
+        self.flags = try await stream.read(UInt32.self)
+        self.id = try await stream.read(UInt32.self)
+        self.timestamp = try await stream.read(UInt16.self)
+        self.versionInfo = try await stream.read(UInt16.self)
+        self.version = try await stream.read(UInt16.self)
+        self.unused = try await stream.read(UInt16.self)
     }
     
     var isGroup: Bool {
         return type == .group
     }
     
-    func payload<S>(_ iterator: inout AsyncBufferedIterator<S>) async throws -> Bytes  where S.Element == UInt8 {
+    func payload(_ stream: DataStream) async throws -> Bytes {
         let size = Int(isGroup ? self.size - 24 : self.size)
-        return try await iterator.next(bytes: Bytes.self, count: size)
+        return try await stream.read(count: size)
     }
 }
 

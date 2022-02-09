@@ -37,30 +37,11 @@ class Processor {
     let configuration: Configuration
     let encoder: JSONEncoder
     
-    typealias RecordAction = (Record, Processor) async -> ()
-    typealias FieldAction = (Field, Processor) async -> ()
-
-    func process(url: URL, action: @escaping RecordAction) async {
-        do {
-            try await process(bytes: url.resourceBytes, action: action)
-        } catch {
-            print(error)
-        }
-    }
-    
-    func process<I: AsyncByteSequence>(bytes: I, action: @escaping RecordAction) async throws {
-        let records = records(bytes: bytes)
-
-        for try await record in records {
-            await action(record, self)
-            try await process(bytes: record.childData, action: action)
-        }
-    }
-    
     func records<I: AsyncByteSequence>(bytes: I) -> AsyncThrowingIteratorMapSequence<I, Record> {
         let records = bytes.iteratorMap { iterator -> Record in
-            let header = try await RecordHeader(&iterator)
-            let data = try await header.payload(&iterator) // TODO: allow the payload read to be deferred
+            let stream = AsyncDataStream(iterator: iterator)
+            let header = try await RecordHeader(stream)
+            let data = try await header.payload(stream) // TODO: allow the payload read to be deferred
             return try await self.inflate(header: header, data: data)
         }
 
@@ -77,7 +58,7 @@ class Processor {
         let sequence = bytes.iteratorMap { iterator -> Field in
             let header = try await Field.Header(&iterator)
             let data = try await iterator.next(bytes: Bytes.self, count: Int(header.size))
-            return try await self.inflate(header: header, data: data, types: types, iterator: &iterator)
+            return try await self.inflate(header: header, data: data, types: types)
         }
         
         return sequence
@@ -94,7 +75,7 @@ class Processor {
         return try await Record(header: header, data: data, processor: self)
     }
 
-    func inflate<I>(header: Field.Header, data: Bytes, types: FieldsMap, iterator: inout AsyncBufferedIterator<I>) async throws -> Field where I.Element == Byte {
+    func inflate(header: Field.Header, data: Bytes, types: FieldsMap) async throws -> Field {
         do {
             if let kind = types[header.type]?.field {
                 let decoder = FieldDecoder(header: header, data: data)
