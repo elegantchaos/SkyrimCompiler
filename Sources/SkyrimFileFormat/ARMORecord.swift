@@ -21,18 +21,25 @@ struct ARMORecord: Codable, RecordProtocol {
     let maleArmour: String
     let femaleArmour: String?
     let fields: [UnpackedField]?
+
+    static var fieldMap: FieldMap {
+        [
+            "EDID": .string("editorID"),
+            "MOD2": .string("maleArmour"),
+            "MOD4": .string("femaleArmour"),
+        ]
+    }
     
-//    init(header: RecordHeader, fields: FieldProcessor) throws {
-//        self.header = UnpackedHeader(header)
-//        self.fields = fields.unprocessed.map { UnpackedField($0) }
-//        self.editorID = fields.values[.editorID] as! String
-//        self.maleArmour = fields.values[.maleArmour] as! String
-//        self.femaleArmour = fields.values[.femaleArmour] as? String
-//    }
-//
     static func asJSON(header: RecordHeader, fields: DecodedFields, with processor: Processor) throws -> Data {
         let decoder = RecordDecoder(header: header, fields: fields)
         let record = try decoder.decode(ARMORecord.self)
         return try processor.encoder.encode(record)
+    }
+}
+
+
+extension ARMORecord: CustomStringConvertible {
+    var description: String {
+        return "«armour \(editorID)»"
     }
 }

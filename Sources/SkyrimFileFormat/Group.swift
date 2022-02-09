@@ -17,6 +17,16 @@ enum GroupType: UInt32 {
     case topicChildren
     case cellPersistentChildren
     case cellTemporaryChildren
+    
+    func label(flags: UInt32) -> String {
+        switch self {
+            case .top:
+                return Tag(flags).description
+                
+            default:
+                return String(describing: self)
+        }
+    }
 }
 
 struct Group: RecordProtocol {
@@ -30,5 +40,16 @@ struct Group: RecordProtocol {
     
     static func asJSON(header: RecordHeader, fields: DecodedFields, with processor: Processor) throws -> Data {
         return Data()
+    }
+    
+    static var fieldMap: FieldMap {
+        return FieldMap()
+    }
+}
+
+extension Group: CustomStringConvertible {
+    var description: String {
+        let type = GroupType(rawValue: header.id ?? 0)!
+        return "«group \(type.label(flags: header.flags ?? 0))»"
     }
 }

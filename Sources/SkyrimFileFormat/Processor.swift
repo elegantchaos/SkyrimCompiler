@@ -53,7 +53,7 @@ class Processor {
     }
 
     
-    func fields<I>(bytes: inout I, types: FieldsMap) -> AsyncThrowingIteratorMapSequence<I, Field> where I: AsyncSequence, I.Element == Byte {
+    func fields<I>(bytes: inout I, types: FieldMap) -> AsyncThrowingIteratorMapSequence<I, Field> where I: AsyncSequence, I.Element == Byte {
         let sequence = bytes.iteratorMap { iterator -> Field in
             let header = try await Field.Header(&iterator)
             let data = try await iterator.next(bytes: Bytes.self, count: Int(header.size))
@@ -77,11 +77,11 @@ class Processor {
         return fp
     }
     
-    func inflate(header: Field.Header, data: Bytes, types: FieldsMap) async throws -> Field {
+    func inflate(header: Field.Header, data: Bytes, types: FieldMap) async throws -> Field {
         do {
-            if let kind = types[header.type]?.field {
+            if let type = types.byTag[header.type]?.type {
                 let decoder = FieldDecoder(header: header, data: data)
-                let unpacked = try kind.init(from: decoder)
+                let unpacked = try type.init(from: decoder)
                 return Field(header: header, value: unpacked)
             }
         } catch {

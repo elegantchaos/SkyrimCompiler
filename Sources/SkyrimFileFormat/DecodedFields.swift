@@ -14,7 +14,7 @@ enum FieldType: String, Codable {
 }
 
 struct FieldSpec {
-    let type: FieldType
+//    let type: FieldType
     let field: Decodable.Type
     let name: String
 }
@@ -23,7 +23,7 @@ struct FieldMapEntry: Codable {
     let name: String
     let tag: String
     let type: String
-    let role: FieldType
+//    let role: FieldType
 }
 
 typealias FieldMapEntries = [FieldMapEntry]
@@ -32,10 +32,10 @@ typealias FieldsMap = [Tag:FieldSpec]
 
 
 class DecodedFields {
-    let spec: FieldsMap
+    let spec: FieldMap
     var values: [Tag:[Field]]
     
-    init(_ spec: FieldsMap) {
+    init(_ spec: FieldMap) {
         self.spec = spec
         self.values = [:]
     }
@@ -53,13 +53,7 @@ class DecodedFields {
     }
     
     func tag(for field: String) -> Tag? {
-        for f in spec {
-            if f.value.name == field {
-                return f.key
-            }
-        }
-        
-        return nil
+        return spec.byName[field]
     }
 
     func extract<A,B>(_ key: WritableKeyPath<A,Optional<B>>, from: inout A) {

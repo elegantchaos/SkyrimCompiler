@@ -18,8 +18,7 @@ struct RecordHeader {
     let groupType: GroupType?
     
     init(_ stream: DataStream) async throws {
-        let tag =
-        try await stream.read(UInt32.self)
+        let tag = try await stream.read(UInt32.self)
         self.type = Tag(tag)
         self.size = try await stream.read(UInt32.self)
         self.flags = try await stream.read(UInt32.self)
@@ -41,15 +40,10 @@ struct RecordHeader {
     }
     
     var label: String {
-        switch groupType {
-            case nil:
-                return type.description
-                
-            case .top:
-                return Tag(flags).description
-                
-            default:
-                return String(describing: groupType!)
+        if let type = groupType {
+            return type.label(flags: flags)
+        } else {
+            return type.description
         }
     }
 }

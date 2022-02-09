@@ -24,4 +24,15 @@ struct UnknownRecord: RecordProtocol {
         let record = try UnknownRecord(header: header, fields: fields)
         return try processor.encoder.encode(record)
     }
+    
+    static var fieldMap: FieldMap {
+        [:]
+    }
+}
+
+extension UnknownRecord: CustomStringConvertible {
+    var description: String {
+        let fieldDescription = Set(fields.map({ $0.type.description })).joined(separator: ", ")
+        return "«\(header.type), fields:\(fieldDescription)»"
+    }
 }

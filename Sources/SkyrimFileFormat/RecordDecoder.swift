@@ -56,7 +56,7 @@ class RecordDecoder: Decoder {
         }
         
         func contains(_ key: K) -> Bool {
-            print("Contains \(key.stringValue)")
+//            print("Contains \(key.stringValue)")
             guard let tag = decoder.fields.tag(for: key.stringValue) else { return false }
             return decoder.fields.values[tag] != nil
         }
@@ -139,10 +139,10 @@ class RecordDecoder: Decoder {
                     
                     let values = fields.map({ $0.value })
                     if let item = values as? T {
-                        print("decoded list \(T.self) for \(key.stringValue)")
+//                        print("decoded list \(T.self) for \(key.stringValue)")
                         return item
                     } else if let list = values as? [T], !list.isEmpty {
-                        print("decoded item \(T.self) for \(key.stringValue)")
+//                        print("decoded item \(T.self) for \(key.stringValue)")
                         return list.first!
                     } else {
                         throw Error.missingValue

@@ -6,9 +6,43 @@
 import Bytes
 import Foundation
 
+struct FieldMap: ExpressibleByDictionaryLiteral {
+    struct Entry {
+        let name: String
+        let type: Decodable.Type
+        
+        init(_ name: String, _ type: Decodable.Type) {
+            self.name = name
+            self.type = type
+        }
+        
+        static func string(_ name: String) -> Entry {
+            return .init(name, String.self)
+        }
+    }
+    
+
+    let byTag: [Tag:Entry]
+    let byName: [String:Tag]
+    
+    init(dictionaryLiteral elements: (Tag, Entry)...) {
+        var byTag: [Tag:Entry] = [:]
+        var byName: [String:Tag] = [:]
+        
+        for (tag, entry) in elements {
+            byTag[tag] = entry
+            byName[entry.name] = tag
+        }
+
+        self.byName = byName
+        self.byTag = byTag
+    }
+}
+
 protocol RecordProtocol: Codable {
     static var tag: Tag { get }
     static func asJSON(header: RecordHeader, fields: DecodedFields, with processor: Processor) throws -> Data
+    static var fieldMap: FieldMap { get }
     var header: UnpackedHeader { get }
 }
 
@@ -38,37 +72,15 @@ struct Configuration {
 
     let records: RecordMap
     let fieldClasses: FieldClassesMap
-    let defaultFieldsMap = FieldsMap()
+    let defaultFieldsMap: FieldMap = [:]
     
     internal init(records: RecordMap = Self.defaultRecordMap, fields: FieldClassesMap = Self.defaultFieldClassesMap) {
         self.records = records
         self.fieldClasses = fields
     }
     
-    func fields(forRecord type: Tag) throws -> FieldsMap {
-        let name = type.description
-        guard let url = Bundle.module.url(forResource: name, withExtension: "json", subdirectory: "Records") else {
-            return defaultFieldsMap
-        }
-        
-        let json = try Data(contentsOf: url)
-        let entries: FieldMapEntries
-        do {
-            entries = try JSONDecoder().decode(FieldMapEntries.self, from: json)
-        } catch {
-            print(error)
-            throw error
-        }
-        var map = FieldsMap()
-        for entry in entries {
-            if let fieldClass = fieldClasses[entry.type] {
-                map[Tag(entry.tag)] = FieldSpec(type: entry.role, field: fieldClass, name: entry.name)
-            } else {
-                print("Unknown field class \(entry.type)")
-                print("nblah")
-            }
-        }
-        
-        return map
+    func fields(forRecord type: Tag) throws -> FieldMap {
+        guard let kind = records[type] else { return defaultFieldsMap }
+        return kind.fieldMap
     }
 }

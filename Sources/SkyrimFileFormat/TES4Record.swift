@@ -36,5 +36,22 @@ struct TES4Record: Codable, RecordProtocol {
         let record = try decoder.decode(TES4Record.self)
         return try processor.encoder.encode(record)
     }
+    
+    static var fieldMap: FieldMap {
+        [
+            "HEDR": .init("info", TES4Header.self),
+            "CNAM": .string("author"),
+            "SNAM": .string("desc"),
+            "MAST": .init("masters", String.self),
+            "DATA": .init("unusedData", UInt64.self),
+            "INTV": .init("tagifiedStringCount", UInt32.self),
+            "INTC": .init("unknownCounter", UInt32.self)
+        ]
+    }
 }
 
+extension TES4Record: CustomStringConvertible {
+    var description: String {
+        return "«TES4 \(info.version)»"
+    }
+}
