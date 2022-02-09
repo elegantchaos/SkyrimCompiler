@@ -44,7 +44,24 @@ struct FieldMap: ExpressibleByDictionaryLiteral {
         self.byTag = entries
     }
     
-    init<T>(paths map: [Tag:PartialKeyPath<T>]) {
+//    init<T>(paths map: [Tag:PartialKeyPath<T>]) {
+//        var entries: [Tag:FieldMap.Entry] = [:]
+//        for (key, path) in map {
+//            print(type(of: path))
+//            let t: Any.Type
+//            if let p = path as? EnclosingType {
+//                t = type(of: p).baseType
+//            } else {
+//                t = type(of: path).valueType
+//            }
+//
+//            entries[key] = .init("\(path)", t as! Decodable.Type)
+//        }
+//
+//        self.init(entries)
+//    }
+
+    init<K, T>(paths map: [K:PartialKeyPath<T>]) where K: CodingKey, K: RawRepresentable, K.RawValue == String {
         var entries: [Tag:FieldMap.Entry] = [:]
         for (key, path) in map {
             print(type(of: path))
@@ -55,11 +72,12 @@ struct FieldMap: ExpressibleByDictionaryLiteral {
                 t = type(of: path).valueType
             }
 
-            entries[key] = .init("\(path)", t as! Decodable.Type)
+            entries[Tag(key.rawValue)] = .init("\(path)", t as! Decodable.Type)
         }
     
         self.init(entries)
     }
+
 }
 
 protocol RecordProtocol: Codable {

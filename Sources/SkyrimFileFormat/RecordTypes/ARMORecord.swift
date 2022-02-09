@@ -21,14 +21,12 @@ struct ARMORecord: Codable, RecordProtocol {
         case header, editorID = "EDID", maleArmour = "MOD2", femaleArmour = "MOD4", fullName = "FULL", fields
     }
 
-    static var fieldMap: FieldMap {
-        [
-            "EDID": .string("editorID"),
-            "MOD2": .string("maleArmour"),
-            "MOD4": .string("femaleArmour"),
-            "FULL": .string("fullName")
-        ]
-    }
+    static var fieldMap = FieldMap(paths: [
+        CodingKeys.editorID: \Self.editorID,
+        .maleArmour: \.maleArmour,
+        .femaleArmour: \.femaleArmour,
+        .fullName: \.fullName
+        ])
     
     func asJSON(with processor: Processor) throws -> Data {
         return try processor.encoder.encode(self)

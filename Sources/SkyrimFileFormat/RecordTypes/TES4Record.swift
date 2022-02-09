@@ -27,13 +27,13 @@ struct TES4Record: Codable, RecordProtocol {
     }
     
     static var fieldMap = FieldMap(paths: [
-        "HEDR": \Self.info,
-        "CNAM": \.author,
-        "SNAM": \.desc,
-        "MAST": \.masters,
-        "DATA": \.masterData,
-        "INTV": \.tagifiedStringCount,
-        "INTC": \.unknownCounter
+        CodingKeys.info: \Self.info,
+        .author: \.author,
+        .desc: \.desc,
+        .masters: \.masters,
+        .masterData: \.masterData,
+        .tagifiedStringCount: \.tagifiedStringCount,
+        .unknownCounter: \.unknownCounter
     ])
 }
 
