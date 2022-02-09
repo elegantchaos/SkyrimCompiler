@@ -36,13 +36,12 @@ let package = Package(
             ]
         ),
         
-        .testTarget(
-            name: "SkyrimFileFormatTests",
-            dependencies: ["SkyrimFileFormat", "XCTestExtensions"],
-            resources: [
-                .copy("Resources/Example"),
-                    .copy("Resources/DialogueExample")
-                       ]
-        ),
+            .testTarget(
+                name: "SkyrimFileFormatTests",
+                dependencies: ["SkyrimFileFormat", "XCTestExtensions"],
+                resources: [
+                    .copy("Resources/Examples")
+                ]
+            ),
     ]
 )

@@ -35,22 +35,26 @@ func show(_ url: URL) {
 }
 
 final class SkyrimFileFormatTests: XCTestCase {
-    func testExample() async {
+    func loadExample(named name: String) async throws {
         let context = Context()
-        let url = Bundle.module.url(forResource: "Example/Example", withExtension: "esp")!
+        let url = Bundle.module.url(forResource: "Examples/\(name)", withExtension: "esp")!
         
-        do {
-            for try await record in context.processor.realisedRecords(bytes: url.resourceBytes, processChildren: true) {
-                print(record)
-            }
-        } catch {
-            print(error)
+        for try await record in context.processor.realisedRecords(bytes: url.resourceBytes, processChildren: true) {
+            print(record)
         }
     }
-    
+
+    func testExample() async throws {
+        try await loadExample(named: "Example")
+    }
+
+    func testDialogueExample() async throws {
+        try await loadExample(named: "Dialogue")
+    }
+
     func testUnpack() async {
         let context = Context()
-        let url = Bundle.module.url(forResource: "Example/Example", withExtension: "esp")!
+        let url = Bundle.module.url(forResource: "Examples/Example", withExtension: "esp")!
         let output = temporaryFile(named: url.deletingPathExtension().lastPathComponent, extension: "esps")
         let fm = FileManager.default
         

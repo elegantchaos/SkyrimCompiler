@@ -13,8 +13,8 @@ struct TES4Record: Codable, RecordProtocol {
     
     let header: RecordHeader
     let info: TES4Header
-    let desc: String
-    let author: String
+    let desc: String?
+    let author: String?
     let masters: [String]
     let tagifiedStringCount: UInt32
     let unknownCounter: UInt?
