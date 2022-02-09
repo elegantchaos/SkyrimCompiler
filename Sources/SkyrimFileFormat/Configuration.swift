@@ -37,6 +37,17 @@ struct FieldMap: ExpressibleByDictionaryLiteral {
         self.byName = byName
         self.byTag = byTag
     }
+    
+    init(_ entries: [Tag:Entry]) {
+        
+        var byName: [String:Tag] = [:]
+        for (tag, entry) in entries {
+            byName[entry.name] = tag
+        }
+
+        self.byTag = entries
+        self.byName = byName
+    }
 }
 
 protocol RecordProtocol: Codable {
