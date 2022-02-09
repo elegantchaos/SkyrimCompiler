@@ -6,8 +6,8 @@
 import Bytes
 import Foundation
 
-class Record: CustomStringConvertible {
-    required init(header: RecordHeader, data: Bytes) async throws {
+struct Record {
+    init(header: RecordHeader, data: Bytes) async throws {
         self.header = header
         self.data = data
     }
@@ -15,19 +15,17 @@ class Record: CustomStringConvertible {
     let header: RecordHeader
     let data: Bytes
 
-    var description: String {
-        return "«\(header.type) \(String(format: "0x%08X", header.id))»"
-    }
-    
-    var childData: BytesAsyncSequence {
-        return BytesAsyncSequence(bytes: [])
-    }
-
     var name: String {
-        header.type.description
+        header.id == 0 ? header.label : String(format: "%@-%08X", header.label, header.id)
     }
     
     var isGroup: Bool {
         header.isGroup
+    }
+}
+
+extension Record: CustomStringConvertible {
+    var description: String {
+        return "«\(header) \(String(format: "0x%08X", header.id))»"
     }
 }

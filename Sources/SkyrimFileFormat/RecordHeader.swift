@@ -6,7 +6,7 @@
 import Bytes
 import Foundation
 
-struct RecordHeader: Codable {
+struct RecordHeader {
     let type: Tag
     let size: UInt32
     let flags: UInt32
@@ -15,6 +15,7 @@ struct RecordHeader: Codable {
     let versionInfo: UInt16
     let version: UInt16
     let unused: UInt16
+    let groupType: GroupType?
     
     init(_ stream: DataStream) async throws {
         let tag =
@@ -27,15 +28,35 @@ struct RecordHeader: Codable {
         self.versionInfo = try await stream.read(UInt16.self)
         self.version = try await stream.read(UInt16.self)
         self.unused = try await stream.read(UInt16.self)
+        self.groupType = type == .group ? GroupType(rawValue: id) : nil
     }
     
     var isGroup: Bool {
-        type == .group
+        groupType != nil
     }
     
     func payload(_ stream: DataStream) async throws -> Bytes {
         let size = Int(isGroup ? self.size - 24 : self.size)
         return try await stream.read(count: size)
+    }
+    
+    var label: String {
+        switch groupType {
+            case nil:
+                return type.description
+                
+            case .top:
+                return Tag(flags).description
+                
+            default:
+                return String(describing: groupType!)
+        }
+    }
+}
+
+extension RecordHeader: CustomStringConvertible {
+    var description: String {
+        return isGroup ? "group \(label)" : "record \(label)"
     }
 }
 

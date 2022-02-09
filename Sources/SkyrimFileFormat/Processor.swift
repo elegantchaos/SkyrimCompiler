@@ -83,8 +83,8 @@ class Processor {
         var index = 0
         for try await record in records {
             do {
-                let label = (record.header.id == 0) ? record.name : String(format: "%@-%08X", record.name, record.header.id)
-                let name = String(format: "%04d %@", index, label)
+                let name = String(format: "%04d %@", index, record.name)
+                print("exporting \(name)")
                 let recordURL = url.appendingPathComponent(name)
                 if record.isGroup {
                     try await export(group: record, asJSONTo: recordURL)
