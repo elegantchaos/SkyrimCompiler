@@ -8,19 +8,18 @@ import Foundation
 struct RawRecord: RecordProtocol {
     static var tag = Tag("????")
 
-    let header: UnpackedHeader
+    let header: RecordHeader
     let fields: [UnpackedField]
     
-    init(header: UnpackedHeader, fields: DecodedFields) throws {
+    init(header: RecordHeader, fields: DecodedFields) throws {
         self.header = header
         self.fields = fields.values.flatMap({ $0.value }).map({ UnpackedField($0) })
     }
     
-    static func asJSON(header: UnpackedHeader, fields: DecodedFields, with processor: Processor) throws -> Data {
-        let record = try RawRecord(header: header, fields: fields)
-        return try processor.encoder.encode(record)
+    func asJSON(with processor: Processor) throws -> Data {
+        return try processor.encoder.encode(self)
     }
-    
+
     static var fieldMap: FieldMap {
         [:]
     }

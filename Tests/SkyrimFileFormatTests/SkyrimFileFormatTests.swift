@@ -10,6 +10,9 @@ import XCTestExtensions
 import AppKit
 
 func show(_ url: URL) async {
+    let shouldShow = false
+    
+    if shouldShow {
     let config = NSWorkspace.OpenConfiguration()
     config.activates = true
     
@@ -17,6 +20,7 @@ func show(_ url: URL) async {
         NSWorkspace.shared.open([url], withApplicationAt: URL(fileURLWithPath: "/Applications/Visual Studio Code.app"), configuration: config) { application, error in
             continuation.resume()
         }
+    }
     }
 }
 #else

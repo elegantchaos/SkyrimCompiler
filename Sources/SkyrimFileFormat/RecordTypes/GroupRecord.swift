@@ -9,16 +9,16 @@ import Foundation
 struct GroupRecord: RecordProtocol {
     static var tag = Tag("GRUP")
 
-    let header: UnpackedHeader
+    let header: RecordHeader
     
-    init(header: UnpackedHeader) {
+    init(header: RecordHeader) {
         self.header = header
     }
     
-    static func asJSON(header: UnpackedHeader, fields: DecodedFields, with processor: Processor) throws -> Data {
-        return Data()
+    func asJSON(with processor: Processor) throws -> Data {
+        return try processor.encoder.encode(self)
     }
-    
+
     static var fieldMap: FieldMap {
         return FieldMap()
     }
@@ -27,6 +27,6 @@ struct GroupRecord: RecordProtocol {
 extension GroupRecord: CustomStringConvertible {
     var description: String {
         let type = GroupType(rawValue: header.id ?? 0)!
-        return "«group \(type.label(flags: header.flags ?? 0))»"
+        return "«group of \(type.label(flags: header.flags ?? 0))»"
     }
 }

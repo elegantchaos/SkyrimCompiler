@@ -7,14 +7,14 @@ import Bytes
 import Foundation
 
 struct Record {
-    init(type: Tag, header: UnpackedHeader, data: Bytes) async throws {
+    init(type: Tag, header: RecordHeader, data: Bytes) async throws {
         self.type = type
         self.header = header
         self.data = data
     }
     
     let type: Tag
-    let header: UnpackedHeader
+    let header: RecordHeader
     let data: Bytes
 
     var name: String {
@@ -38,8 +38,6 @@ struct Record {
             return type.description
         }
     }
-
-
 }
 
 extension Record: CustomStringConvertible {

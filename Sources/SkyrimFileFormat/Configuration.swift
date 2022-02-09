@@ -41,9 +41,9 @@ struct FieldMap: ExpressibleByDictionaryLiteral {
 
 protocol RecordProtocol: Codable {
     static var tag: Tag { get }
-    static func asJSON(header: UnpackedHeader, fields: DecodedFields, with processor: Processor) throws -> Data
+    func asJSON(with processor: Processor) throws -> Data
     static var fieldMap: FieldMap { get }
-    var header: UnpackedHeader { get }
+    var header: RecordHeader { get }
 }
 
 protocol FieldProtocol {
@@ -77,6 +77,10 @@ struct Configuration {
     internal init(records: RecordMap = Self.defaultRecordMap, fields: FieldClassesMap = Self.defaultFieldClassesMap) {
         self.records = records
         self.fieldClasses = fields
+    }
+    
+    func recordClass(for type: Tag) -> RecordProtocol.Type {
+        records[type] ?? RawRecord.self
     }
     
     func fields(forRecord type: Tag) throws -> FieldMap {

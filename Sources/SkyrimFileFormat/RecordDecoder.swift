@@ -6,14 +6,14 @@
 import Foundation
 
 class RecordDecoder: Decoder {
-    let header: UnpackedHeader
+    let header: RecordHeader
     let fields: DecodedFields
     
     enum Error: Swift.Error {
         case missingValue
     }
     
-    internal init(header: UnpackedHeader, fields: DecodedFields) {
+    internal init(header: RecordHeader, fields: DecodedFields) {
         self.header = header
         self.fields = fields
         self.codingPath = []
@@ -123,12 +123,24 @@ class RecordDecoder: Decoder {
 //            fatalError("to do")
 //        }
         
+        func decode(_ type: [UnpackedField].Type, forKey key: K) throws -> [UnpackedField] {
+            let allFields = decoder.fields.values.values.flatMap({ $0 }).map({ UnpackedField($0) })
+            return allFields
+        }
+
+        func decode(_ type: RecordHeader.Type, forKey key: K) throws -> RecordHeader {
+            return decoder.header
+        }
+
         func decode<T>(_ type: T.Type, forKey key: K) throws -> T where T : Decodable {
             switch key.stringValue {
                 case "header":
-                    print(T.self)
                     return decoder.header as! T
                     
+                case "fields":
+                    let allFields = decoder.fields.values.values.flatMap({ $0 }).map({ UnpackedField($0) })
+                    return allFields as! T
+
                 default:
                     let tag = decoder.fields.tag(for: key.stringValue)!
                     

@@ -11,7 +11,7 @@ import Foundation
 struct TES4Record: Codable, RecordProtocol {
     static var tag = Tag("TES4")
     
-    let header: UnpackedHeader
+    let header: RecordHeader
     let info: TES4Header
     let desc: String
     let author: String
@@ -20,10 +20,8 @@ struct TES4Record: Codable, RecordProtocol {
     let unknownCounter: UInt?
     let fields: [UnpackedField]?
 
-    static func asJSON(header: UnpackedHeader, fields: DecodedFields, with processor: Processor) throws -> Data {
-        let decoder = RecordDecoder(header: header, fields: fields)
-        let record = try decoder.decode(TES4Record.self)
-        return try processor.encoder.encode(record)
+    func asJSON(with processor: Processor) throws -> Data {
+        return try processor.encoder.encode(self)
     }
     
     static var fieldMap: FieldMap {

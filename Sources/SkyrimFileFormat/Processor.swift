@@ -40,7 +40,7 @@ class Processor {
             let stream = AsyncDataStream(iterator: iterator)
             let type = try await Tag(stream.read(UInt32.self))
             let size = try await stream.read(UInt32.self)
-            let header = try await UnpackedHeader(type: type, stream)
+            let header = try await RecordHeader(type: type, stream)
             let payloadSize = Int(type == GroupRecord.tag ? size - 24 : size)
             let data = try await stream.read(count: payloadSize)
             iterator = stream.iterator
@@ -120,8 +120,11 @@ class Processor {
     func export(record: Record, asJSONTo url: URL) async throws {
         let header = record.header
         let fields = try await decodedFields(type: record.type, data: record.data)
-        let packed: RecordProtocol.Type = configuration.records[record.type] ?? RawRecord.self
-        let encoded = try packed.asJSON(header: header, fields: fields, with: self)
+        let recordClass = configuration.records[record.type] ?? RawRecord.self
+        
+        let decoder = RecordDecoder(header: header, fields: fields)
+        let record = try recordClass.init(from: decoder)
+        let encoded = try record.asJSON(with: self)
         try encoded.write(to: url.appendingPathExtension("json"), options: .atomic)
     }
     
