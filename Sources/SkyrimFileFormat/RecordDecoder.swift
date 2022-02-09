@@ -56,14 +56,13 @@ class RecordDecoder: Decoder {
         }
         
         func contains(_ key: K) -> Bool {
-//            print("Contains \(key.stringValue)")
-            guard let tag = decoder.fields.tag(for: key.stringValue) else { return false }
-            return decoder.fields.values[tag] != nil
+            if key.stringValue == "fields" { return decoder.fields.values.count > 0 }
+            return decoder.fields.values[Tag(key.stringValue)] != nil
         }
         
         func decodeNil(forKey key: K) throws -> Bool {
-            guard let tag = decoder.fields.tag(for: key.stringValue) else { return false }
-            return decoder.fields.values[tag] == nil
+            if key.stringValue == "fields" { return decoder.fields.values.count == 0 }
+            return decoder.fields.values[Tag(key.stringValue)] == nil
         }
         
 //        func decode(_ type: Bool.Type, forKey key: K) throws -> Bool {

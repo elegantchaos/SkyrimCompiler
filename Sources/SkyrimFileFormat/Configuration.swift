@@ -23,18 +23,14 @@ struct FieldMap: ExpressibleByDictionaryLiteral {
     
 
     let byTag: [Tag:Entry]
-    let byName: [String:Tag]
     
     init(dictionaryLiteral elements: (Tag, Entry)...) {
         var byTag: [Tag:Entry] = [:]
-        var byName: [String:Tag] = [:]
         
         for (tag, entry) in elements {
             byTag[tag] = entry
-            byName[entry.name] = tag
         }
 
-        self.byName = byName
         self.byTag = byTag
     }
     
@@ -46,7 +42,6 @@ struct FieldMap: ExpressibleByDictionaryLiteral {
         }
 
         self.byTag = entries
-        self.byName = byName
     }
     
     init<T>(paths map: [Tag:PartialKeyPath<T>]) {

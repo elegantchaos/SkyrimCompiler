@@ -51,31 +51,4 @@ class DecodedFields {
         guard let value = values[tag] as? T else { throw SkyrimFileError.requiredPropertyWrongType }
         return value
     }
-    
-    func tag(for field: String) -> Tag? {
-        return spec.byName[field]
-    }
-
-    func extract<A,B>(_ key: WritableKeyPath<A,Optional<B>>, from: inout A) {
-        if let tag = tag(for: "\(key)") {
-            from[keyPath: key] = values[tag] as? B
-        }
-    }
-
-    func extract<A,B>(_ key: WritableKeyPath<A,B>, from: inout A) {
-        if let tag = tag(for: "\(key)") {
-            from[keyPath: key] = values[tag] as! B
-        }
-    }
-    
-    func extract2<A,B>(_ key: KeyPath<A,B>) -> B {
-        let tag = tag(for: "\(key)")!
-        return values[tag] as! B
-    }
-
-    func extract3<B>(_ key: String) -> B {
-        let tag = tag(for: key)!
-        return values[tag] as! B
-    }
-
 }
