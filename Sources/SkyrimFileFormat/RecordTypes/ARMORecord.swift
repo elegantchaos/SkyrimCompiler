@@ -17,6 +17,10 @@ struct ARMORecord: Codable, RecordProtocol {
     let fullName: String?
     let fields: [UnpackedField]?
 
+    private enum CodingKeys : String, CodingKey {
+        case header, editorID = "EDID", maleArmour = "MOD2", femaleArmour = "MOD4", fullName = "FULL", fields
+    }
+
     static var fieldMap: FieldMap {
         [
             "EDID": .string("editorID"),

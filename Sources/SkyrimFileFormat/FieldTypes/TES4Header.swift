@@ -10,3 +10,11 @@ struct TES4Header: Codable {
     let number: UInt32
     let nextID: UInt32
 }
+
+extension TES4Header: MapDecodable {
+    init() {
+        version = 0
+        number = 0
+        nextID = 0
+    }
+}

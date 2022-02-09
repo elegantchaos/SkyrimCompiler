@@ -3,25 +3,59 @@
 //  All code (c) 2022 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import Bytes
 import Foundation
 
-class RecordDecoder: Decoder {
-    let header: RecordHeader
-    let fields: DecodedFields
-    
+protocol MapDecodable {
+    init()
+}
+
+extension String: MapDecodable {
+}
+
+extension Array: MapDecodable {
+}
+
+extension UInt16: MapDecodable {
+}
+
+extension UInt32: MapDecodable {
+}
+
+
+extension UInt64: MapDecodable {
+}
+
+extension Int16: MapDecodable {
+}
+
+extension Int32: MapDecodable {
+}
+
+
+extension Int64: MapDecodable {
+}
+
+
+class MappingDecoder: Decoder {
     enum Error: Swift.Error {
-        case missingValue
+        case outOfData
+        case badStringEncoding
     }
+        
+    var map: [String:Any.Type] = [:]
     
-    internal init(header: RecordHeader, fields: DecodedFields) {
-        self.header = header
-        self.fields = fields
+    internal init() {
         self.codingPath = []
         self.userInfo = [:]
     }
     
-    func decode<T: Decodable>(_ kind: T.Type) throws -> T {
-        return try T(from: self)
+    func decode<T: Decodable>(_ kind: T.Type) -> T {
+        do {
+            return try T(from: self)
+        } catch {
+            fatalError("arse")
+        }
     }
     
     var codingPath: [CodingKey]
@@ -44,9 +78,9 @@ class RecordDecoder: Decoder {
         typealias Key = K
         
         var codingPath: [CodingKey]
-        let decoder: RecordDecoder
+        let decoder: MappingDecoder
         
-        init(for decoder: RecordDecoder, path: [CodingKey]) {
+        init(for decoder: MappingDecoder, path: [CodingKey]) {
             self.decoder = decoder
             self.codingPath = path
         }
@@ -56,14 +90,11 @@ class RecordDecoder: Decoder {
         }
         
         func contains(_ key: K) -> Bool {
-//            print("Contains \(key.stringValue)")
-            guard let tag = decoder.fields.tag(for: key.stringValue) else { return false }
-            return decoder.fields.values[tag] != nil
+            return true
         }
         
         func decodeNil(forKey key: K) throws -> Bool {
-            guard let tag = decoder.fields.tag(for: key.stringValue) else { return false }
-            return decoder.fields.values[tag] == nil
+            return false
         }
         
 //        func decode(_ type: Bool.Type, forKey key: K) throws -> Bool {
@@ -79,86 +110,15 @@ class RecordDecoder: Decoder {
 //            fatalError("to do")
 //        }
 //
-//        func decode(_ type: Float.Type, forKey key: K) throws -> Float {
-//            fatalError("to do")
-//        }
-//
-//        func decode(_ type: Int.Type, forKey key: K) throws -> Int {
-//            print("decode \(type) for key \(key) path \(codingPath)")
-//            return 123
-//        }
-//
-//        func decode(_ type: Int8.Type, forKey key: K) throws -> Int8 {
-//            fatalError("to do")
-//        }
-//
-//        func decode(_ type: Int16.Type, forKey key: K) throws -> Int16 {
-//            fatalError("to do")
-//        }
-//
-//        func decode(_ type: Int32.Type, forKey key: K) throws -> Int32 {
-//            fatalError("to do")
-//        }
-//
-//        func decode(_ type: Int64.Type, forKey key: K) throws -> Int64 {
-//            fatalError("to do")
-//        }
-//
-//        func decode(_ type: UInt.Type, forKey key: K) throws -> UInt {
-//            fatalError("to do")
-//        }
-//
-//        func decode(_ type: UInt8.Type, forKey key: K) throws -> UInt8 {
-//            fatalError("to do")
-//        }
-//
-//        func decode(_ type: UInt16.Type, forKey key: K) throws -> UInt16 {
-//            fatalError("to do")
-//        }
-//
-//        func decode(_ type: UInt32.Type, forKey key: K) throws -> UInt32 {
-//            fatalError("to do")
-//        }
-//
-//        func decode(_ type: UInt64.Type, forKey key: K) throws -> UInt64 {
-//            fatalError("to do")
-//        }
-        
-        func decode(_ type: [UnpackedField].Type, forKey key: K) throws -> [UnpackedField] {
-            let allFields = decoder.fields.values.values.flatMap({ $0 }).map({ UnpackedField($0) })
-            return allFields
-        }
-
-        func decode(_ type: RecordHeader.Type, forKey key: K) throws -> RecordHeader {
-            return decoder.header
-        }
 
         func decode<T>(_ type: T.Type, forKey key: K) throws -> T where T : Decodable {
-            switch key.stringValue {
-                case "header":
-                    return decoder.header as! T
-                    
-                case "fields":
-                    let allFields = decoder.fields.values.values.flatMap({ $0 }).map({ UnpackedField($0) })
-                    return allFields as! T
-
-                default:
-                    guard let fields = decoder.fields.values[Tag(key.stringValue)] else {
-                        print("no fields for \(key.stringValue) type \(T.self)")
-                        throw Error.missingValue
-                    }
-                    
-                    let values = fields.map({ $0.value })
-                    if let item = values as? T {
-//                        print("decoded list \(T.self) for \(key.stringValue)")
-                        return item
-                    } else if let list = values as? [T], !list.isEmpty {
-//                        print("decoded item \(T.self) for \(key.stringValue)")
-                        return list.first!
-                    } else {
-                        throw Error.missingValue
-                    }
+            decoder.map[key.stringValue] = type
+            
+            if let t = type as? MapDecodable.Type {
+                return t.init() as! T
             }
+            
+            fatalError("can't make instance for type \(type)")
         }
         
         func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type, forKey key: K) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
@@ -179,7 +139,7 @@ class RecordDecoder: Decoder {
     }
 
     class UnkeyedContainer: UnkeyedDecodingContainer {
-        let decoder: RecordDecoder
+        let decoder: MappingDecoder
         
         var codingPath: [CodingKey]
         
@@ -189,7 +149,7 @@ class RecordDecoder: Decoder {
         
         var currentIndex: Int
 
-        init(for decoder: RecordDecoder) {
+        init(for decoder: MappingDecoder) {
             self.decoder = decoder
             self.codingPath = []
             self.count = nil
@@ -341,9 +301,9 @@ class RecordDecoder: Decoder {
             fatalError("to do")
         }
         
-        let decoder: RecordDecoder
+        let decoder: MappingDecoder
 
-        init(for decoder: RecordDecoder, path: [CodingKey]) {
+        init(for decoder: MappingDecoder, path: [CodingKey]) {
             self.decoder = decoder
             self.codingPath = path
         }

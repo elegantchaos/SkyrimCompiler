@@ -25,3 +25,15 @@ struct RecordHeader: Codable {
         self.unused = try await stream.readNonZero(UInt16.self)
     }
 }
+
+extension RecordHeader: MapDecodable {
+    init() {
+        type = ""
+        flags = nil
+        id = nil
+        timestamp = nil
+        versionInfo = nil
+        version = nil
+        unused = nil
+    }
+}

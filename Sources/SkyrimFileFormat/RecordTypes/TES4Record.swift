@@ -21,11 +21,42 @@ struct TES4Record: Codable, RecordProtocol {
     let unknownCounter: UInt32?
     let fields: [UnpackedField]?
 
+    private enum CodingKeys : String, CodingKey {
+        case header, info = "HEDR", desc = "SNAM", author = "CNAM", masters = "MAST", masterData = "DATA", tagifiedStringCount = "INTV", unknownCounter = "INTC", fields
+    }
+    
     func asJSON(with processor: Processor) throws -> Data {
         return try processor.encoder.encode(self)
     }
     
-    static var fieldMap: FieldMap {
+    struct Wibble<T> {
+        let map: [Tag:PartialKeyPath<T>]
+    }
+    
+    static var fieldMap: FieldMap = {
+        let paths: [Tag:PartialKeyPath<Self>] = [
+        "HEDR": \.info,
+        "CNAM": \.author,
+        "SNAM": \.desc,
+        "MAST": \.masters,
+        "DATA": \.masterData,
+        "INTV": \.tagifiedStringCount,
+        "INTC": \.unknownCounter
+        ]
+
+        let nuMap = FieldMap(paths: paths)
+
+        print(oldMap.byTag.map({ key, value in "\(key): \(value.type) \(value.name)" }).sorted())
+        print(nuMap.byTag.map({ key, value in "\(key): \(value.type) \(value.name)" }).sorted())
+
+        let decoder = MappingDecoder()
+        let mapping = decoder.decode(Self.self)
+        print(decoder.map)
+        
+        return nuMap
+    }()
+
+    static var oldMap: FieldMap {
         let map: FieldMap = [
             "HEDR": .init("info", TES4Header.self),
             "CNAM": .string("author"),
@@ -35,39 +66,7 @@ struct TES4Record: Codable, RecordProtocol {
             "INTV": .init("tagifiedStringCount", UInt32.self),
             "INTC": .init("unknownCounter", UInt32.self)
         ]
-        
-        let mirror = Mirror(reflecting: TES4Record.self)
-        for child in mirror.children {
-            let tag = map.byName[child.label!]!.tag
-            print(tag)
-        }
 
-        let testMap: [Tag:PartialKeyPath<Self>] = [
-            "HEDR": \.info,
-            "CNAM": \.author,
-            "SNAM": \.desc,
-            "MAST": \.masters,
-            "DATA": \.masterData,
-            "INTV": \.tagifiedStringCount,
-            "INTC": \.unknownCounter
-        ]
-
-        var fieldMap2: [Tag:FieldMap.Entry] = [:]
-        for (key, path) in testMap {
-            print(type(of: path))
-            let t: Any.Type
-            if let p = path as? P1 {
-                t = p.dearrayedType
-            } else {
-                t = type(of: path).valueType
-            }
-
-            fieldMap2[key] = .init("\(path)", t as! Decodable.Type)
-        }
-        
-        print(map.byTag.map({ key, value in "\(key): \(value.type)" }).sorted())
-        print(fieldMap2.map({ key, value in "\(key): \(value.type)" }).sorted())
-        
         return map
     }
 }
