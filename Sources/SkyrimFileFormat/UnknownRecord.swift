@@ -13,7 +13,7 @@ struct UnknownRecord: RecordProtocol {
     
     init(header: RecordHeader, fields: DecodedFields) throws {
         self.header = UnpackedHeader(header)
-        self.fields = fields.unprocessed.map { UnpackedField($0) }
+        self.fields = fields.values.flatMap({ $0.value }).map({ UnpackedField($0) })
     }
     
     var containsRawFields: Bool {

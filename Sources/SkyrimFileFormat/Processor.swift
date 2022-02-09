@@ -64,9 +64,16 @@ class Processor {
     }
     
     func decodedFields(header: RecordHeader, data: Bytes) async throws -> DecodedFields {
-        let map = try configuration.fields(forRecord: header.type.description)
+        let map = try configuration.fields(forRecord: header.type)
         let fp = DecodedFields(map)
-        try await fp.process(data: data, processor: self)
+        
+        var bytes = BytesAsyncSequence(bytes: data)
+        
+        let fields = fields(bytes: &bytes, types: map)
+        for try await field in fields {
+            try fp.add(field)
+        }
+
         return fp
     }
     
@@ -108,12 +115,9 @@ class Processor {
     
     func export(record: Record, asJSONTo url: URL) async throws {
         let header = record.header
-        let map = try configuration.fields(forRecord: header.type.description)
-        let fp = DecodedFields(map)
-        try await fp.process(data: record.data, processor: self)
-
+        let fields = try await decodedFields(header: header, data: record.data)
         let packed: RecordProtocol.Type = configuration.records[header.type] ?? UnknownRecord.self
-        let encoded = try packed.asJSON(header: header, fields: fp, with: self)
+        let encoded = try packed.asJSON(header: header, fields: fields, with: self)
         try encoded.write(to: url.appendingPathExtension("json"), options: .atomic)
     }
     

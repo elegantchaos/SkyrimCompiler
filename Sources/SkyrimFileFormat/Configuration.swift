@@ -45,7 +45,8 @@ struct Configuration {
         self.fieldClasses = fields
     }
     
-    func fields(forRecord name: String) throws -> FieldsMap {
+    func fields(forRecord type: Tag) throws -> FieldsMap {
+        let name = type.description
         guard let url = Bundle.module.url(forResource: name, withExtension: "json", subdirectory: "Records") else {
             return defaultFieldsMap
         }

@@ -9,6 +9,10 @@ class RecordDecoder: Decoder {
     let header: RecordHeader
     let fields: DecodedFields
     
+    enum Error: Swift.Error {
+        case missingValue
+    }
+    
     internal init(header: RecordHeader, fields: DecodedFields) {
         self.header = header
         self.fields = fields
@@ -126,16 +130,24 @@ class RecordDecoder: Decoder {
                     return UnpackedHeader(decoder.header) as! T
                     
                 default:
-                    print("decoding \(T.self) for \(key.stringValue)")
                     let tag = decoder.fields.tag(for: key.stringValue)!
-                    return decoder.fields.values[tag] as! T
+                    
+                    guard let fields = decoder.fields.values[tag] else {
+                        print("no fields for \(key.stringValue) type \(T.self)")
+                        throw Error.missingValue
+                    }
+                    
+                    let values = fields.map({ $0.value })
+                    if let item = values as? T {
+                        print("decoded list \(T.self) for \(key.stringValue)")
+                        return item
+                    } else if let list = values as? [T], !list.isEmpty {
+                        print("decoded item \(T.self) for \(key.stringValue)")
+                        return list.first!
+                    } else {
+                        throw Error.missingValue
+                    }
             }
-//            return try decoder.decode(type)
-//            print("decode \(type) for key \(key) path \(codingPath)")
-//            decoder.codingPath.append(key)
-//            let decoded = decoder.decode(type)
-//            decoder.codingPath.removeLast()
-//            return decoded
         }
         
         func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type, forKey key: K) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
