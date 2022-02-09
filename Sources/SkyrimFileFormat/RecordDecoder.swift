@@ -62,7 +62,8 @@ class RecordDecoder: Decoder {
         }
         
         func decodeNil(forKey key: K) throws -> Bool {
-            fatalError("to do")
+            guard let tag = decoder.fields.tag(for: key.stringValue) else { return false }
+            return decoder.fields.values[tag] == nil
         }
         
 //        func decode(_ type: Bool.Type, forKey key: K) throws -> Bool {

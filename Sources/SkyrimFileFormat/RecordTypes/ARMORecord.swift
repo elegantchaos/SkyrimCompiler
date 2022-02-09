@@ -7,12 +7,6 @@ import AsyncSequenceReader
 import Bytes
 import Foundation
 
-private extension Tag {
-    static let editorID: Self = "EDID"
-    static let maleArmour: Self = "MOD2"
-    static let femaleArmour: Self = "MOD4"
-}
-
 struct ARMORecord: Codable, RecordProtocol {
     static var tag = Tag("ARMO")
     
@@ -20,6 +14,7 @@ struct ARMORecord: Codable, RecordProtocol {
     let editorID: String
     let maleArmour: String
     let femaleArmour: String?
+    let fullName: String?
     let fields: [UnpackedField]?
 
     static var fieldMap: FieldMap {
@@ -27,6 +22,7 @@ struct ARMORecord: Codable, RecordProtocol {
             "EDID": .string("editorID"),
             "MOD2": .string("maleArmour"),
             "MOD4": .string("femaleArmour"),
+            "FULL": .string("fullName")
         ]
     }
     
@@ -38,6 +34,6 @@ struct ARMORecord: Codable, RecordProtocol {
 
 extension ARMORecord: CustomStringConvertible {
     var description: String {
-        return "«armour \(editorID)»"
+        return "«armour \(fullName ?? editorID)»"
     }
 }
