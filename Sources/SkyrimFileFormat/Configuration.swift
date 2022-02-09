@@ -9,6 +9,7 @@ import Foundation
 protocol RecordProtocol: Codable {
     static var tag: Tag { get }
     static func asJSON(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data
+    var header: UnpackedHeader { get }
 }
 
 protocol FieldProtocol {

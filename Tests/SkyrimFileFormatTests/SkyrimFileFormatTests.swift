@@ -36,7 +36,7 @@ final class SkyrimFileFormatTests: XCTestCase {
         let url = Bundle.module.url(forResource: "Example/Example", withExtension: "esp")!
         
         do {
-            for try await record in context.processor.realisedRecords(bytes: url.resourceBytes) {
+            for try await record in context.processor.realisedRecords(bytes: url.resourceBytes, processChildren: true) {
                 print(record)
             }
         } catch {

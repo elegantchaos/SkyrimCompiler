@@ -7,13 +7,53 @@ import AsyncSequenceReader
 import Bytes
 import Foundation
 
+protocol RecordIterator {
+    func next() async throws -> Record?
+}
 
-struct RealisedRecordIterator<I: AsyncByteSequence>: AsyncIteratorProtocol {
-    var records: AsyncThrowingIteratorMapSequence<I, Record>.AsyncIterator
+class WrappedRecordIterator<I: AsyncByteSequence>: RecordIterator {
+    internal init(iterator: AsyncThrowingIteratorMapSequence<I, Record>.AsyncIterator) {
+        self.iterator = iterator
+    }
+    
+    var iterator: AsyncThrowingIteratorMapSequence<I, Record>.AsyncIterator
+    func next() async throws -> Record? {
+        return try await iterator.next()
+    }
+}
+
+class RealisedRecordIterator: AsyncIteratorProtocol {
+    
+    var records: [RecordIterator]
     let processor: Processor
+    let processChildren: Bool
 
-    mutating func next() async throws -> RecordProtocol? {
-        guard let record = try await records.next() else { return nil }
+    init(_ root: RecordIterator, processor: Processor, processChildren: Bool) {
+        self.records = [root]
+        self.processor = processor
+        self.processChildren = processChildren
+    }
+
+    func nextRecord() async throws -> Record? {
+        while(records.count > 0) {
+            if let record = try await records.last?.next() {
+                if processChildren && record.isGroup {
+                    let r = processor.records(bytes: record.data.asyncBytes)
+                    let childIterator = WrappedRecordIterator(iterator: r.makeAsyncIterator())
+                    records.append(childIterator)
+                }
+                
+                return record
+            }
+            
+            records.removeLast()
+        }
+        
+        return nil
+    }
+    
+    func next() async throws -> RecordProtocol? {
+        guard let record = try await nextRecord() else { return nil }
 
         let header = record.header
         let map = try processor.configuration.fields(forRecord: header.type.description)
@@ -29,13 +69,15 @@ struct RealisedRecordIterator<I: AsyncByteSequence>: AsyncIteratorProtocol {
 
 
 struct RealisedRecordSequence<I: AsyncByteSequence>: AsyncSequence {
-    typealias AsyncIterator = RealisedRecordIterator<I>
+    typealias AsyncIterator = RealisedRecordIterator
     typealias Element = RecordProtocol
     
     let data: I
     let processor: Processor
-
+    let processChildren: Bool
+    
     func makeAsyncIterator() -> AsyncIterator {
-        AsyncIterator(records: processor.records(bytes: data).makeAsyncIterator(), processor: processor)
+        let rootIterator = WrappedRecordIterator(iterator: processor.records(bytes: data).makeAsyncIterator())
+        return RealisedRecordIterator(rootIterator, processor: processor, processChildren: processChildren)
     }
 }
