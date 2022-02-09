@@ -45,20 +45,20 @@ struct FieldMap: ExpressibleByDictionaryLiteral {
     }
     
     init<T>(paths map: [Tag:PartialKeyPath<T>]) {
-        var fieldMap2: [Tag:FieldMap.Entry] = [:]
+        var entries: [Tag:FieldMap.Entry] = [:]
         for (key, path) in map {
             print(type(of: path))
             let t: Any.Type
-            if let p = path as? P1 {
-                t = p.dearrayedType
+            if let p = path as? EnclosingType {
+                t = type(of: p).baseType
             } else {
                 t = type(of: path).valueType
             }
 
-            fieldMap2[key] = .init("\(path)", t as! Decodable.Type)
+            entries[key] = .init("\(path)", t as! Decodable.Type)
         }
     
-        self.init(fieldMap2)
+        self.init(entries)
     }
 }
 
