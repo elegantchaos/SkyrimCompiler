@@ -5,13 +5,13 @@
 
 import Foundation
 
-struct PackedRecord: Encodable, RecordProtocol {
+struct UnknownRecord: RecordProtocol {
     let header: UnpackedHeader
     let fields: [UnpackedField]
     
     static var tag: Tag { "???" }
     
-    init(header: RecordHeader, fields: FieldProcessor) throws {
+    init(header: RecordHeader, fields: DecodedFields) throws {
         self.header = UnpackedHeader(header)
         self.fields = fields.unprocessed.map { UnpackedField($0) }
     }
@@ -20,8 +20,8 @@ struct PackedRecord: Encodable, RecordProtocol {
         return false
     }
     
-    static func asJSON(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data {
-        let record = try PackedRecord(header: header, fields: fields)
+    static func asJSON(header: RecordHeader, fields: DecodedFields, with processor: Processor) throws -> Data {
+        let record = try UnknownRecord(header: header, fields: fields)
         return try processor.encoder.encode(record)
     }
 }

@@ -7,9 +7,9 @@ import Foundation
 
 class RecordDecoder: Decoder {
     let header: RecordHeader
-    let fields: FieldProcessor
+    let fields: DecodedFields
     
-    internal init(header: RecordHeader, fields: FieldProcessor) {
+    internal init(header: RecordHeader, fields: DecodedFields) {
         self.header = header
         self.fields = fields
         self.codingPath = []

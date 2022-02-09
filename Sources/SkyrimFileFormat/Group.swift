@@ -22,21 +22,13 @@ enum GroupType: UInt32 {
 struct Group: RecordProtocol {
     let header: UnpackedHeader
     
+    init(header: RecordHeader) {
+        self.header = UnpackedHeader(header)
+    }
+    
     static var tag: Tag { .group }
     
-    static func asJSON(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data {
+    static func asJSON(header: RecordHeader, fields: DecodedFields, with processor: Processor) throws -> Data {
         return Data()
     }
 }
-
-struct UnknownRecord: RecordProtocol {
-    let header: UnpackedHeader
-    let fields: [UnpackedField]
-
-    static var tag: Tag { "????" }
-    
-    static func asJSON(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data {
-        return Data()
-    }
-}
-

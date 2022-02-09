@@ -58,17 +58,17 @@ class RealisedRecordIterator: AsyncIteratorProtocol {
         do {
             let header = record.header
             if header.isGroup {
-                return Group(header: UnpackedHeader(record.header))
+                return Group(header: record.header)
+            } else {
+                
             }
 
-            let map = try processor.configuration.fields(forRecord: header.type.description)
-            let fp = FieldProcessor(map)
-            try await fp.process(data: record.data, processor: processor)
-            let decoder = RecordDecoder(header: header, fields: fp)
+            let fields = try await processor.decodedFields(header: header, data: record.data)
             if let kind = processor.configuration.records[header.type] {
+                let decoder = RecordDecoder(header: header, fields: fields)
                 return try kind.init(from: decoder)
             } else {
-                return try UnknownRecord(header: UnpackedHeader(record.header), fields: fp.unprocessed.map { UnpackedField($0) })
+                return try UnknownRecord(header: record.header, fields: fields)
             }
         } catch {
             print(error)

@@ -31,7 +31,7 @@ struct TES4Record: Codable, RecordProtocol {
     let unknownCounter: UInt?
     let fields: [UnpackedField]?
 
-    static func asJSON(header: RecordHeader, fields: FieldProcessor, with processor: Processor) throws -> Data {
+    static func asJSON(header: RecordHeader, fields: DecodedFields, with processor: Processor) throws -> Data {
         let decoder = RecordDecoder(header: header, fields: fields)
         let record = try decoder.decode(TES4Record.self)
         return try processor.encoder.encode(record)

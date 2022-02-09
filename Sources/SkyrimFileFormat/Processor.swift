@@ -63,6 +63,13 @@ class Processor {
         return sequence
     }
     
+    func decodedFields(header: RecordHeader, data: Bytes) async throws -> DecodedFields {
+        let map = try configuration.fields(forRecord: header.type.description)
+        let fp = DecodedFields(map)
+        try await fp.process(data: data, processor: self)
+        return fp
+    }
+    
     func inflate(header: Field.Header, data: Bytes, types: FieldsMap) async throws -> Field {
         do {
             if let kind = types[header.type]?.field {
@@ -102,10 +109,10 @@ class Processor {
     func export(record: Record, asJSONTo url: URL) async throws {
         let header = record.header
         let map = try configuration.fields(forRecord: header.type.description)
-        let fp = FieldProcessor(map)
+        let fp = DecodedFields(map)
         try await fp.process(data: record.data, processor: self)
 
-        let packed: RecordProtocol.Type = configuration.records[header.type] ?? PackedRecord.self
+        let packed: RecordProtocol.Type = configuration.records[header.type] ?? UnknownRecord.self
         let encoded = try packed.asJSON(header: header, fields: fp, with: self)
         try encoded.write(to: url.appendingPathExtension("json"), options: .atomic)
     }

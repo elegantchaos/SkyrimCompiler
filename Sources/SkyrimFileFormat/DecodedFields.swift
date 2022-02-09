@@ -31,7 +31,7 @@ typealias FieldMapEntries = [FieldMapEntry]
 typealias FieldsMap = [Tag:FieldSpec]
 
 
-class FieldProcessor {
+class DecodedFields {
     let spec: [Tag:FieldSpec]
     var values: [Tag:Any]
     var unprocessed: [Field]
