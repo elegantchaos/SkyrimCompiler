@@ -14,7 +14,7 @@ private extension Tag {
 }
 
 struct ARMORecord: Codable, RecordProtocol {
-    static var tag: Tag { "ARMO" }
+    static var tag = Tag("ARMO")
     
     let header: UnpackedHeader
     let editorID: String
@@ -30,7 +30,7 @@ struct ARMORecord: Codable, RecordProtocol {
         ]
     }
     
-    static func asJSON(header: RecordHeader, fields: DecodedFields, with processor: Processor) throws -> Data {
+    static func asJSON(header: UnpackedHeader, fields: DecodedFields, with processor: Processor) throws -> Data {
         let decoder = RecordDecoder(header: header, fields: fields)
         let record = try decoder.decode(ARMORecord.self)
         return try processor.encoder.encode(record)

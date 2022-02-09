@@ -7,25 +7,43 @@ import Bytes
 import Foundation
 
 struct Record {
-    init(header: RecordHeader, data: Bytes) async throws {
+    init(type: Tag, header: UnpackedHeader, data: Bytes) async throws {
+        self.type = type
         self.header = header
         self.data = data
     }
     
-    let header: RecordHeader
+    let type: Tag
+    let header: UnpackedHeader
     let data: Bytes
 
     var name: String {
-        header.id == 0 ? header.label : String(format: "%@-%08X", header.label, header.id)
+        guard let id = header.id, id != 0 else { return label }
+        return String(format: "%@-%08X", label, id)
     }
     
     var isGroup: Bool {
-        header.isGroup
+        type == GroupRecord.tag
     }
+    
+    var groupType: GroupType? {
+        guard isGroup else { return nil }
+        return GroupType(rawValue: header.id ?? 0)
+    }
+
+    var label: String {
+        if let type = groupType {
+            return type.label(flags: header.flags ?? 0)
+        } else {
+            return type.description
+        }
+    }
+
+
 }
 
 extension Record: CustomStringConvertible {
     var description: String {
-        return "«\(header) \(String(format: "0x%08X", header.id))»"
+        return "«\(name)»"
     }
 }

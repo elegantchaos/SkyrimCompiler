@@ -5,23 +5,19 @@
 
 import Foundation
 
-struct UnknownRecord: RecordProtocol {
+struct RawRecord: RecordProtocol {
+    static var tag = Tag("????")
+
     let header: UnpackedHeader
     let fields: [UnpackedField]
     
-    static var tag: Tag { "???" }
-    
-    init(header: RecordHeader, fields: DecodedFields) throws {
-        self.header = UnpackedHeader(header)
+    init(header: UnpackedHeader, fields: DecodedFields) throws {
+        self.header = header
         self.fields = fields.values.flatMap({ $0.value }).map({ UnpackedField($0) })
     }
     
-    var containsRawFields: Bool {
-        return false
-    }
-    
-    static func asJSON(header: RecordHeader, fields: DecodedFields, with processor: Processor) throws -> Data {
-        let record = try UnknownRecord(header: header, fields: fields)
+    static func asJSON(header: UnpackedHeader, fields: DecodedFields, with processor: Processor) throws -> Data {
+        let record = try RawRecord(header: header, fields: fields)
         return try processor.encoder.encode(record)
     }
     
@@ -30,7 +26,7 @@ struct UnknownRecord: RecordProtocol {
     }
 }
 
-extension UnknownRecord: CustomStringConvertible {
+extension RawRecord: CustomStringConvertible {
     var description: String {
         let fieldDescription = Set(fields.map({ $0.type.description })).joined(separator: ", ")
         return "«\(header.type), fields:\(fieldDescription)»"

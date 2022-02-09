@@ -1,5 +1,0 @@
-    [
-        { "name": "editorID", "tag": "EDID", "type": "String", "role": "required" },
-        { "name": "maleArmour", "tag": "MOD2", "type": "String", "role": "required" },
-        { "name": "femaleArmour", "tag": "MOD4", "type": "String", "role": "optional" }
-    ]

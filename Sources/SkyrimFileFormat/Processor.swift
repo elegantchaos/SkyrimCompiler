@@ -38,10 +38,14 @@ class Processor {
     func records<I: AsyncByteSequence>(bytes: I) -> AsyncThrowingIteratorMapSequence<I, Record> {
         let records = bytes.iteratorMap { iterator -> Record in
             let stream = AsyncDataStream(iterator: iterator)
-            let header = try await RecordHeader(stream)
-            let data = try await header.payload(stream) // TODO: allow the payload read to be deferred
+            let type = try await Tag(stream.read(UInt32.self))
+            let size = try await stream.read(UInt32.self)
+            let header = try await UnpackedHeader(type: type, stream)
+            let payloadSize = Int(type == GroupRecord.tag ? size - 24 : size)
+            let data = try await stream.read(count: payloadSize)
             iterator = stream.iterator
-            return try await Record(header: header, data: data)
+
+            return try await Record(type: type, header: header, data: data)
         }
 
         return records
@@ -63,8 +67,8 @@ class Processor {
         return sequence
     }
     
-    func decodedFields(header: RecordHeader, data: Bytes) async throws -> DecodedFields {
-        let map = try configuration.fields(forRecord: header.type)
+    func decodedFields(type: Tag, data: Bytes) async throws -> DecodedFields {
+        let map = try configuration.fields(forRecord: type)
         let fp = DecodedFields(map)
         
         var bytes = BytesAsyncSequence(bytes: data)
@@ -115,8 +119,8 @@ class Processor {
     
     func export(record: Record, asJSONTo url: URL) async throws {
         let header = record.header
-        let fields = try await decodedFields(header: header, data: record.data)
-        let packed: RecordProtocol.Type = configuration.records[header.type] ?? UnknownRecord.self
+        let fields = try await decodedFields(type: record.type, data: record.data)
+        let packed: RecordProtocol.Type = configuration.records[record.type] ?? RawRecord.self
         let encoded = try packed.asJSON(header: header, fields: fields, with: self)
         try encoded.write(to: url.appendingPathExtension("json"), options: .atomic)
     }
@@ -126,7 +130,7 @@ class Processor {
         let groupURL = url.appendingPathExtension("epsg")
         try FileManager.default.createDirectory(at: groupURL, withIntermediateDirectories: true)
         
-        let header = UnpackedHeader(group.header)
+        let header = group.header
         let headerURL = groupURL.appendingPathComponent("header.json")
         let encoded = try encoder.encode(header)
         try encoded.write(to: headerURL, options: .atomic)

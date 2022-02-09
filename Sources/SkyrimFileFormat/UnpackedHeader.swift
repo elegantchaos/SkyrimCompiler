@@ -14,6 +14,17 @@ struct UnpackedHeader: Codable {
     let version: UInt16?
     let unused: UInt16?
     
+    
+    init(type: Tag, _ stream: DataStream) async throws {
+        self.type = type.description
+        self.flags = try await stream.read(UInt32.self)
+        self.id = try await stream.read(UInt32.self)
+        self.timestamp = try await stream.read(UInt16.self)
+        self.versionInfo = try await stream.read(UInt16.self)
+        self.version = try await stream.read(UInt16.self)
+        self.unused = try await stream.read(UInt16.self)
+    }
+    
     init(_ record: RecordHeader) {
         self.type = record.type.description
         self.flags = record.flags == 0 ? nil : record.flags
@@ -23,4 +34,5 @@ struct UnpackedHeader: Codable {
         self.version = record.version == 44 ? nil : record.version
         self.unused = record.unused == 0 ? nil : record.unused
     }
+    
 }

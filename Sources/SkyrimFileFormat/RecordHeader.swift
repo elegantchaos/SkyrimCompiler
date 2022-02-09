@@ -27,7 +27,7 @@ struct RecordHeader {
         self.versionInfo = try await stream.read(UInt16.self)
         self.version = try await stream.read(UInt16.self)
         self.unused = try await stream.read(UInt16.self)
-        self.groupType = type == .group ? GroupType(rawValue: id) : nil
+        self.groupType = type == GroupRecord.tag ? GroupType(rawValue: id) : nil
     }
     
     var isGroup: Bool {
@@ -52,8 +52,4 @@ extension RecordHeader: CustomStringConvertible {
     var description: String {
         return isGroup ? "group \(label)" : "record \(label)"
     }
-}
-
-extension Tag {
-    static let group: Tag = "GRUP"
 }

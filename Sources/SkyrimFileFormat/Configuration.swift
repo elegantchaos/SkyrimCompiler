@@ -41,7 +41,7 @@ struct FieldMap: ExpressibleByDictionaryLiteral {
 
 protocol RecordProtocol: Codable {
     static var tag: Tag { get }
-    static func asJSON(header: RecordHeader, fields: DecodedFields, with processor: Processor) throws -> Data
+    static func asJSON(header: UnpackedHeader, fields: DecodedFields, with processor: Processor) throws -> Data
     static var fieldMap: FieldMap { get }
     var header: UnpackedHeader { get }
 }

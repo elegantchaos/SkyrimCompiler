@@ -6,14 +6,14 @@
 import Foundation
 
 class RecordDecoder: Decoder {
-    let header: RecordHeader
+    let header: UnpackedHeader
     let fields: DecodedFields
     
     enum Error: Swift.Error {
         case missingValue
     }
     
-    internal init(header: RecordHeader, fields: DecodedFields) {
+    internal init(header: UnpackedHeader, fields: DecodedFields) {
         self.header = header
         self.fields = fields
         self.codingPath = []
@@ -127,7 +127,7 @@ class RecordDecoder: Decoder {
             switch key.stringValue {
                 case "header":
                     print(T.self)
-                    return UnpackedHeader(decoder.header) as! T
+                    return decoder.header as! T
                     
                 default:
                     let tag = decoder.fields.tag(for: key.stringValue)!

@@ -33,7 +33,6 @@ let package = Package(
                 "Coercion"
             ],
             resources: [
-                .copy("Resources/Records")
             ]
         ),
         

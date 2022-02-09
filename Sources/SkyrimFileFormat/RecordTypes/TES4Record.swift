@@ -8,19 +8,8 @@ import Bytes
 import Coercion
 import Foundation
 
-private extension Tag {
-    static let header: Self = "HEDR"
-    static let author: Self = "CNAM"
-    static let description: Self = "SNAM"
-    static let master: Self = "MAST"
-    static let tagifiedStringCount: Self = "INTV"
-    static let unknownCounter: Self = "INCC"
-    static let unusedData: Self = "DATA"
-}
-
-
 struct TES4Record: Codable, RecordProtocol {
-    static var tag: Tag { "TES4" }
+    static var tag = Tag("TES4")
     
     let header: UnpackedHeader
     let info: TES4Header
@@ -31,7 +20,7 @@ struct TES4Record: Codable, RecordProtocol {
     let unknownCounter: UInt?
     let fields: [UnpackedField]?
 
-    static func asJSON(header: RecordHeader, fields: DecodedFields, with processor: Processor) throws -> Data {
+    static func asJSON(header: UnpackedHeader, fields: DecodedFields, with processor: Processor) throws -> Data {
         let decoder = RecordDecoder(header: header, fields: fields)
         let record = try decoder.decode(TES4Record.self)
         return try processor.encoder.encode(record)
