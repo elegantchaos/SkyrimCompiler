@@ -8,7 +8,9 @@ import Foundation
 struct TES4Record: Codable, RecordProtocol {
     static var tag = Tag("TES4")
     
-    let header: RecordHeader
+    let _header: RecordHeader
+    let _fields: UnpackedFields?
+
     let info: TES4Header
     var desc: String?
     let author: String?
@@ -16,7 +18,6 @@ struct TES4Record: Codable, RecordProtocol {
     let masterData: [UInt64]
     let tagifiedStringCount: UInt32
     let unknownCounter: UInt32?
-    let fields: [UnpackedField]?
     
     func asJSON(with processor: Processor) throws -> Data {
         return try processor.encoder.encode(self)

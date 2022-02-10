@@ -65,7 +65,9 @@ class DecodedFields {
         unprocessed.count > 0
     }
     
-    var unproccessedFields: [UnpackedField] {
-        unprocessed.values.flatMap({ $0 }).map({ UnpackedField($0)})
+    var unproccessedFields: UnpackedFields {
+        let keysAndValues = unprocessed.map({ ($0.key.description, $0.value.map({ $0.encodedValue})) })
+        return UnpackedFields(uniqueKeysWithValues: keysAndValues)
+        
     }
 }

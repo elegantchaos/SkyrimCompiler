@@ -9,5 +9,9 @@ protocol RecordProtocol: Codable {
     static var tag: Tag { get }
     func asJSON(with processor: Processor) throws -> Data
     static var fieldMap: FieldTypeMap { get }
-    var header: RecordHeader { get }
+    var _header: RecordHeader { get }
+}
+
+extension RecordProtocol {
+    var header: RecordHeader { _header }
 }

@@ -14,6 +14,11 @@ struct Field: CustomStringConvertible {
     var description: String {
         return "«\(header.type) field»"
     }
+    
+    var encodedValue: String {
+        let data = value as? Bytes ?? []
+        return data.map({ String(format: "%02X", $0)}).joined(separator: "")
+    }
 }
 
 extension Field {

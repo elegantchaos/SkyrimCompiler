@@ -9,10 +9,10 @@ import Foundation
 struct GroupRecord: RecordProtocol {
     static var tag = Tag("GRUP")
 
-    let header: RecordHeader
+    let _header: RecordHeader
     
     init(header: RecordHeader) {
-        self.header = header
+        self._header = header
     }
     
     func asJSON(with processor: Processor) throws -> Data {

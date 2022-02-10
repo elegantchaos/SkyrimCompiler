@@ -8,12 +8,12 @@ import Foundation
 struct RawRecord: RecordProtocol {
     static var tag = Tag("????")
 
-    let header: RecordHeader
-    let fields: [UnpackedField]
+    let _header: RecordHeader
+    let _fields: UnpackedFields
     
     init(header: RecordHeader, fields: DecodedFields) throws {
-        self.header = header
-        self.fields = fields.unproccessedFields
+        self._header = header
+        self._fields = fields.unproccessedFields
     }
     
     func asJSON(with processor: Processor) throws -> Data {
@@ -25,7 +25,7 @@ struct RawRecord: RecordProtocol {
 
 extension RawRecord: CustomStringConvertible {
     var description: String {
-        let fieldDescription = Set(fields.map({ $0.type.description })).joined(separator: ", ")
+        let fieldDescription = Set(_fields.keys).joined(separator: ", ")
         return "«\(header.type), fields:\(fieldDescription)»"
     }
 }

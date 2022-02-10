@@ -57,23 +57,23 @@ class RecordDecoder: Decoder {
         }
         
         func contains(_ key: K) -> Bool {
-            if key.stringValue == "fields" { return decoder.fields.haveUnprocessedFields }
+            if key.stringValue == "_fields" { return decoder.fields.haveUnprocessedFields }
             return decoder.fields.values(forKey: key) != nil
         }
         
         func decodeNil(forKey key: K) throws -> Bool {
-            if key.stringValue == "fields" { return !decoder.fields.haveUnprocessedFields }
+            if key.stringValue == "_fields" { return !decoder.fields.haveUnprocessedFields }
             return decoder.fields.values(forKey: key) == nil
         }
         
         func decode<T>(_ type: T.Type, forKey key: K) throws -> T where T : Decodable {
             switch key.stringValue {
-                case "header":
+                case "_header":
                     assert(type == RecordHeader.self)
                     return decoder.header as! T
                     
-                case "fields":
-                    assert(type == [UnpackedField].self)
+                case "_fields":
+                    assert(type == UnpackedFields.self)
                     return decoder.fields.unproccessedFields as! T
 
                 default:

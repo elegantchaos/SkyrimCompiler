@@ -15,7 +15,9 @@ typealias FormID = UInt32
 struct ARMORecord: Codable, RecordProtocol {
     static var tag = Tag("ARMO")
     
-    let header: RecordHeader
+    let _header: RecordHeader
+    let _fields: UnpackedFields?
+
     let editorID: String
     let bounds: OBNDField
     let fullName: String?
@@ -29,7 +31,8 @@ struct ARMORecord: Codable, RecordProtocol {
     let dropSound: FormID
     let keywordCount: UInt32
     let keywords: SingleFieldArray<FormID>
-    let fields: [UnpackedField]?
+    let desc: String
+    
 
     static var fieldMap = FieldTypeMap(paths: [
         (CodingKeys.editorID, \Self.editorID, "EDID"),
@@ -44,7 +47,8 @@ struct ARMORecord: Codable, RecordProtocol {
         (.pickupSound, \.pickupSound, "YNAM"),
         (.dropSound, \.dropSound, "ZNAM"),
         (.keywordCount, \.keywordCount, "KSIZ"),
-        (.keywords, \.keywords, "KWDA")
+        (.keywords, \.keywords, "KWDA"),
+        (.desc, \.desc, "DESC")
         ]
     )
     

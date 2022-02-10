@@ -27,7 +27,7 @@ class Processor {
     internal init(configuration: Configuration = .defaultConfiguration) {
         self.configuration = configuration
         self.encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted]
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
     }
     
     let configuration: Configuration
