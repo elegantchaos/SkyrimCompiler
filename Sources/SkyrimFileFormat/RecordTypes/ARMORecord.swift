@@ -32,7 +32,12 @@ struct ARMORecord: Codable, RecordProtocol {
     let keywordCount: UInt32
     let keywords: SingleFieldArray<FormID>
     let desc: String
-    
+    let armourRating: UInt32
+    let template: FormID?
+    let data: DATAField
+    let armature: FormID
+    let race: FormID
+    let bodyTemplate: BOD2Field
 
     static var fieldMap = FieldTypeMap(paths: [
         (CodingKeys.editorID, \Self.editorID, "EDID"),
@@ -48,12 +53,23 @@ struct ARMORecord: Codable, RecordProtocol {
         (.dropSound, \.dropSound, "ZNAM"),
         (.keywordCount, \.keywordCount, "KSIZ"),
         (.keywords, \.keywords, "KWDA"),
-        (.desc, \.desc, "DESC")
+        (.desc, \.desc, "DESC"),
+        (.armourRating, \.armourRating, "DNAM"),
+        (.template, \.template, "TNAM"),
+        (.armature, \.armature, "MODL"),
+        (.data, \.data, "DATA"),
+        (.race, \.race, "RNAM"),
+        (.bodyTemplate, \.bodyTemplate, "BOD2")
         ]
     )
     
     func asJSON(with processor: Processor) throws -> Data {
         return try processor.encoder.encode(self)
+    }
+    
+    struct DATAField: Codable {
+        let base: UInt32
+        let weight: Float
     }
 }
 
