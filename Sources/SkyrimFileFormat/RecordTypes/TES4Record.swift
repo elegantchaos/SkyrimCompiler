@@ -4,6 +4,32 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import Foundation
+//
+//struct NamedCodingKey: CodingKey, RawRepresentable {
+//    typealias RawValue = String
+//
+//    var rawValue: String { stringValue }
+//
+//
+//    var stringValue: String
+//
+//    init(rawValue: String) {
+//        self.stringValue = rawValue
+//    }
+//
+//    init?(stringValue: String) {
+//        self.stringValue = stringValue
+//    }
+//
+//    var intValue: Int?
+//
+//    init?(intValue: Int) {
+//        self.intValue = intValue
+//        self.stringValue = "\(intValue)"
+//    }
+//
+//
+//}
 
 struct TES4Record: Codable, RecordProtocol {
     static var tag = Tag("TES4")
@@ -39,6 +65,7 @@ struct TES4Record: Codable, RecordProtocol {
 
 extension TES4Record: CustomStringConvertible {
     var description: String {
+        print(CodingKeys.info)
         return "«TES4 \(info.version)»"
     }
 }

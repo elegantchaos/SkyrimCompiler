@@ -7,37 +7,15 @@ import AsyncSequenceReader
 import Bytes
 import Foundation
 
-enum FieldType: String, Codable {
-    case required
-    case optional
-    case list
-}
-
-struct FieldSpec {
-//    let type: FieldType
-    let field: Decodable.Type
-    let name: String
-}
-
-struct FieldMapEntry: Codable {
-    let name: String
-    let tag: String
-    let type: String
-//    let role: FieldType
-}
-
-typealias FieldMapEntries = [FieldMapEntry]
-
-typealias FieldsMap = [Tag:FieldSpec]
-
-
 class DecodedFields {
     let spec: FieldTypeMap
     var values: [Tag:[Field]]
+    var unprocessed: [Tag:[Field]]
     
     init(_ spec: FieldTypeMap) {
         self.spec = spec
         self.values = [:]
+        self.unprocessed = [:]
     }
     
     func add(_ field: Field) throws {
@@ -45,6 +23,16 @@ class DecodedFields {
         var list = (values[tag]) ?? []
         list.append(field)
         values[tag] = list
+    }
+    
+    func moveUnprocesed() {
+        let keys = values.keys
+        for key in keys {
+            if !spec.haveMapping(forFieldType: key) {
+                unprocessed[key] = values[key]
+                values.removeValue(forKey: key)
+            }
+        }
     }
     
     func unpack<T>(_ tag: Tag) throws -> T {

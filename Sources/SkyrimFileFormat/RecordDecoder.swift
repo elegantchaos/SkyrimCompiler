@@ -56,73 +56,15 @@ class RecordDecoder: Decoder {
         }
         
         func contains(_ key: K) -> Bool {
-            if key.stringValue == "fields" { return decoder.fields.values.count > 0 }
+            if key.stringValue == "fields" { return decoder.fields.unprocessed.values.count > 0 }
             return decoder.fields.values[Tag(key.stringValue)] != nil
         }
         
         func decodeNil(forKey key: K) throws -> Bool {
-            if key.stringValue == "fields" { return decoder.fields.values.count == 0 }
+            if key.stringValue == "fields" { return decoder.fields.unprocessed.values.count == 0 }
             return decoder.fields.values[Tag(key.stringValue)] == nil
         }
-        
-//        func decode(_ type: Bool.Type, forKey key: K) throws -> Bool {
-//            fatalError("to do")
-//        }
-//
-//        func decode(_ type: String.Type, forKey key: K) throws -> String {
-//            print("decode \(type) for key \(key) path \(codingPath)")
-//            return "string"
-//        }
-//
-//        func decode(_ type: Double.Type, forKey key: K) throws -> Double {
-//            fatalError("to do")
-//        }
-//
-//        func decode(_ type: Float.Type, forKey key: K) throws -> Float {
-//            fatalError("to do")
-//        }
-//
-//        func decode(_ type: Int.Type, forKey key: K) throws -> Int {
-//            print("decode \(type) for key \(key) path \(codingPath)")
-//            return 123
-//        }
-//
-//        func decode(_ type: Int8.Type, forKey key: K) throws -> Int8 {
-//            fatalError("to do")
-//        }
-//
-//        func decode(_ type: Int16.Type, forKey key: K) throws -> Int16 {
-//            fatalError("to do")
-//        }
-//
-//        func decode(_ type: Int32.Type, forKey key: K) throws -> Int32 {
-//            fatalError("to do")
-//        }
-//
-//        func decode(_ type: Int64.Type, forKey key: K) throws -> Int64 {
-//            fatalError("to do")
-//        }
-//
-//        func decode(_ type: UInt.Type, forKey key: K) throws -> UInt {
-//            fatalError("to do")
-//        }
-//
-//        func decode(_ type: UInt8.Type, forKey key: K) throws -> UInt8 {
-//            fatalError("to do")
-//        }
-//
-//        func decode(_ type: UInt16.Type, forKey key: K) throws -> UInt16 {
-//            fatalError("to do")
-//        }
-//
-//        func decode(_ type: UInt32.Type, forKey key: K) throws -> UInt32 {
-//            fatalError("to do")
-//        }
-//
-//        func decode(_ type: UInt64.Type, forKey key: K) throws -> UInt64 {
-//            fatalError("to do")
-//        }
-        
+   
         func decode(_ type: [UnpackedField].Type, forKey key: K) throws -> [UnpackedField] {
             let allFields = decoder.fields.values.values.flatMap({ $0 }).map({ UnpackedField($0) })
             return allFields
@@ -138,7 +80,7 @@ class RecordDecoder: Decoder {
                     return decoder.header as! T
                     
                 case "fields":
-                    let allFields = decoder.fields.values.values.flatMap({ $0 }).map({ UnpackedField($0) })
+                    let allFields = decoder.fields.unprocessed.values.flatMap({ $0 }).map({ UnpackedField($0) })
                     return allFields as! T
 
                 default:

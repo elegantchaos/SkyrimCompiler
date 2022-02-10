@@ -77,16 +77,17 @@ class Processor {
         for try await field in fields {
             try fp.add(field)
         }
+        fp.moveUnprocesed()
 
         return fp
     }
     
     func inflate(header: Field.Header, data: Bytes, types: FieldTypeMap) async throws -> Field {
         do {
-            if let type = types.byTag[header.type] {
+            if let valueType = types.valueType(forFieldType: header.type) {
                 let decoder = FieldDecoder(header: header, data: data)
-                let unpacked = try type.init(from: decoder)
-                return Field(header: header, value: unpacked)
+                let value = try valueType.init(from: decoder)
+                return Field(header: header, value: value)
             }
         } catch {
             print("Error unpacking \(header.type). Falling back to basic field.\n\n\(error)")

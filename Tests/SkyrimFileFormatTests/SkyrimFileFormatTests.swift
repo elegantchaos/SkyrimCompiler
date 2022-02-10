@@ -10,7 +10,7 @@ import XCTestExtensions
 import AppKit
 
 func show(_ url: URL) async {
-    let shouldShow = false
+    let shouldShow = true
     
     if shouldShow {
     let config = NSWorkspace.OpenConfiguration()
@@ -69,24 +69,3 @@ final class SkyrimFileFormatTests: XCTestCase {
 
     }
 }
-//
-//extension RecordProtocol {
-//    @objc func test(_ context: Context) async throws {
-//        print("Testing \(self)")
-//    }
-//}
-//
-//extension TES4Record {
-//    @objc override func test(_ context: Context) async throws {
-//        try await super.test(context)
-//        
-//        XCTAssertEqual(header.version, 44)
-//        XCTAssertEqual(version, 1.7)
-//        XCTAssertEqual(count, 12)
-//        XCTAssertEqual(nextID, 0x1d8c)
-//        XCTAssertEqual(author, "AirChomp")
-//        XCTAssertEqual(desc, "Adds a black variant of the common farmer gloves, buyable at Radient Raiment and lootable from Warlocks.")
-//        XCTAssertEqual(masters, ["Skyrim.esm"])
-//
-//    }
-//}
