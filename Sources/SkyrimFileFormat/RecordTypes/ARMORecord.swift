@@ -14,6 +14,7 @@ struct ARMORecord: Codable, RecordProtocol {
     let editorID: String
     let maleArmour: String
     let femaleArmour: String?
+    let bounds: OBNDField
     let fullName: String?
     let fields: [UnpackedField]?
 
@@ -21,6 +22,7 @@ struct ARMORecord: Codable, RecordProtocol {
         (CodingKeys.editorID, \Self.editorID, "EDID"),
         (.maleArmour, \.maleArmour, "MOD2"),
         (.femaleArmour, \.femaleArmour, "MOD4"),
+        (.bounds, \.bounds, "OBND"),
         (.fullName, \.fullName, "FULL")
         ]
     )
