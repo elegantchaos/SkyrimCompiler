@@ -4,8 +4,6 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import Foundation
-import CoreText
-
 
 class RecordDecoder: Decoder {
     let header: RecordHeader
@@ -13,6 +11,7 @@ class RecordDecoder: Decoder {
     
     enum Error: Swift.Error {
         case missingValue
+        case wrongTypeOfValue
     }
     
     internal init(header: RecordHeader, fields: DecodedFields) {
@@ -83,15 +82,26 @@ class RecordDecoder: Decoder {
                         throw Error.missingValue
                     }
                     
-                    let values = fields.map({ $0.value })
-                    if let item = values as? T {
-                        return item
-//                    } else if let array = type as? SingleFieldArrayProtocol.Type, let item = values.first as? SingleFieldArrayProtocol {
-//                        return item.extracted as! T
-                    } else if let list = values as? [T], !list.isEmpty {
-                        return list.first!
+                    // we could have one or more fields of the same type,
+                    // so they potentially form a list of values
+                    let fieldValues = fields.map({ $0.value })
+
+                    if let listValue = fieldValues as? T {
+                        // if the fieldValues can be coerced into the type we were asked for
+                        // then we must have been asked for a list of values - so just return
+                        // the coerced field values
+                        return listValue
+                        
+                    } else if let individualValue = (fieldValues as? [T])?.first {
+                        // otherwise we assume that we were actually expecting just one
+                        // value, so we use the first (and presumably only) field value
+                        
+                        assert(fieldValues.count == 1)
+                        return individualValue
+                        
                     } else {
-                        throw Error.missingValue
+                        // otherwise something has gone wrong...
+                        throw Error.wrongTypeOfValue
                     }
             }
         }

@@ -6,14 +6,9 @@
 import Foundation
 
 protocol SingleFieldArrayProtocol: Codable {
-    var extracted: Any { get }
 }
 
 struct SingleFieldArray<Value>: SingleFieldArrayProtocol where Value: Codable {
-    var extracted: Any {
-        return value
-    }
-
     let value: [Value]
     
     init(from decoder: Decoder) throws {
