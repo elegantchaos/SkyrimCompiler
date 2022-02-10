@@ -6,63 +6,18 @@
 import Bytes
 import Foundation
 
-struct FieldMap: ExpressibleByDictionaryLiteral {
-    struct Entry {
-        let name: String
-        let type: Decodable.Type
-        
-        init(_ name: String, _ type: Decodable.Type) {
-            self.name = name
-            self.type = type
-        }
-        
-        static func string(_ name: String) -> Entry {
-            return .init(name, String.self)
-        }
+/// Maps the coding keys for fields to their types
+struct FieldTypeMap {
+    typealias Map = [Tag:Decodable.Type]
+    
+    let byTag: Map
+    
+    init() {
+        byTag = [:]
     }
     
-
-    let byTag: [Tag:Entry]
-    
-    init(dictionaryLiteral elements: (Tag, Entry)...) {
-        var byTag: [Tag:Entry] = [:]
-        
-        for (tag, entry) in elements {
-            byTag[tag] = entry
-        }
-
-        self.byTag = byTag
-    }
-    
-    init(_ entries: [Tag:Entry]) {
-        
-        var byName: [String:Tag] = [:]
-        for (tag, entry) in entries {
-            byName[entry.name] = tag
-        }
-
-        self.byTag = entries
-    }
-    
-//    init<T>(paths map: [Tag:PartialKeyPath<T>]) {
-//        var entries: [Tag:FieldMap.Entry] = [:]
-//        for (key, path) in map {
-//            print(type(of: path))
-//            let t: Any.Type
-//            if let p = path as? EnclosingType {
-//                t = type(of: p).baseType
-//            } else {
-//                t = type(of: path).valueType
-//            }
-//
-//            entries[key] = .init("\(path)", t as! Decodable.Type)
-//        }
-//
-//        self.init(entries)
-//    }
-
     init<K, T>(paths map: [K:PartialKeyPath<T>]) where K: CodingKey, K: RawRepresentable, K.RawValue == String {
-        var entries: [Tag:FieldMap.Entry] = [:]
+        var entries: Map = [:]
         for (key, path) in map {
             print(type(of: path))
             let t: Any.Type
@@ -72,10 +27,10 @@ struct FieldMap: ExpressibleByDictionaryLiteral {
                 t = type(of: path).valueType
             }
 
-            entries[Tag(key.rawValue)] = .init("\(path)", t as! Decodable.Type)
+            entries[Tag(key.rawValue)] = t as! Decodable.Type
         }
     
-        self.init(entries)
+        self.byTag = entries
     }
 
 }
@@ -83,7 +38,7 @@ struct FieldMap: ExpressibleByDictionaryLiteral {
 protocol RecordProtocol: Codable {
     static var tag: Tag { get }
     func asJSON(with processor: Processor) throws -> Data
-    static var fieldMap: FieldMap { get }
+    static var fieldMap: FieldTypeMap { get }
     var header: RecordHeader { get }
 }
 
@@ -92,7 +47,7 @@ protocol FieldProtocol {
 }
 
 typealias RecordMap = [Tag:RecordProtocol.Type]
-typealias FieldClassesMap = [String:Decodable.Type]
+//typealias FieldClassesMap = [String:Decodable.Type]
 
 struct Configuration {
     static let defaultRecords: [RecordProtocol.Type] = [
@@ -100,31 +55,31 @@ struct Configuration {
         TES4Record.self
     ]
     
-    static let defaultFields: [Decodable.Type] = [
-        TES4Header.self,
-        String.self,
-        UInt32.self,
-        UInt64.self,
-        Float.self
-    ]
+//    static let defaultFields: [Decodable.Type] = [
+//        TES4Header.self,
+//        String.self,
+//        UInt32.self,
+//        UInt64.self,
+//        Float.self
+//    ]
     
     static let defaultRecordMap = RecordMap(uniqueKeysWithValues: defaultRecords.map { ($0.tag, $0) })
-    static let defaultFieldClassesMap = FieldClassesMap(uniqueKeysWithValues: defaultFields.map { (String(describing: $0), $0) })
+//    static let defaultFieldClassesMap = FieldClassesMap(uniqueKeysWithValues: defaultFields.map { (String(describing: $0), $0) })
 
     let records: RecordMap
-    let fieldClasses: FieldClassesMap
-    let defaultFieldsMap: FieldMap = [:]
+//    let fieldClasses: FieldClassesMap
+    let defaultFieldsMap = FieldTypeMap()
     
-    internal init(records: RecordMap = Self.defaultRecordMap, fields: FieldClassesMap = Self.defaultFieldClassesMap) {
+    internal init(records: RecordMap = Self.defaultRecordMap /*, fields: FieldClassesMap = Self.defaultFieldClassesMap*/) {
         self.records = records
-        self.fieldClasses = fields
+//        self.fieldClasses = fields
     }
     
     func recordClass(for type: Tag) -> RecordProtocol.Type {
         records[type] ?? RawRecord.self
     }
     
-    func fields(forRecord type: Tag) throws -> FieldMap {
+    func fields(forRecord type: Tag) throws -> FieldTypeMap {
         guard let kind = records[type] else { return defaultFieldsMap }
         return kind.fieldMap
     }

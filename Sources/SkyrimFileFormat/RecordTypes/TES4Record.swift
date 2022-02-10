@@ -26,7 +26,7 @@ struct TES4Record: Codable, RecordProtocol {
         return try processor.encoder.encode(self)
     }
     
-    static var fieldMap = FieldMap(paths: [
+    static var fieldMap = FieldTypeMap(paths: [
         CodingKeys.info: \Self.info,
         .author: \.author,
         .desc: \.desc,

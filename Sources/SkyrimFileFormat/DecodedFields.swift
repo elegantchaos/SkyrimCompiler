@@ -32,10 +32,10 @@ typealias FieldsMap = [Tag:FieldSpec]
 
 
 class DecodedFields {
-    let spec: FieldMap
+    let spec: FieldTypeMap
     var values: [Tag:[Field]]
     
-    init(_ spec: FieldMap) {
+    init(_ spec: FieldTypeMap) {
         self.spec = spec
         self.values = [:]
     }

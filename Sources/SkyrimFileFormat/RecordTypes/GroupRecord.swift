@@ -19,9 +19,7 @@ struct GroupRecord: RecordProtocol {
         return try processor.encoder.encode(self)
     }
 
-    static var fieldMap: FieldMap {
-        return FieldMap()
-    }
+    static var fieldMap = FieldTypeMap()
 }
 
 extension GroupRecord: CustomStringConvertible {

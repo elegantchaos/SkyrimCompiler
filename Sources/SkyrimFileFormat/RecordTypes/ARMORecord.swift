@@ -21,7 +21,7 @@ struct ARMORecord: Codable, RecordProtocol {
         case header, editorID = "EDID", maleArmour = "MOD2", femaleArmour = "MOD4", fullName = "FULL", fields
     }
 
-    static var fieldMap = FieldMap(paths: [
+    static var fieldMap = FieldTypeMap(paths: [
         CodingKeys.editorID: \Self.editorID,
         .maleArmour: \.maleArmour,
         .femaleArmour: \.femaleArmour,

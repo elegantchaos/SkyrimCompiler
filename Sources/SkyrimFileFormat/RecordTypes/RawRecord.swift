@@ -20,9 +20,7 @@ struct RawRecord: RecordProtocol {
         return try processor.encoder.encode(self)
     }
 
-    static var fieldMap: FieldMap {
-        [:]
-    }
+    static var fieldMap = FieldTypeMap()
 }
 
 extension RawRecord: CustomStringConvertible {
