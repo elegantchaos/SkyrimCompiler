@@ -24,7 +24,7 @@ extension AsyncThrowingIteratorMapSequence: RecordSequence where Element == Reco
 }
 
 class Processor {
-    internal init(configuration: Configuration) {
+    internal init(configuration: Configuration = .defaultConfiguration) {
         self.configuration = configuration
         self.encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted]
@@ -77,7 +77,8 @@ class Processor {
         for try await field in fields {
             try fp.add(field)
         }
-
+        fp.moveUnprocesed()
+        
         return fp
     }
     

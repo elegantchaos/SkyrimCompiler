@@ -31,7 +31,7 @@ func show(_ url: URL) {
 @testable import SkyrimFileFormat
 
 @objc class Context: NSObject {
-    let processor = Processor(configuration: Configuration())
+    let processor = Processor()
 }
 
 final class SkyrimFileFormatTests: XCTestCase {

@@ -13,7 +13,7 @@ struct RawRecord: RecordProtocol {
     
     init(header: RecordHeader, fields: DecodedFields) throws {
         self.header = header
-        self.fields = fields.values.flatMap({ $0.value }).map({ UnpackedField($0) })
+        self.fields = fields.unproccessedFields
     }
     
     func asJSON(with processor: Processor) throws -> Data {

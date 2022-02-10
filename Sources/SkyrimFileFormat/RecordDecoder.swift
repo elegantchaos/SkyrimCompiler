@@ -4,6 +4,7 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import Foundation
+import CoreText
 
 class RecordDecoder: Decoder {
     let header: RecordHeader
@@ -56,23 +57,24 @@ class RecordDecoder: Decoder {
         }
         
         func contains(_ key: K) -> Bool {
-            if key.stringValue == "fields" { return decoder.fields.values.count > 0 }
+            if key.stringValue == "fields" { return decoder.fields.haveUnprocessedFields }
             return decoder.fields.values(forKey: key) != nil
         }
         
         func decodeNil(forKey key: K) throws -> Bool {
-            if key.stringValue == "fields" { return decoder.fields.values.count == 0 }
+            if key.stringValue == "fields" { return !decoder.fields.haveUnprocessedFields }
             return decoder.fields.values(forKey: key) == nil
         }
         
         func decode<T>(_ type: T.Type, forKey key: K) throws -> T where T : Decodable {
             switch key.stringValue {
                 case "header":
+                    assert(type == RecordHeader.self)
                     return decoder.header as! T
                     
                 case "fields":
-                    let allFields = decoder.fields.values.values.flatMap({ $0 }).map({ UnpackedField($0) })
-                    return allFields as! T
+                    assert(type == [UnpackedField].self)
+                    return decoder.fields.unproccessedFields as! T
 
                 default:
                     guard let fields = decoder.fields.values(forKey: key) else {
@@ -82,10 +84,8 @@ class RecordDecoder: Decoder {
                     
                     let values = fields.map({ $0.value })
                     if let item = values as? T {
-//                        print("decoded list \(T.self) for \(key.stringValue)")
                         return item
                     } else if let list = values as? [T], !list.isEmpty {
-//                        print("decoded item \(T.self) for \(key.stringValue)")
                         return list.first!
                     } else {
                         throw Error.missingValue
