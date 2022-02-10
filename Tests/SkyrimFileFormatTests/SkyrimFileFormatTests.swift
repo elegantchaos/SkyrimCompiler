@@ -10,7 +10,7 @@ import XCTestExtensions
 import AppKit
 
 func show(_ url: URL) async {
-    let shouldShow = false
+    let shouldShow = true
     
     if shouldShow {
     let config = NSWorkspace.OpenConfiguration()

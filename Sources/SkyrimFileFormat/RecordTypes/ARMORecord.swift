@@ -17,16 +17,13 @@ struct ARMORecord: Codable, RecordProtocol {
     let fullName: String?
     let fields: [UnpackedField]?
 
-    private enum CodingKeys : String, CodingKey {
-        case header, editorID = "EDID", maleArmour = "MOD2", femaleArmour = "MOD4", fullName = "FULL", fields
-    }
-
     static var fieldMap = FieldTypeMap(paths: [
-        CodingKeys.editorID: \Self.editorID,
-        .maleArmour: \.maleArmour,
-        .femaleArmour: \.femaleArmour,
-        .fullName: \.fullName
-        ])
+        (CodingKeys.editorID, \Self.editorID, "EDID"),
+        (.maleArmour, \.maleArmour, "MOD2"),
+        (.femaleArmour, \.femaleArmour, "MOD4"),
+        (.fullName, \.fullName, "FULL")
+        ]
+    )
     
     func asJSON(with processor: Processor) throws -> Data {
         return try processor.encoder.encode(self)

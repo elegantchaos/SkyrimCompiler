@@ -17,23 +17,19 @@ struct TES4Record: Codable, RecordProtocol {
     let tagifiedStringCount: UInt32
     let unknownCounter: UInt32?
     let fields: [UnpackedField]?
-
-    private enum CodingKeys : String, CodingKey {
-        case header, info = "HEDR", desc = "SNAM", author = "CNAM", masters = "MAST", masterData = "DATA", tagifiedStringCount = "INTV", unknownCounter = "INTC", fields
-    }
     
     func asJSON(with processor: Processor) throws -> Data {
         return try processor.encoder.encode(self)
     }
     
     static var fieldMap = FieldTypeMap(paths: [
-        CodingKeys.info: \Self.info,
-        .author: \.author,
-        .desc: \.desc,
-        .masters: \.masters,
-        .masterData: \.masterData,
-        .tagifiedStringCount: \.tagifiedStringCount,
-        .unknownCounter: \.unknownCounter
+        (CodingKeys.info, \Self.info, "HEDR"),
+        (.author, \.author, "CNAM"),
+        (.desc, \.desc, "SNAM"),
+        (.masters, \.masters, "MAST"),
+        (.masterData, \.masterData, "DATA"),
+        (.tagifiedStringCount, \.tagifiedStringCount, "INTV"),
+        (.unknownCounter, \.unknownCounter, "INTC")
     ])
 }
 

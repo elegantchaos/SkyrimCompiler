@@ -8,17 +8,27 @@ import Foundation
 
 /// Maps the coding keys for fields to their types
 struct FieldTypeMap {
-    typealias Map = [Tag:Decodable.Type]
-    
-    let byTag: Map
-    
-    init() {
-        byTag = [:]
+    struct Entry {
+        let type: Decodable.Type
+        let readKey: Tag
     }
     
-    init<K, T>(paths map: [K:PartialKeyPath<T>]) where K: CodingKey, K: RawRepresentable, K.RawValue == String {
-        var entries: Map = [:]
-        for (key, path) in map {
+    typealias Map = [String:Entry]
+    typealias NameMap = [Tag:String]
+    
+    private let index: Map
+    private let tagToName: [Tag:String]
+
+    init() {
+        index = [:]
+        tagToName = [:]
+    }
+    
+    init<K, T>(paths map: [(K,PartialKeyPath<T>, String)]) where K: CodingKey {
+        var entries = Map()
+        var tagToName = NameMap()
+        
+        for (key, path, readKey) in map {
             print(type(of: path))
             let t: Any.Type
             if let p = path as? EnclosingType {
@@ -27,12 +37,27 @@ struct FieldTypeMap {
                 t = type(of: path).valueType
             }
 
-            entries[Tag(key.rawValue)] = t as! Decodable.Type
+            let readTag = Tag(readKey)
+            entries[key.stringValue] = Entry(type: t as! Decodable.Type, readKey: readTag)
+            tagToName[readTag] = key.stringValue
         }
     
-        self.byTag = entries
+        self.index = entries
+        self.tagToName = tagToName
     }
 
+    func fieldType(forKey key: CodingKey) -> Decodable.Type? {
+        index[key.stringValue]?.type
+    }
+
+    func fieldType(forTag tag: Tag) -> Decodable.Type? {
+        guard let name = tagToName[tag] else { return nil }
+        return index[name]?.type
+    }
+
+    func fieldTag(forKey key: CodingKey) -> Tag? {
+        return index[key.stringValue]?.readKey
+    }
 }
 
 protocol RecordProtocol: Codable {

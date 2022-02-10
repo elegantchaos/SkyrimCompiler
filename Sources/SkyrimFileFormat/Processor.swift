@@ -83,7 +83,7 @@ class Processor {
     
     func inflate(header: Field.Header, data: Bytes, types: FieldTypeMap) async throws -> Field {
         do {
-            if let type = types.byTag[header.type] {
+            if let type = types.fieldType(forTag: header.type) {
                 let decoder = FieldDecoder(header: header, data: data)
                 let unpacked = try type.init(from: decoder)
                 return Field(header: header, value: unpacked)

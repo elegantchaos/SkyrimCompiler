@@ -51,4 +51,9 @@ class DecodedFields {
         guard let value = values[tag] as? T else { throw SkyrimFileError.requiredPropertyWrongType }
         return value
     }
+    
+    func values(forKey key: CodingKey) -> [Field]? {
+        guard let tag = spec.fieldTag(forKey: key) else { return nil }
+        return values[tag]
+    }
 }
