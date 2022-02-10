@@ -351,6 +351,11 @@ class FieldDecoder: Decoder {
         }
         
         func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
+            if let unconstrained = type as? UnconstrainedDecodable.Type {
+                return try unconstrained.decode(bytes: decoder.remainingCount(), from: decoder) as! T
+            }
+
+            print("decoding \(type)")
             fatalError("to do")
         }
         

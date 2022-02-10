@@ -28,7 +28,7 @@ struct ARMORecord: Codable, RecordProtocol {
     let pickupSound: FormID
     let dropSound: FormID
     let keywordCount: UInt32
-    let keywords: KWDAField
+    let keywords: SingleFieldArray<FormID>
     let fields: [UnpackedField]?
 
     static var fieldMap = FieldTypeMap(paths: [

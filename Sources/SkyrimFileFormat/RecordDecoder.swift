@@ -6,6 +6,7 @@
 import Foundation
 import CoreText
 
+
 class RecordDecoder: Decoder {
     let header: RecordHeader
     let fields: DecodedFields
@@ -85,6 +86,8 @@ class RecordDecoder: Decoder {
                     let values = fields.map({ $0.value })
                     if let item = values as? T {
                         return item
+//                    } else if let array = type as? SingleFieldArrayProtocol.Type, let item = values.first as? SingleFieldArrayProtocol {
+//                        return item.extracted as! T
                     } else if let list = values as? [T], !list.isEmpty {
                         return list.first!
                     } else {
