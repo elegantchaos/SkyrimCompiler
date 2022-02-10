@@ -7,23 +7,44 @@ import AsyncSequenceReader
 import Bytes
 import Foundation
 
+typealias FormID = UInt32
+//struct FormID: Codable {
+//    let id: UInt32
+//}
+
 struct ARMORecord: Codable, RecordProtocol {
     static var tag = Tag("ARMO")
     
     let header: RecordHeader
     let editorID: String
-    let maleArmour: String
-    let femaleArmour: String?
     let bounds: OBNDField
     let fullName: String?
+    let maleArmour: String
+    let maleInventoryImage: String?
+    let maleMessageImage: String?
+    let femaleArmour: String?
+    let femaleInventoryImage: String?
+    let femaleMessageImage: String?
+    let pickupSound: FormID
+    let dropSound: FormID
+    let keywordCount: UInt32
+    let keywords: KWDAField
     let fields: [UnpackedField]?
 
     static var fieldMap = FieldTypeMap(paths: [
         (CodingKeys.editorID, \Self.editorID, "EDID"),
-        (.maleArmour, \.maleArmour, "MOD2"),
-        (.femaleArmour, \.femaleArmour, "MOD4"),
         (.bounds, \.bounds, "OBND"),
-        (.fullName, \.fullName, "FULL")
+        (.fullName, \.fullName, "FULL"),
+        (.maleArmour, \.maleArmour, "MOD2"),
+        (.maleInventoryImage, \.maleInventoryImage, "ICON"),
+        (.maleMessageImage, \.maleMessageImage, "MICO"),
+        (.femaleArmour, \.femaleArmour, "MOD4"),
+        (.femaleInventoryImage, \.femaleInventoryImage, "ICO2"),
+        (.femaleMessageImage, \.femaleMessageImage, "MIC2"),
+        (.pickupSound, \.pickupSound, "YNAM"),
+        (.dropSound, \.dropSound, "ZNAM"),
+        (.keywordCount, \.keywordCount, "KSIZ"),
+        (.keywords, \.keywords, "KWDA")
         ]
     )
     

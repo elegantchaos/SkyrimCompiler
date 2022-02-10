@@ -28,7 +28,6 @@ struct FieldTypeMap {
         var tagToName = NameMap()
         
         for (key, path, readKey) in map {
-            print(type(of: path))
             let t: Any.Type
             if let p = path as? EnclosingType {
                 t = type(of: p).baseType

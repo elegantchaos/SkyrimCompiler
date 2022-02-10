@@ -6,6 +6,22 @@
 import Bytes
 import Foundation
 
+protocol UnconstrainedDecodable {
+    static func decode(bytes: Int, from: Decoder) throws -> Self
+}
+
+extension Array: UnconstrainedDecodable where Element: Decodable {
+    static var elementSize: Int { return MemoryLayout<Element>.size }
+    static func decode(bytes: Int, from decoder: Decoder) throws -> Array<Element> {
+        var result = Self()
+        let count = bytes / elementSize
+        for _ in 0..<count {
+            result.append(try Element(from: decoder))
+        }
+        return result
+    }
+}
+
 class FieldDecoder: Decoder {
     enum Error: Swift.Error {
         case outOfData
@@ -53,6 +69,14 @@ class FieldDecoder: Decoder {
         return try T(littleEndianBytes: bytes)
     }
 
+    func readAll() -> ArraySlice<Byte> {
+        return data[index...]
+    }
+    
+    func remainingCount() -> Int {
+        data.count - index
+    }
+    
     var codingPath: [CodingKey]
     
     var userInfo: [CodingUserInfoKey : Any]
@@ -87,27 +111,12 @@ class FieldDecoder: Decoder {
         func contains(_ key: K) -> Bool {
             print("Contains \(key.stringValue)")
             fatalError("to do")
-//            guard let tag = decoder.fields.tag(for: key.stringValue) else { return false }
-//            return decoder.fields.values[tag] != nil
         }
         
         func decodeNil(forKey key: K) throws -> Bool {
             fatalError("to do")
         }
         
-//        func decode(_ type: Bool.Type, forKey key: K) throws -> Bool {
-//            fatalError("to do")
-//        }
-//
-//        func decode(_ type: String.Type, forKey key: K) throws -> String {
-//            print("decode \(type) for key \(key) path \(codingPath)")
-//            return "string"
-//        }
-//
-//        func decode(_ type: Double.Type, forKey key: K) throws -> Double {
-//            fatalError("to do")
-//        }
-//
         func decode(_ type: Float.Type, forKey key: K) throws -> Float {
             let bytes = try decoder.read(MemoryLayout<Float>.size)
             let raw = try UInt32(littleEndianBytes: bytes)
@@ -155,24 +164,12 @@ class FieldDecoder: Decoder {
         }
 
         func decode<T>(_ type: T.Type, forKey key: K) throws -> T where T : Decodable {
+            if let unconstrained = type as? UnconstrainedDecodable.Type {
+                return try unconstrained.decode(bytes: decoder.remainingCount(), from: decoder) as! T
+            }
+
             print("decoding  \(type) \(key)")
             fatalError("to do")
-//            switch key.stringValue {
-//                case "header":
-//                    print(T.self)
-//                    return UnpackedHeader(decoder.header) as! T
-//
-//                default:
-//                    print("decoding \(T.self) for \(key.stringValue)")
-//                    let tag = decoder.fields.tag(for: key.stringValue)!
-//                    return decoder.fields.values[tag] as! T
-//            }
-//            return try decoder.decode(type)
-//            print("decode \(type) for key \(key) path \(codingPath)")
-//            decoder.codingPath.append(key)
-//            let decoded = decoder.decode(type)
-//            decoder.codingPath.removeLast()
-//            return decoded
         }
         
         func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type, forKey key: K) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {

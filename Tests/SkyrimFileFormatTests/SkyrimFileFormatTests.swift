@@ -10,17 +10,15 @@ import XCTestExtensions
 import AppKit
 
 func show(_ url: URL) async {
-    let shouldShow = true
-    
-    if shouldShow {
-    let config = NSWorkspace.OpenConfiguration()
-    config.activates = true
-    
-    await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) -> Void in
-        NSWorkspace.shared.open([url], withApplicationAt: URL(fileURLWithPath: "/Applications/Visual Studio Code.app"), configuration: config) { application, error in
-            continuation.resume()
+    if ProcessInfo.processInfo.environment["OpenInVSCode"] == "1" {
+        let config = NSWorkspace.OpenConfiguration()
+        config.activates = true
+        
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) -> Void in
+            NSWorkspace.shared.open([url], withApplicationAt: URL(fileURLWithPath: "/Applications/Visual Studio Code.app"), configuration: config) { application, error in
+                continuation.resume()
+            }
         }
-    }
     }
 }
 #else
@@ -35,21 +33,32 @@ func show(_ url: URL) {
 }
 
 final class SkyrimFileFormatTests: XCTestCase {
-    func loadExample(named name: String) async throws {
-        let context = Context()
+    let context = Context()
+    
+    func loadExample(named name: String) async throws -> [RecordProtocol] {
         let url = Bundle.module.url(forResource: "Examples/\(name)", withExtension: "esp")!
         
+        var records: [RecordProtocol] = []
         for try await record in context.processor.realisedRecords(bytes: url.resourceBytes, processChildren: true) {
             print(record)
+            records.append(record)
+        }
+        
+        return records
+    }
+
+    func testArmour() async throws {
+        let records = try await loadExample(named: "Example")
+        for record in records {
+            if record is ARMORecord {
+                let json = try record.asJSON(with: context.processor)
+                print(String(data: json, encoding: .utf8)!)
+            }
         }
     }
 
-    func testExample() async throws {
-        try await loadExample(named: "Example")
-    }
-
     func testDialogueExample() async throws {
-        try await loadExample(named: "Dialogue")
+        _ = try await loadExample(named: "Dialogue")
     }
 
     func testUnpack() async {
