@@ -7,14 +7,3 @@ import Bytes
 import Foundation
 
 typealias UnpackedFields = [String:[String]]
-
-//struct UnpackedField: Codable {
-//    let type: String
-//    let data: String
-//    
-//    init(_ field: Field) {
-//        self.type = field.header.type.description
-//        let data = field.value as? Bytes ?? []
-//        self.data = data.map({ String(format: "%02X", $0)}).joined(separator: "")
-//    }
-//}

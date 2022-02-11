@@ -7,7 +7,27 @@ import Foundation
 
 public struct BOD2Field: Codable {
     let partFlags: PartNodeFlags
-    let skill: UInt32
+    let skill: Skill
+
+    enum Skill: String, CaseIterable, Codable {
+        case light
+        case heavy
+        case none
+        
+        init(from decoder: Decoder) throws {
+            let container = try decoder.singleValueContainer()
+            if let uint = try? container.decode(UInt32.self) {
+                self = Self.allCases[Int(uint)]
+            } else {
+                let string = try container.decode(String.self)
+                if let value = Self(rawValue: string) {
+                    self = value
+                } else {
+                    throw DecodingError.valueNotFound(Skill.self, .init(codingPath: decoder.codingPath, debugDescription: "Couldn't decode Skill"))
+                }
+            }
+        }
+    }
 }
 
 
