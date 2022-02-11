@@ -5,13 +5,13 @@
 
 import Foundation
 
-struct TES4Header: Codable {
+struct TES4HeaderField: Codable {
     let version: Float32
     let number: UInt32
     let nextID: UInt32
 }
 
-extension TES4Header: MapDecodable {
+extension TES4HeaderField: MapDecodable {
     init() {
         version = 0
         number = 0
