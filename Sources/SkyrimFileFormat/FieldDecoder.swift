@@ -6,22 +6,6 @@
 import Bytes
 import Foundation
 
-protocol UnconstrainedDecodable {
-    static func decode(bytes: Int, from: Decoder) throws -> Self
-}
-
-extension Array: UnconstrainedDecodable where Element: Decodable {
-    static var elementSize: Int { return MemoryLayout<Element>.size }
-    static func decode(bytes: Int, from decoder: Decoder) throws -> Array<Element> {
-        var result = Self()
-        let count = bytes / elementSize
-        for _ in 0..<count {
-            result.append(try Element(from: decoder))
-        }
-        return result
-    }
-}
-
 class FieldDecoder: Decoder {
     enum Error: Swift.Error {
         case outOfData
@@ -164,12 +148,11 @@ class FieldDecoder: Decoder {
         }
 
         func decode<T>(_ type: T.Type, forKey key: K) throws -> T where T : Decodable {
-            if let unconstrained = type as? UnconstrainedDecodable.Type {
+            if let unconstrained = type as? UnboundedDecodable.Type {
                 return try unconstrained.decode(bytes: decoder.remainingCount(), from: decoder) as! T
             }
 
-            print("decoding  \(type) \(key)")
-            fatalError("to do")
+            return try T(from: decoder)
         }
         
         func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type, forKey key: K) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
@@ -351,7 +334,7 @@ class FieldDecoder: Decoder {
         }
         
         func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
-            if let unconstrained = type as? UnconstrainedDecodable.Type {
+            if let unconstrained = type as? UnboundedDecodable.Type {
                 return try unconstrained.decode(bytes: decoder.remainingCount(), from: decoder) as! T
             }
 
