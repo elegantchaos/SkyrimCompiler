@@ -9,7 +9,7 @@ public protocol OptionSetFromEnum: OptionSet, Codable where OptionType.AllCases.
     associatedtype OptionType: CaseIterable, Codable, Equatable
     init(arrayLiteral elements: OptionType...)
     init(from decoder: Decoder) throws
-    init(rawValue: RawValue)
+    init(knownRawValue: RawValue)
 }
 
 extension OptionSetFromEnum where RawValue: FixedWidthInteger, RawValue: Decodable {
@@ -22,45 +22,25 @@ extension OptionSetFromEnum where RawValue: FixedWidthInteger, RawValue: Decodab
             }
         }
 
-        self.init(rawValue: value)
+        self.init(knownRawValue: value)
+    }
+
+    public init(knownRawValue: RawValue) {
+        self.init(rawValue: knownRawValue)!
     }
     
-//    public init(from decoder: Decoder) throws {
-//        let container = try decoder.singleValueContainer()
-//        if let value = try? container.decode(RawValue.self) {
-//            self.init(rawValue: value)
-//        } else {
-////            var container = try decoder.unkeyedContainer()
-//            let cases = try container.decode([OptionType.self])
-//
-////            {
-////            let cases = OptionType.allCases
-////            var value: RawValue = 0
-////            var index: RawValue = 1
-////            for case in cases {
-////
-////            }
-////                value = value | (1 << index)
-////            }
-////            self.init(rawValue: value)
-////        } else {
-////            self.init(rawValue: 0)
-//        }
-//    }
-
-    public static func decodeRawValue(from decoder: Decoder) throws -> RawValue {
+    public init(from decoder: Decoder) throws {
         let cases = OptionType.allCases
         let container = try decoder.singleValueContainer()
         if let value = try? container.decode(RawValue.self) {
-            return value
-        } else if var container = try? decoder.unkeyedContainer() {
+            self.init(knownRawValue: value)
+        } else {
+            var container = try decoder.unkeyedContainer()
             var value: RawValue = 0
             while let node = try? container.decode(OptionType.self), let index = cases.firstIndex(of: node) {
                 value = value | (1 << index)
             }
-            return value
-        } else {
-            return 0
+            self.init(knownRawValue: value)
         }
     }
 

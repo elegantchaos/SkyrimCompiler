@@ -40,52 +40,13 @@ public enum PartNode: String, Codable, CaseIterable {
     case fx01
 }
 
-public struct PartNodeFlags: OptionSet, Codable, ExpressibleByArrayLiteral
+public struct PartNodeFlags: OptionSetFromEnum
 {
-    public init(arrayLiteral elements: PartNode...) {
-        var value: UInt32 = 0
-        let cases = PartNode.allCases
-        for node in elements {
-            if let index = cases.firstIndex(of: node) {
-                value = value | (1 << index)
-            }
-        }
-        self.rawValue = value
-    }
+    public typealias OptionType = PartNode
     
     public init(rawValue: UInt32) {
         self.rawValue = rawValue
     }
     
     public let rawValue: UInt32
-    
-    public init(from decoder: Decoder) throws {
-        let cases = PartNode.allCases
-        let container = try decoder.singleValueContainer()
-        if let value = try? container.decode(UInt32.self) {
-            self.rawValue = value
-        } else if var container = try? decoder.unkeyedContainer() {
-            var value: UInt32 = 0
-            while let node = try? container.decode(PartNode.self), let index = cases.firstIndex(of: node) {
-                value = value | (1 << index)
-            }
-            self.rawValue = value
-        } else {
-            self.rawValue = 0
-        }
-    }
-    
-    public func encode(to encoder: Encoder) throws {
-        var nodes: [PartNode] = []
-        var index = UInt32(1)
-        for flag in PartNode.allCases {
-            if (rawValue & index) != 0 {
-                nodes.append(flag)
-            }
-            index = index << 1
-        }
-
-        var container = encoder.singleValueContainer()
-        try container.encode(nodes)
-    }
 }

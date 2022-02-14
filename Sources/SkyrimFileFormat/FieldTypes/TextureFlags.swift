@@ -1,9 +1,7 @@
-//
-//  File.swift
-//  
-//
-//  Created by Sam Deane on 14/02/2022.
-//
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+//  Created by Sam Deane on 14/02/22.
+//  All code (c) 2022 - present day, Elegant Chaos Limited.
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import Foundation
 import CoreText
@@ -19,9 +17,6 @@ public struct TextureFlags: OptionSetFromEnum
 {
     public typealias OptionType = TextureFlag
 
-    public init(from decoder: Decoder) throws {
-        self.init(rawValue: try TextureFlags.decodeRawValue(from: decoder))
-    }
     public init(rawValue: UInt16) {
         self.rawValue = rawValue
     }
