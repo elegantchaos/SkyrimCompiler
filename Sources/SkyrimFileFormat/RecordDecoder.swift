@@ -77,11 +77,8 @@ class RecordDecoder: Decoder {
                     return decoder.fields.unproccessedFields as! T
 
                 default:
-                    guard let fields = decoder.fields.values(forKey: key) else {
-                        print("no fields for \(key.stringValue) type \(T.self)")
-                        throw Error.missingValue
-                    }
-                    
+                    let fields = decoder.fields.values(forKey: key) ?? []
+
                     // we could have one or more fields of the same type,
                     // so they potentially form a list of values
                     let fieldValues = fields.map({ $0.value })
@@ -99,8 +96,11 @@ class RecordDecoder: Decoder {
                         assert(fieldValues.count == 1)
                         return individualValue
                         
+                    } else if fields.count == 0 {
+                        print("no fields for \(key.stringValue) type \(T.self)")
+                        throw Error.missingValue
                     } else {
-                        // otherwise something has gone wrong...
+                        print("wrong type for \(key.stringValue) type \(T.self)")
                         throw Error.wrongTypeOfValue
                     }
             }
