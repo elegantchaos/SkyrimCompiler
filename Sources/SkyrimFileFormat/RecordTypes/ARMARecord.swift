@@ -27,7 +27,8 @@ struct ARMARecord: RecordProtocol {
     let model5: String?
     let model5Textures: MODTField?
     let model5AlternateTextures: [AlternateTextureField]
-
+    let unknown: DNAMField
+    
     static var fieldMap = FieldTypeMap(paths: [
         (CodingKeys.editorID, \Self.editorID, "EDID"),
         (.bodyTemplate, \.bodyTemplate, "BOD2"),
@@ -45,5 +46,15 @@ struct ARMARecord: RecordProtocol {
         (.model5, \.model5, "MOD5"),
         (.model5Textures, \.model5Textures, "MO5T"),
         (.model5AlternateTextures, \.model5AlternateTextures, "MO5S"),
+        (.unknown, \.unknown, "DNAM"),
     ])
+    
+    struct DNAMField: Codable {
+        let malePriority: UInt8
+        let femalePriority: UInt8
+        let unknown: UInt32
+        let detectionSound: UInt8
+        let unknown2: UInt8
+        let weaponAdjust: Float32
+    }
 }
