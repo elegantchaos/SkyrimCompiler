@@ -20,19 +20,21 @@ struct TXSTRecord: Codable, RecordProtocol {
     let environmentMap: String?
     let multilayer: String?
     let specularMap: String?
+    let decalData: DecalData?
     let flags: TextureFlags
 
     static var fieldMap = FieldTypeMap(paths: [
         (CodingKeys.editorID, \Self.editorID, "EDID"),
-        (CodingKeys.colorMap, \Self.colorMap, "TX00"),
-        (CodingKeys.normalMap, \Self.normalMap, "TX01"),
-        (CodingKeys.mask, \Self.mask, "TX02"),
-        (CodingKeys.toneMap, \Self.toneMap, "TX03"),
-        (CodingKeys.detailMap, \Self.detailMap, "TX04"),
-        (CodingKeys.environmentMap, \Self.environmentMap, "TX05"),
-        (CodingKeys.multilayer, \Self.multilayer, "TX06"),
-        (CodingKeys.specularMap, \Self.specularMap, "TX07"),
-        (CodingKeys.flags, \Self.flags, "DNAM"),
+        (.colorMap, \.colorMap, "TX00"),
+        (.normalMap, \.normalMap, "TX01"),
+        (.mask, \.mask, "TX02"),
+        (.toneMap, \.toneMap, "TX03"),
+        (.detailMap, \.detailMap, "TX04"),
+        (.environmentMap, \.environmentMap, "TX05"),
+        (.multilayer, \.multilayer, "TX06"),
+        (.specularMap, \.specularMap, "TX07"),
+        (.decalData, \.decalData, "DODT"),
+        (.flags, \.flags, "DNAM"),
     ])
     
     func asJSON(with processor: Processor) throws -> Data {
