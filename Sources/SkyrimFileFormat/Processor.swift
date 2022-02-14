@@ -57,23 +57,23 @@ class Processor {
     }
 
     
-    func fields<I>(bytes: inout I, types: FieldTypeMap) -> AsyncThrowingIteratorMapSequence<I, Field> where I: AsyncSequence, I.Element == Byte {
+    func fields<I>(bytes: inout I, types: FieldTypeMap, inRecord recordType: Tag, withHeader recordHeader: RecordHeader) -> AsyncThrowingIteratorMapSequence<I, Field> where I: AsyncSequence, I.Element == Byte {
         let sequence = bytes.iteratorMap { iterator -> Field in
             let header = try await Field.Header(&iterator)
             let data = try await iterator.next(bytes: Bytes.self, count: Int(header.size))
-            return try await self.inflate(header: header, data: data, types: types)
+            return try await self.inflate(header: header, data: data, types: types, inRecord: recordType, withHeader: recordHeader)
         }
         
         return sequence
     }
     
-    func decodedFields(type: Tag, data: Bytes) async throws -> DecodedFields {
+    func decodedFields(type: Tag, header: RecordHeader, data: Bytes) async throws -> DecodedFields {
         let map = try configuration.fields(forRecord: type)
-        let fp = DecodedFields(map)
+        let fp = DecodedFields(map, for: type, header: header)
         
         var bytes = BytesAsyncSequence(bytes: data)
         
-        let fields = fields(bytes: &bytes, types: map)
+        let fields = fields(bytes: &bytes, types: map, inRecord: type, withHeader: header)
         for try await field in fields {
             try fp.add(field)
         }
@@ -82,10 +82,10 @@ class Processor {
         return fp
     }
     
-    func inflate(header: Field.Header, data: Bytes, types: FieldTypeMap) async throws -> Field {
+    func inflate(header: Field.Header, data: Bytes, types: FieldTypeMap, inRecord recordType: Tag, withHeader recordHeader: RecordHeader) async throws -> Field {
         do {
             if let type = types.fieldType(forTag: header.type) {
-                let decoder = FieldDecoder(header: header, data: data)
+                let decoder = FieldDecoder(header: header, data: data, inRecord: recordType, withHeader: recordHeader)
                 let unpacked = try type.init(from: decoder)
                 return Field(header: header, value: unpacked)
             }
@@ -120,7 +120,7 @@ class Processor {
     
     func export(record: Record, asJSONTo url: URL) async throws {
         let header = record.header
-        let fields = try await decodedFields(type: record.type, data: record.data)
+        let fields = try await decodedFields(type: record.type, header: record.header, data: record.data)
         let recordClass = configuration.records[record.type] ?? RawRecord.self
         
         let decoder = RecordDecoder(header: header, fields: fields)

@@ -6,22 +6,21 @@
 import Bytes
 import Foundation
 
-class FieldDecoder: Decoder {
-    enum Error: Swift.Error {
-        case outOfData
-        case badStringEncoding
-    }
-    
+class FieldDecoder: BasicDecoder {
     let header: Field.Header
+    let recordType: Tag
+    let recordHeader: RecordHeader
     var data: Bytes
     var index: Bytes.Index
     
-    internal init(header: Field.Header, data: Bytes) {
+    internal init(header: Field.Header, data: Bytes, inRecord recordType: Tag, withHeader recordHeader: RecordHeader) {
         self.header = header
         self.data = data
         self.index = data.startIndex
         self.codingPath = []
         self.userInfo = [:]
+        self.recordType = recordType
+        self.recordHeader = recordHeader
     }
     
     func decode<T: Decodable>(_ kind: T.Type) -> T {
@@ -34,7 +33,7 @@ class FieldDecoder: Decoder {
     
     func read(_ count: Int) throws -> ArraySlice<Byte> {
         let end = index.advanced(by: count)
-        guard end <= data.endIndex else { throw Error.outOfData }
+        guard end <= data.endIndex else { throw BasicDecoderError.outOfData }
 
         let slice = data[index..<end]
         index = end
@@ -42,7 +41,7 @@ class FieldDecoder: Decoder {
     }
     
     func read(until: Byte)  throws -> ArraySlice<Byte> {
-        guard let end = data.firstIndex(of: until) else { throw Error.outOfData }
+        guard let end = data.firstIndex(of: until) else { throw BasicDecoderError.outOfData }
         let slice = data[index..<end]
         index = end
         return slice
@@ -172,8 +171,8 @@ class FieldDecoder: Decoder {
         }
     }
 
-    class UnkeyedContainer: UnkeyedDecodingContainer {
-        let decoder: FieldDecoder
+    class UnkeyedContainer: UnkeyedDecodingContainer, BasicDecoderClient {
+        let decoder: BasicDecoder
         
         var codingPath: [CodingKey]
         
@@ -190,164 +189,132 @@ class FieldDecoder: Decoder {
             self.currentIndex = 0
             self.isAtEnd = false
         }
-
-        func decode(_ type: String.Type) throws -> String {
-            fatalError("to do")
-        }
-        
-        func decode(_ type: Double.Type) throws -> Double {
-            fatalError("to do")
-        }
-        
-        func decode(_ type: Float.Type) throws -> Float {
-            fatalError("to do")
-        }
-        
-        func decode(_ type: Int.Type) throws -> Int {
-            fatalError("to do")
-        }
-        
-        func decode(_ type: Int8.Type) throws -> Int8 {
-            fatalError("to do")
-        }
-        
-        func decode(_ type: Int16.Type) throws -> Int16 {
-            fatalError("to do")
-        }
-        
-        func decode(_ type: Int32.Type) throws -> Int32 {
-            fatalError("to do")
-        }
-        
-        func decode(_ type: Int64.Type) throws -> Int64 {
-            fatalError("to do")
-        }
-        
-        func decode(_ type: UInt.Type) throws -> UInt {
-            fatalError("to do")
-        }
-        
-        func decode(_ type: UInt8.Type) throws -> UInt8 {
-            fatalError("to do")
-        }
-        
-        func decode(_ type: UInt16.Type) throws -> UInt16 {
-            fatalError("to do")
-        }
-        
-        func decode(_ type: UInt32.Type) throws -> UInt32 {
-            fatalError("to do")
-        }
-        
-        func decode(_ type: UInt64.Type) throws -> UInt64 {
-            fatalError("to do")
-        }
-        
-        func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
-            fatalError("to do")
-        }
-        
-        func decode(_ type: Bool.Type) throws -> Bool {
-            fatalError("to do")
-        }
-        
-        func decodeNil() throws -> Bool {
-            fatalError("to do")
-        }
-        
-        func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
-            fatalError("to do")
-        }
-        
-        func nestedUnkeyedContainer() throws -> UnkeyedDecodingContainer {
-            fatalError("to do")
-        }
-        
-        func superDecoder() throws -> Decoder {
-            fatalError("to do")
-        }
     }
 
-    class SingleValueContainer: SingleValueDecodingContainer {
+    class SingleValueContainer: SingleValueDecodingContainer, BasicDecoderClient {
+        var decoder: BasicDecoder
         var codingPath: [CodingKey]
         
-        func decodeNil() -> Bool {
-            fatalError("to do")
-        }
-        
-        func decode(_ type: Bool.Type) throws -> Bool {
-            fatalError("to do")
-        }
-        
-        func decode(_ type: String.Type) throws -> String {
-            let bytes = try decoder.read(until: 0)
-            guard let string = String(bytes: bytes, encoding: .utf8) else { throw Error.badStringEncoding }
-            return string
-        }
-        
-        func decode(_ type: Double.Type) throws -> Double {
-            fatalError("to do")
-        }
-        
-        func decode(_ type: Float.Type) throws -> Float {
-            fatalError("to do")
-        }
-        
-        func decode(_ type: Int.Type) throws -> Int {
-            return try decoder.readInt(type)
-        }
-        
-        func decode(_ type: Int8.Type) throws -> Int8 {
-            return try decoder.readInt(type)
-        }
-        
-        func decode(_ type: Int16.Type) throws -> Int16 {
-            return try decoder.readInt(type)
-        }
-        
-        func decode(_ type: Int32.Type) throws -> Int32 {
-            return try decoder.readInt(type)
-        }
-        
-        func decode(_ type: Int64.Type) throws -> Int64 {
-            return try decoder.readInt(type)
-        }
-        
-        func decode(_ type: UInt.Type) throws -> UInt {
-            return try decoder.readInt(type)
-        }
-        
-        func decode(_ type: UInt8.Type) throws -> UInt8 {
-            return try decoder.readInt(type)
-        }
-        
-        func decode(_ type: UInt16.Type) throws -> UInt16 {
-            return try decoder.readInt(type)
-        }
-        
-        func decode(_ type: UInt32.Type) throws -> UInt32 {
-            return try decoder.readInt(type)
-        }
-        
-        func decode(_ type: UInt64.Type) throws -> UInt64 {
-            return try decoder.readInt(type)
-        }
-        
-        func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
-            if let unconstrained = type as? UnboundedDecodable.Type {
-                return try unconstrained.decode(bytes: decoder.remainingCount(), from: decoder) as! T
-            }
-
-            print("decoding \(type)")
-            fatalError("to do")
-        }
-        
-        let decoder: FieldDecoder
-
         init(for decoder: FieldDecoder, path: [CodingKey]) {
             self.decoder = decoder
             self.codingPath = path
         }
     }
 
+}
+
+
+protocol BasicDecoder: Decoder {
+    func read(_ count: Int) throws -> ArraySlice<Byte>
+    func read(until: Byte)  throws -> ArraySlice<Byte>
+    func readInt<T>(_ type: T.Type) throws -> T where T: FixedWidthInteger
+    func readAll() -> ArraySlice<Byte>
+    func remainingCount() -> Int
+}
+
+enum BasicDecoderError: Error {
+    case outOfData
+    case badStringEncoding
+}
+
+protocol BasicDecoderClient {
+    var decoder: BasicDecoder { get }
+}
+
+extension BasicDecoderClient {
+    func decodeNil() -> Bool {
+        fatalError("to do")
+    }
+    
+    func decode(_ type: String.Type) throws -> String {
+        let bytes = try decoder.read(until: 0)
+        guard let string = String(bytes: bytes, encoding: .utf8) else { throw BasicDecoderError.badStringEncoding }
+        return string
+    }
+    
+    func decode(_ type: Bool.Type) throws -> Bool {
+        fatalError("to do")
+    }
+
+    func decode(_ type: Double.Type) throws -> Double {
+        fatalError("to do")
+    }
+    
+    func decode(_ type: Float.Type) throws -> Float {
+        fatalError("to do")
+    }
+    
+    func decode(_ type: Int.Type) throws -> Int {
+        return try decoder.readInt(type)
+    }
+    
+    func decode(_ type: Int8.Type) throws -> Int8 {
+        return try decoder.readInt(type)
+    }
+    
+    func decode(_ type: Int16.Type) throws -> Int16 {
+        return try decoder.readInt(type)
+    }
+    
+    func decode(_ type: Int32.Type) throws -> Int32 {
+        return try decoder.readInt(type)
+    }
+    
+    func decode(_ type: Int64.Type) throws -> Int64 {
+        return try decoder.readInt(type)
+    }
+    
+    func decode(_ type: UInt.Type) throws -> UInt {
+        return try decoder.readInt(type)
+    }
+    
+    func decode(_ type: UInt8.Type) throws -> UInt8 {
+        return try decoder.readInt(type)
+    }
+    
+    func decode(_ type: UInt16.Type) throws -> UInt16 {
+        return try decoder.readInt(type)
+    }
+    
+    func decode(_ type: UInt32.Type) throws -> UInt32 {
+        return try decoder.readInt(type)
+    }
+    
+    func decode(_ type: UInt64.Type) throws -> UInt64 {
+        return try decoder.readInt(type)
+    }
+    
+    func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
+        if let unconstrained = type as? UnboundedDecodable.Type {
+            return try unconstrained.decode(bytes: decoder.remainingCount(), from: decoder) as! T
+        }
+
+        print("decoding \(type)")
+        fatalError("to do")
+    }
+    
+    func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
+        fatalError("to do")
+    }
+    
+    func nestedUnkeyedContainer() throws -> UnkeyedDecodingContainer {
+        fatalError("to do")
+    }
+    
+    func superDecoder() throws -> Decoder {
+        fatalError("to do")
+    }
+
+}
+
+
+extension UnkeyedDecodingContainer {
+    mutating func decodeArray<T>(of type: T.Type, count: Int) throws -> [T] where T: Decodable {
+        var result: [T] = []
+        result.reserveCapacity(count)
+        for _ in 0..<count {
+            result.append(try decode(T.self))
+        }
+        return result
+    }
 }

@@ -63,7 +63,7 @@ class RealisedRecordIterator: AsyncIteratorProtocol {
                 
             }
 
-            let fields = try await processor.decodedFields(type: record.type, data: record.data)
+            let fields = try await processor.decodedFields(type: record.type, header: record.header, data: record.data)
             let recordClass = processor.configuration.recordClass(for: record.type)
             let decoder = RecordDecoder(header: header, fields: fields)
             return try recordClass.init(from: decoder)

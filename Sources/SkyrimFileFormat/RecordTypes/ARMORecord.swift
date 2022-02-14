@@ -24,9 +24,11 @@ struct ARMORecord: Codable, RecordProtocol {
     let maleArmour: String
     let maleInventoryImage: String?
     let maleMessageImage: String?
+    let maleModelData: MODTField?
     let femaleArmour: String?
     let femaleInventoryImage: String?
     let femaleMessageImage: String?
+    let femaleModelData: MODTField?
     let pickupSound: FormID
     let dropSound: FormID
     let keywordCount: UInt32
@@ -46,9 +48,11 @@ struct ARMORecord: Codable, RecordProtocol {
         (.maleArmour, \.maleArmour, "MOD2"),
         (.maleInventoryImage, \.maleInventoryImage, "ICON"),
         (.maleMessageImage, \.maleMessageImage, "MICO"),
+        (.maleModelData, \.maleModelData, "MO2T"),
         (.femaleArmour, \.femaleArmour, "MOD4"),
         (.femaleInventoryImage, \.femaleInventoryImage, "ICO2"),
         (.femaleMessageImage, \.femaleMessageImage, "MIC2"),
+        (.femaleModelData, \.femaleModelData, "MO4T"),
         (.pickupSound, \.pickupSound, "YNAM"),
         (.dropSound, \.dropSound, "ZNAM"),
         (.keywordCount, \.keywordCount, "KSIZ"),

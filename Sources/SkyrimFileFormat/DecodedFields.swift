@@ -25,13 +25,18 @@ typealias FieldsMap = [Tag:FieldSpec]
 
 class DecodedFields {
     let map: FieldTypeMap
+    let recordType: Tag
+    let recordHeader: RecordHeader
+
     private var values: [Tag:[Field]]
     private var unprocessed: [Tag:[Field]]
 
-    init(_ spec: FieldTypeMap) {
+    init(_ spec: FieldTypeMap, for type: Tag, header: RecordHeader) {
         self.map = spec
         self.values = [:]
         self.unprocessed = [:]
+        self.recordType = type
+        self.recordHeader = header
     }
     
     func add(_ field: Field) throws {
