@@ -289,8 +289,7 @@ extension BasicDecoderClient {
             return try unconstrained.decode(bytes: decoder.remainingCount(), from: decoder) as! T
         }
 
-        print("decoding \(type)")
-        fatalError("to do")
+        return try T(from: decoder)
     }
     
     func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
@@ -309,9 +308,9 @@ extension BasicDecoderClient {
 
 
 extension UnkeyedDecodingContainer {
-    mutating func decodeArray<T>(of type: T.Type, count: Int) throws -> [T] where T: Decodable {
+    mutating func decodeArray<T, C>(of type: T.Type, count: C) throws -> [T] where T: Decodable, C: FixedWidthInteger {
         var result: [T] = []
-        result.reserveCapacity(count)
+        result.reserveCapacity(Int(count))
         for _ in 0..<count {
             result.append(try decode(T.self))
         }

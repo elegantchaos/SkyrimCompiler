@@ -47,8 +47,29 @@ final class SkyrimFileFormatTests: XCTestCase {
         return records
     }
 
+    func unpackExample(named name: String) async throws {
+        let context = Context()
+        let url = Bundle.module.url(forResource: "Examples/\(name)", withExtension: "esp")!
+        let output = outputURL(for: url)
+        
+        try await context.processor.pack(bytes: url.resourceBytes, to: output)
+        await show(output)
+    }
+    
+    func outputURL(for url: URL) -> URL {
+        let output: URL
+        if ProcessInfo.processInfo.environment["OutputToDesktop"] == "1" {
+            let root = ("~/Desktop/Test Results" as NSString).expandingTildeInPath
+            output = URL(fileURLWithPath: root).appendingPathComponent(url.lastPathComponent).deletingPathExtension().appendingPathExtension("esps")
+        } else {
+            output = temporaryFile(named: url.deletingPathExtension().lastPathComponent, extension: "esps")
+        }
+        try? FileManager.default.createDirectory(at: output, withIntermediateDirectories: true)
+        return output
+    }
+    
     func testArmour() async throws {
-        let records = try await loadExample(named: "Example")
+        let records = try await loadExample(named: "Armour")
         for record in records {
             if record is ARMORecord {
                 let json = try record.asJSON(with: context.processor)
@@ -61,22 +82,14 @@ final class SkyrimFileFormatTests: XCTestCase {
         _ = try await loadExample(named: "Dialogue")
     }
 
-    func testUnpack() async {
-        let context = Context()
-        let url = Bundle.module.url(forResource: "Examples/Example", withExtension: "esp")!
-        let output = temporaryFile(named: url.deletingPathExtension().lastPathComponent, extension: "esps")
-        let fm = FileManager.default
-        
-        do {
-            try? fm.createDirectory(at: output, withIntermediateDirectories: true)
-            try await context.processor.pack(bytes: url.resourceBytes, to: output)
-        } catch {
-            print(error)
-        }
-
-        await show(output)
-
+    func testUnpackArmour() async throws {
+        try await unpackExample(named: "Armour")
     }
+
+    func testUnpackDialogue() async throws {
+        try await unpackExample(named: "Dialogue")
+    }
+
 }
 //
 //extension RecordProtocol {

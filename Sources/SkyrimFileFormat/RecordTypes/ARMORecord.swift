@@ -25,10 +25,12 @@ struct ARMORecord: Codable, RecordProtocol {
     let maleInventoryImage: String?
     let maleMessageImage: String?
     let maleModelData: MODTField?
+    let maleTextures: AlternateTextureField?
     let femaleArmour: String?
     let femaleInventoryImage: String?
     let femaleMessageImage: String?
     let femaleModelData: MODTField?
+    let femaleTextures: AlternateTextureField?
     let pickupSound: FormID
     let dropSound: FormID
     let keywordCount: UInt32
@@ -49,10 +51,12 @@ struct ARMORecord: Codable, RecordProtocol {
         (.maleInventoryImage, \.maleInventoryImage, "ICON"),
         (.maleMessageImage, \.maleMessageImage, "MICO"),
         (.maleModelData, \.maleModelData, "MO2T"),
+        (.maleTextures, \.maleTextures, "MO2S"),
         (.femaleArmour, \.femaleArmour, "MOD4"),
         (.femaleInventoryImage, \.femaleInventoryImage, "ICO2"),
         (.femaleMessageImage, \.femaleMessageImage, "MIC2"),
         (.femaleModelData, \.femaleModelData, "MO4T"),
+        (.femaleTextures, \.femaleTextures, "MO4S"),
         (.pickupSound, \.pickupSound, "YNAM"),
         (.dropSound, \.dropSound, "ZNAM"),
         (.keywordCount, \.keywordCount, "KSIZ"),
@@ -64,8 +68,7 @@ struct ARMORecord: Codable, RecordProtocol {
         (.data, \.data, "DATA"),
         (.race, \.race, "RNAM"),
         (.bodyTemplate, \.bodyTemplate, "BOD2")
-        ]
-    )
+    ])
     
     func asJSON(with processor: Processor) throws -> Data {
         return try processor.encoder.encode(self)

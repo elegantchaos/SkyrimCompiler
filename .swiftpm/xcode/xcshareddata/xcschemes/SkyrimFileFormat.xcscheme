@@ -57,8 +57,8 @@
       shouldUseLaunchSchemeArgsEnv = "NO">
       <EnvironmentVariables>
          <EnvironmentVariable
-            key = "OpenInVSCode"
-            value = "0"
+            key = "OutputToDesktop"
+            value = "1"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
