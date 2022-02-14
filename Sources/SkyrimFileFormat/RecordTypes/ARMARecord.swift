@@ -13,7 +13,8 @@ struct ARMARecord: RecordProtocol {
     
     let editorID: String
     let bodyTemplate: BOD2Field
-    let race: FormID
+    let primaryRace: FormID
+    let races: [FormID]
     let model2: String
     let model2Textures: MODTField?
     let model2AlternateTextures: [AlternateTextureField]
@@ -30,7 +31,8 @@ struct ARMARecord: RecordProtocol {
     static var fieldMap = FieldTypeMap(paths: [
         (CodingKeys.editorID, \Self.editorID, "EDID"),
         (.bodyTemplate, \.bodyTemplate, "BOD2"),
-        (.race, \.race, "RNAM"),
+        (.primaryRace, \.primaryRace, "RNAM"),
+        (.races, \.races, "MODL"),
         (.model2, \.model2, "MOD2"),
         (.model2Textures, \.model2Textures, "MO2T"),
         (.model2AlternateTextures, \.model2AlternateTextures, "MO2S"),

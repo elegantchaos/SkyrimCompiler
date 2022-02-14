@@ -7,7 +7,6 @@ import AsyncSequenceReader
 import Bytes
 import Foundation
 
-typealias FormID = UInt32
 
 struct ARMORecord: Codable, RecordProtocol {
     static var tag = Tag("ARMO")
