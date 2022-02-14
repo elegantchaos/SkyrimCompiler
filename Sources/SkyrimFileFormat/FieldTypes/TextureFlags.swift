@@ -15,7 +15,7 @@ public enum TextureFlag: String, Codable, CaseIterable {
 
 public struct TextureFlags: OptionSetFromEnum
 {
-    public typealias OptionType = TextureFlag
+    public typealias Options = TextureFlag
 
     public init(rawValue: UInt16) {
         self.rawValue = rawValue

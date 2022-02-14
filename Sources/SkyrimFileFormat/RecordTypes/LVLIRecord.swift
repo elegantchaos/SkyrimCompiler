@@ -14,7 +14,7 @@ struct LVLIRecord: IdentifiedRecord {
     let editorID: String
     let bounds: OBNDField
     let noSpawnChance: Int8
-    let flags: Int8
+    let flags: LevelledListFlags
     let noSpawnGlobal: FormID?
     let count: Int8?
     let items: [LevelledItem]
@@ -34,4 +34,19 @@ struct LVLIRecord: IdentifiedRecord {
         let item: FormID
         let amount: UInt32
     }
+
+    public struct LevelledListFlags: OptionSetFromEnum {
+        public enum Options: String, Codable, CaseIterable {
+            case allLevels
+            case eachTime
+            case useAll
+            case specialLoot
+        }
+        
+        public let rawValue: UInt8
+        public init(rawValue: UInt8) {
+            self.rawValue = rawValue
+        }
+    }
 }
+

@@ -42,7 +42,7 @@ public enum PartNode: String, Codable, CaseIterable {
 
 public struct PartNodeFlags: OptionSetFromEnum
 {
-    public typealias OptionType = PartNode
+    public typealias Options = PartNode
     
     public init(rawValue: UInt32) {
         self.rawValue = rawValue
