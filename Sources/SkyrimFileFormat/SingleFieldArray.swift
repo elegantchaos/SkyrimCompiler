@@ -12,8 +12,17 @@ struct SingleFieldArray<Value>: SingleFieldArrayProtocol where Value: Codable {
     let value: [Value]
     
     init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        value = try container.decode([Value].self)
+        if var container = try? decoder.unkeyedContainer() {
+            var result: [Value] = []
+            while let item = try? container.decode(Value.self) {
+                result.append(item)
+            }
+            value = result
+        } else {
+            let container = try decoder.singleValueContainer()
+            value = try container.decode([Value].self)
+        }
+        
     }
     
     func encode(to encoder: Encoder) throws {
