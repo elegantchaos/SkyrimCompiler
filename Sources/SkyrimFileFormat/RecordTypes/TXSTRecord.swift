@@ -36,8 +36,4 @@ struct TXSTRecord: Codable, RecordProtocol {
         (.decalData, \.decalData, "DODT"),
         (.flags, \.flags, "DNAM"),
     ])
-    
-    func asJSON(with processor: Processor) throws -> Data {
-        return try processor.encoder.encode(self)
-    }
 }

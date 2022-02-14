@@ -14,10 +14,6 @@ struct GroupRecord: RecordProtocol {
     init(header: RecordHeader) {
         self._header = header
     }
-    
-    func asJSON(with processor: Processor) throws -> Data {
-        return try processor.encoder.encode(self)
-    }
 
     static var fieldMap = FieldTypeMap()
 }

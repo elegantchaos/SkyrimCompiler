@@ -19,10 +19,6 @@ struct TES4Record: Codable, RecordProtocol {
     let tagifiedStringCount: UInt32
     let unknownCounter: UInt32?
     
-    func asJSON(with processor: Processor) throws -> Data {
-        return try processor.encoder.encode(self)
-    }
-    
     static var fieldMap = FieldTypeMap(paths: [
         (CodingKeys.info, \Self.info, "HEDR"),
         (.author, \.author, "CNAM"),

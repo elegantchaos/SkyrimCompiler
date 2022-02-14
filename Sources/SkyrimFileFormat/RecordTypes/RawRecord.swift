@@ -15,10 +15,6 @@ struct RawRecord: RecordProtocol {
         self._header = header
         self._fields = fields.unproccessedFields
     }
-    
-    func asJSON(with processor: Processor) throws -> Data {
-        return try processor.encoder.encode(self)
-    }
 
     static var fieldMap = FieldTypeMap()
 }

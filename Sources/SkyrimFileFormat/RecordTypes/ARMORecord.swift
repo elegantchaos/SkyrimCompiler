@@ -8,9 +8,6 @@ import Bytes
 import Foundation
 
 typealias FormID = UInt32
-//struct FormID: Codable {
-//    let id: UInt32
-//}
 
 struct ARMORecord: Codable, RecordProtocol {
     static var tag = Tag("ARMO")
@@ -69,10 +66,6 @@ struct ARMORecord: Codable, RecordProtocol {
         (.race, \.race, "RNAM"),
         (.bodyTemplate, \.bodyTemplate, "BOD2")
     ])
-    
-    func asJSON(with processor: Processor) throws -> Data {
-        return try processor.encoder.encode(self)
-    }
     
     struct DATAField: Codable {
         let base: UInt32
