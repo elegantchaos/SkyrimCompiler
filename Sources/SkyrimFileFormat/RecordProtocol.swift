@@ -19,3 +19,7 @@ extension RecordProtocol {
         return try processor.encoder.encode(self)
     }
 }
+
+protocol IdentifiedRecord: RecordProtocol {
+    var editorID: String { get }
+}

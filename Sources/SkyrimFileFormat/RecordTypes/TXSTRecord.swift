@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct TXSTRecord: Codable, RecordProtocol {
+struct TXSTRecord: Codable, IdentifiedRecord {
     static var tag = Tag("TXST")
     
     let _header: RecordHeader

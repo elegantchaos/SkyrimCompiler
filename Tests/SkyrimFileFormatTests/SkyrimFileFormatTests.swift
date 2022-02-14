@@ -64,6 +64,8 @@ final class SkyrimFileFormatTests: XCTestCase {
         } else {
             output = temporaryFile(named: url.deletingPathExtension().lastPathComponent, extension: "esps")
         }
+        
+        try? FileManager.default.removeItem(at: output)
         try? FileManager.default.createDirectory(at: output, withIntermediateDirectories: true)
         return output
     }

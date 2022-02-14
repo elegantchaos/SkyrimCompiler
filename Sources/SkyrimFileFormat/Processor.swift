@@ -102,13 +102,10 @@ class Processor {
         var index = 0
         for try await record in records {
             do {
-                let name = String(format: "%04d %@", index, record.name)
-                print("exporting \(name)")
-                let recordURL = url.appendingPathComponent(name)
                 if record.isGroup {
-                    try await export(group: record, asJSONTo: recordURL)
+                    try await export(group: record, index: index, asJSONTo: url)
                 } else {
-                    try await export(record: record, asJSONTo: recordURL)
+                    try await export(record: record, index: index, asJSONTo: url)
                 }
             } catch {
                 print(error)
@@ -118,22 +115,34 @@ class Processor {
     }
 
     
-    func export(record: Record, asJSONTo url: URL) async throws {
-        let header = record.header
-        let fields = try await decodedFields(type: record.type, header: record.header, data: record.data)
-        let recordClass = configuration.records[record.type] ?? RawRecord.self
-        
+    func export(record rawRecord: Record, index: Int, asJSONTo url: URL) async throws {
+        let header = rawRecord.header
+        let fields = try await decodedFields(type: rawRecord.type, header: rawRecord.header, data: rawRecord.data)
+        let recordClass = configuration.records[rawRecord.type] ?? RawRecord.self
+
         let decoder = RecordDecoder(header: header, fields: fields)
         let record = try recordClass.init(from: decoder)
+        
+        var label = rawRecord.name
+        if let identified = record as? IdentifiedRecord {
+            label = "\(identified.editorID) \(label)"
+        }
+
+        let name = String(format: "%04d %@", index, label)
+        let recordURL = url.appendingPathComponent(name)
+
+
         let encoded = try record.asJSON(with: self)
-        try encoded.write(to: url.appendingPathExtension("json"), options: .atomic)
+        try encoded.write(to: recordURL.appendingPathExtension("json"), options: .atomic)
     }
     
     
-    func export(group: Record, asJSONTo url: URL) async throws {
-        let groupURL = url.appendingPathExtension("epsg")
+    func export(group: Record, index: Int, asJSONTo url: URL) async throws {
+        let name = String(format: "%04d %@", index, group.name)
+        let groupURL = url.appendingPathComponent(name).appendingPathExtension("epsg")
+
         try FileManager.default.createDirectory(at: groupURL, withIntermediateDirectories: true)
-        
+
         let header = group.header
         let headerURL = groupURL.appendingPathComponent("header.json")
         let encoded = try encoder.encode(header)

@@ -18,8 +18,8 @@ struct Record {
     let data: Bytes
 
     var name: String {
-        guard let id = header.id, id != 0 else { return label }
-        return String(format: "%@-%08X", label, id)
+        guard let id = header.id, id != 0 else { return "[\(label)]" }
+        return String(format: "[%@:%08X]", label, id)
     }
     
     var isGroup: Bool {

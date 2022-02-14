@@ -34,6 +34,7 @@ struct Configuration {
     static let defaultConfiguration = Configuration(records: [
         ARMORecord.self,
         ARMARecord.self,
+        LVLIRecord.self,
         OTFTRecord.self,
         TES4Record.self,
         TXSTRecord.self

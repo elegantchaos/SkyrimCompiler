@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct OTFTRecord: RecordProtocol {
+struct OTFTRecord: IdentifiedRecord {
     static var tag = Tag("OTFT")
     
     let _header: RecordHeader

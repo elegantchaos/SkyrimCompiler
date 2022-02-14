@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct ARMARecord: RecordProtocol {
+struct ARMARecord: IdentifiedRecord {
     static var tag = Tag("ARMA")
     
     let _header: RecordHeader
