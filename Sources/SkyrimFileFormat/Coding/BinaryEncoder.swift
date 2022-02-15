@@ -3,6 +3,7 @@
 //  All code (c) 2022 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import Bytes
 import Foundation
 
 class BinaryEncoder: Encoder {
@@ -19,6 +20,14 @@ class BinaryEncoder: Encoder {
     func encode(_ value: Encodable) throws -> Data {
         try value.encode(to: self)
         return data
+    }
+    
+    func write<Value>(_ value: Value) where Value: FixedWidthInteger {
+        data.append(contentsOf: value.littleEndianBytes)
+    }
+    
+    func write<Value>(_ value: Value) where Value: BinaryFloatingPoint {
+        data.append(contentsOf: value.littleEndianBytes)
     }
     
     func container<Key>(keyedBy type: Key.Type) -> KeyedEncodingContainer<Key> where Key : CodingKey {
@@ -221,51 +230,51 @@ class BinaryEncoder: Encoder {
         }
         
         mutating func encode(_ value: Double, forKey key: K) throws {
-            fatalError("to do")
+            encoder.write(value)
         }
         
         mutating func encode(_ value: Float, forKey key: K) throws {
-            fatalError("to do")
+            encoder.write(value)
         }
         
         mutating func encode(_ value: Int, forKey key: K) throws {
-            fatalError("to do")
+            encoder.write(value)
         }
         
         mutating func encode(_ value: Int8, forKey key: K) throws {
-            fatalError("to do")
+            encoder.write(value)
         }
         
         mutating func encode(_ value: Int16, forKey key: K) throws {
-            fatalError("to do")
+            encoder.write(value)
         }
         
         mutating func encode(_ value: Int32, forKey key: K) throws {
-            fatalError("to do")
+            encoder.write(value)
         }
         
         mutating func encode(_ value: Int64, forKey key: K) throws {
-            fatalError("to do")
+            encoder.write(value)
         }
         
         mutating func encode(_ value: UInt, forKey key: K) throws {
-            fatalError("to do")
+            encoder.write(value)
         }
         
         mutating func encode(_ value: UInt8, forKey key: K) throws {
-            fatalError("to do")
+            encoder.write(value)
         }
         
         mutating func encode(_ value: UInt16, forKey key: K) throws {
-            fatalError("to do")
+            encoder.write(value)
         }
         
         mutating func encode(_ value: UInt32, forKey key: K) throws {
-            fatalError("to do")
+            encoder.write(value)
         }
         
         mutating func encode(_ value: UInt64, forKey key: K) throws {
-            fatalError("to do")
+            encoder.write(value)
         }
         
         mutating func encode<T>(_ value: T, forKey key: K) throws where T : Encodable {

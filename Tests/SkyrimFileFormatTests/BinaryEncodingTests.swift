@@ -12,10 +12,17 @@ class BinaryEncodingTests: XCTestCase {
         let test = Test(integer: 123, double: 123.456)
         let data = try encoder.encode(test)
         XCTAssertEqual(data.count, 16)
+        
+        let hex = String(hexForData: data)
+        print(hex)
+        
+        let decoder = BinaryDecoder(data: data)
+        let decoded = decoder.decode(Test.self)
+        XCTAssertEqual(test, decoded)
     }
 }
 
-private struct Test: Codable {
+private struct Test: Codable, Equatable {
     let integer: Int
     let double: Double
 }
