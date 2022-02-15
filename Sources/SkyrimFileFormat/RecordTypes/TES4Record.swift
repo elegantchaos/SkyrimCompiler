@@ -11,9 +11,9 @@ struct TES4Record: Codable, RecordProtocol {
     let _header: RecordHeader
     let _fields: UnpackedFields?
 
-    let info: TES4HeaderField
-    var desc: String?
+    var info: TES4HeaderField
     var author: String?
+    var desc: String?
     var masters: [String]
     var masterData: [UInt64]
     let tagifiedStringCount: UInt32

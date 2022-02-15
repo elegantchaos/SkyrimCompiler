@@ -97,75 +97,35 @@ class RecordEncoder: Encoder, WriteableRecordStream {
             fatalError("to do")
         }
         
-        mutating func encode(_ value: Bool, forKey key: K) throws {
-            try encoder.write(value)
-        }
-        
-        mutating func encode(_ value: String, forKey key: K) throws {
-            try encoder.write(value)
-        }
-        
-        mutating func encode(_ value: Double, forKey key: K) throws {
-            try encoder.writeFloat(value)
-        }
-        
-        mutating func encode(_ value: Float, forKey key: K) throws {
-            try encoder.writeFloat(value)
-        }
-        
-        mutating func encode(_ value: Int, forKey key: K) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: Int8, forKey key: K) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: Int16, forKey key: K) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: Int32, forKey key: K) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: Int64, forKey key: K) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: UInt, forKey key: K) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: UInt8, forKey key: K) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: UInt16, forKey key: K) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: UInt32, forKey key: K) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: UInt64, forKey key: K) throws {
-            encoder.writeInt(value)
-        }
-        
         mutating func encode<T>(_ value: T, forKey key: K) throws where T : Encodable {
             switch key.stringValue {
                 case "_header":
                     try encoder.writeEncodable(value)
 
                 default:
-                    print(key.stringValue)
                     guard let tag = encoder.fieldMap.fieldTag(forKey: key) else {
                         throw RecordEncodingError.unknownField
                     }
-                    let header = Field.Header(type: tag, size: 0)
-                    try encoder.writeEncodable(header)
-                    try encoder.writeEncodable(value)
+
+                    if let array = value as? CodableArray {
+                        try array.forEach { element in
+                            let binaryEncoder = BinaryEncoder()
+                            try element.encode(to: binaryEncoder)
+                            let encoded = binaryEncoder.data
+                            
+                            let header = Field.Header(type: tag, size: UInt16(encoded.count))
+                            try encoder.writeEncodable(header)
+                            try encoder.writeEncodable(encoded)
+                        }
+                    } else {
+                        let binaryEncoder = BinaryEncoder()
+                        try value.encode(to: binaryEncoder)
+                        let encoded = binaryEncoder.data
+                        
+                        let header = Field.Header(type: tag, size: UInt16(encoded.count))
+                        try encoder.writeEncodable(header)
+                        try encoder.writeEncodable(encoded)
+                    }
             }
         }
         

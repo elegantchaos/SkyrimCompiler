@@ -101,8 +101,9 @@ final class SkyrimFileFormatTests: XCTestCase {
     }
 
     func testEncoding() async throws {
-        let record = TES4Record(description: "Empty ESP", author: "ScorpioSixNine")
-
+        var record = TES4Record(description: "Empty ESP", author: "ScorpioSixNine")
+        record.info = .init(version: 1.7, number: 0, nextID: 0x1D8C)
+        
         let file: [RecordProtocol] = [
             record
         ]

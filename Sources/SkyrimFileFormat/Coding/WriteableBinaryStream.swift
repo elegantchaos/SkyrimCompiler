@@ -27,7 +27,7 @@ extension WriteableBinaryStreamEncodingAdaptor {
     }
     
     mutating func encode(_ value: String) throws {
-        fatalError("to do")
+        try stream.write(value)
     }
     
     mutating func encode(_ value: Double) throws {
