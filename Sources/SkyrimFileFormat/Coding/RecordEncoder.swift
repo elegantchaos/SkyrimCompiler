@@ -14,25 +14,19 @@ class RecordEncoder: Encoder, WriteableRecordStream {
     var codingPath: [CodingKey]
     var userInfo: [CodingUserInfoKey : Any]
     var binaryEncoder: BinaryEncoder
-    let configuration: Configuration
-    var fieldMap: FieldTypeMap?
+    var fieldMap: FieldTypeMap
     
-    init(binaryEncoder: BinaryEncoder, configuration: Configuration) {
+    init(fields: FieldTypeMap) {
         self.codingPath = []
         self.userInfo = [:]
-        self.binaryEncoder = binaryEncoder
-        self.configuration = configuration
-        self.fieldMap = nil
+        self.binaryEncoder = BinaryEncoder()
+        self.fieldMap = fields
     }
     
     func encode<T: Encodable>(_ value: T) throws -> Data {
         return try binaryEncoder.encode(value)
     }
     
-    func startingRecord(_ header: RecordHeader) {
-        fieldMap = try? configuration.fields(forRecord: Tag(header.type))
-    }
-                                            
     func writeInt<Value>(_ value: Value) where Value: FixedWidthInteger {
         binaryEncoder.writeInt(value)
     }
@@ -162,12 +156,11 @@ class RecordEncoder: Encoder, WriteableRecordStream {
         mutating func encode<T>(_ value: T, forKey key: K) throws where T : Encodable {
             switch key.stringValue {
                 case "_header":
-                    encoder.startingRecord(value as! RecordHeader)
                     try encoder.writeEncodable(value)
 
                 default:
                     print(key.stringValue)
-                    guard let tag = encoder.fieldMap?.fieldTag(forKey: key) else {
+                    guard let tag = encoder.fieldMap.fieldTag(forKey: key) else {
                         throw RecordEncodingError.unknownField
                     }
                     let header = Field.Header(type: tag, size: 0)

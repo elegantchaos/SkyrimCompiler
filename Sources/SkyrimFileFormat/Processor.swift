@@ -43,7 +43,7 @@ class Processor {
             let stream = AsyncDataStream(iterator: iterator)
             let type = try await Tag(stream.read(UInt32.self))
             let size = try await stream.read(UInt32.self)
-            let header = try await RecordHeader(type: type, stream)
+            let header = try await RecordHeader(stream)
             let payloadSize = Int(type == GroupRecord.tag ? size - 24 : size)
             let data = try await stream.read(count: payloadSize)
             iterator = stream.iterator
@@ -158,10 +158,18 @@ class Processor {
     
     func save(_ records: [RecordProtocol]) throws -> Data {
         let binaryEncoder = BinaryEncoder()
-        let recordEncoder = RecordEncoder(binaryEncoder: binaryEncoder, configuration: configuration)
         for record in records {
+            let type = type(of: record).tag
+            let fields = try configuration.fields(forRecord: type)
+            let recordEncoder = RecordEncoder(fields: fields)
             try record.encode(to: recordEncoder)
+            let encoded = recordEncoder.binaryEncoder.data
+
+            try type.encode(to: binaryEncoder)
+            try UInt32(encoded.count).encode(to: binaryEncoder)
+            try encoded.encode(to: binaryEncoder)
         }
+        
         return binaryEncoder.data
     }
 }

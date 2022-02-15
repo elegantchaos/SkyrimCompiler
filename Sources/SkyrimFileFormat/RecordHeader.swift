@@ -7,7 +7,6 @@ import Bytes
 import Foundation
 
 struct RecordHeader: Codable {
-    let type: String // TODO: turn back into a Tag
     let flags: UInt32?
     let id: UInt32?
     let timestamp: UInt16?
@@ -15,8 +14,7 @@ struct RecordHeader: Codable {
     let version: UInt16?
     let unused: UInt16?
     
-    init(type: Tag) {
-        self.type = type.description
+    init() {
         self.flags = nil
         self.id = nil
         self.timestamp = nil
@@ -25,8 +23,7 @@ struct RecordHeader: Codable {
         self.unused = nil
     }
     
-    init(type: Tag, _ stream: DataStream) async throws {
-        self.type = type.description
+    init(_ stream: DataStream) async throws {
         self.flags = try await stream.readNonZero(UInt32.self)
         self.id = try await stream.readNonZero(UInt32.self)
         self.timestamp = try await stream.readNonZero(UInt16.self)
@@ -39,24 +36,11 @@ struct RecordHeader: Codable {
 extension RecordHeader: BinaryEncodable {
     func binaryEncode(to encoder: Encoder) throws {
         var container = encoder.unkeyedContainer()
-        let tag = Tag(type)
-        try container.encode(tag)
         try container.encode(flags ?? 0)
         try container.encode(id ?? 0)
         try container.encode(timestamp ?? 0)
         try container.encode(versionInfo ?? 0)
         try container.encode(version ?? 44)
         try container.encode(unused ?? 0)
-    }
-}
-extension RecordHeader: MapDecodable {
-    init() {
-        type = ""
-        flags = nil
-        id = nil
-        timestamp = nil
-        versionInfo = nil
-        version = nil
-        unused = nil
     }
 }

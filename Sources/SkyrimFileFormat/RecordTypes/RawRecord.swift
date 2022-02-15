@@ -22,6 +22,6 @@ struct RawRecord: RecordProtocol {
 extension RawRecord: CustomStringConvertible {
     var description: String {
         let fieldDescription = Set(_fields.keys).joined(separator: ", ")
-        return "«\(header.type), fields:\(fieldDescription)»"
+        return "«\(Self.tag), fields:\(fieldDescription)»"
     }
 }

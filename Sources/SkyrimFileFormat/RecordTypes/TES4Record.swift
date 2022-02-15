@@ -20,7 +20,7 @@ struct TES4Record: Codable, RecordProtocol {
     let unknownCounter: UInt32?
     
     init(description: String? = nil, author: String? = nil) {
-        self._header = .init(type: Self.tag)
+        self._header = .init()
         self._fields = nil
         self.info = .init(version: 44, number: 0, nextID: 0)
         self.desc = description
