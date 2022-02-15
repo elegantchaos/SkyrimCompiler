@@ -49,10 +49,10 @@ class StreamDecoder<Iterator: AsyncByteIterator>: Decoder {
         typealias Key = K
         
         var codingPath: [CodingKey]
-        let decoder: StreamDecoder
+        let stream: StreamDecoder
         
-        init(for decoder: StreamDecoder, path: [CodingKey]) {
-            self.decoder = decoder
+        init(for stream: StreamDecoder, path: [CodingKey]) {
+            self.stream = stream
             self.codingPath = path
         }
 
@@ -146,7 +146,7 @@ class StreamDecoder<Iterator: AsyncByteIterator>: Decoder {
     }
 
     class UnkeyedContainer: UnkeyedDecodingContainer {
-        let decoder: StreamDecoder
+        let stream: StreamDecoder
         
         var codingPath: [CodingKey]
         
@@ -156,8 +156,8 @@ class StreamDecoder<Iterator: AsyncByteIterator>: Decoder {
         
         var currentIndex: Int
 
-        init(for decoder: StreamDecoder) {
-            self.decoder = decoder
+        init(for stream: StreamDecoder) {
+            self.stream = stream
             self.codingPath = []
             self.count = nil
             self.currentIndex = 0
@@ -308,10 +308,10 @@ class StreamDecoder<Iterator: AsyncByteIterator>: Decoder {
             fatalError("to do")
         }
         
-        let decoder: StreamDecoder
+        let stream: StreamDecoder
 
-        init(for decoder: StreamDecoder, path: [CodingKey]) {
-            self.decoder = decoder
+        init(for stream: StreamDecoder, path: [CodingKey]) {
+            self.stream = stream
             self.codingPath = path
         }
     }

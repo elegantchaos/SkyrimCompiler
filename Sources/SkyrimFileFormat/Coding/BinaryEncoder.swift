@@ -20,7 +20,7 @@ enum BinaryEncodingError: Error {
     case couldntEncodeString
 }
 
-class BinaryEncoder: Encoder {
+class BinaryEncoder: Encoder, WriteableBinaryStream {
     var codingPath: [CodingKey]
     var userInfo: [CodingUserInfoKey : Any]
     var data: Data
@@ -80,178 +80,36 @@ class BinaryEncoder: Encoder {
         return SingleValueContainer(for: self, path: codingPath)
     }
     
-    struct UnkeyedContainer: UnkeyedEncodingContainer {
+    struct UnkeyedContainer: UnkeyedEncodingContainer, WriteableBinaryStreamEncodingAdaptor {
         var codingPath: [CodingKey]
-        var encoder: BinaryEncoder
+        var stream: WriteableBinaryStream
         var count: Int
         
-        init(for encoder: BinaryEncoder) {
-            self.encoder = encoder
+        init(for encoder: WriteableBinaryStream) {
+            self.stream = encoder
             self.codingPath = []
             self.count = 0
         }
-        
-        mutating func encode(_ value: String) throws {
-            fatalError("to do")
-        }
-        
-        mutating func encode(_ value: Double) throws {
-            fatalError("to do")
-        }
-        
-        mutating func encode(_ value: Float) throws {
-            fatalError("to do")
-        }
-        
-        mutating func encode(_ value: Int) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: Int8) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: Int16) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: Int32) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: Int64) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: UInt) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: UInt8) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: UInt16) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: UInt32) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: UInt64) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode<T>(_ value: T) throws where T : Encodable {
-            try encoder.writeEncodable(value)
-        }
-        
-        mutating func encode(_ value: Bool) throws {
-            fatalError("to do")
-        }
-        
-        mutating func encodeNil() throws {
-            fatalError("to do")
-        }
-        
-        mutating func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type) -> KeyedEncodingContainer<NestedKey> where NestedKey : CodingKey {
-            fatalError("to do")
-        }
-        
-        mutating func nestedUnkeyedContainer() -> UnkeyedEncodingContainer {
-            fatalError("to do")
-        }
-        
-        mutating func superEncoder() -> Encoder {
-            fatalError("to do")
-        }
-        
-        
     }
     
-    struct SingleValueContainer: SingleValueEncodingContainer {
+    struct SingleValueContainer: SingleValueEncodingContainer, WriteableBinaryStreamEncodingAdaptor {
         var codingPath: [CodingKey]
-        var encoder: BinaryEncoder
+        var stream: WriteableBinaryStream
         
-        init(for encoder: BinaryEncoder, path codingPath: [CodingKey]) {
-            self.encoder = encoder
+        init(for encoder: WriteableBinaryStream, path codingPath: [CodingKey]) {
+            self.stream = encoder
             self.codingPath = codingPath
         }
-        
-        mutating func encodeNil() throws {
-            fatalError("to do")
-        }
-        
-        mutating func encode(_ value: Bool) throws {
-            fatalError("to do")
-        }
-        
-        mutating func encode(_ value: String) throws {
-            fatalError("to do")
-        }
-        
-        mutating func encode(_ value: Double) throws {
-            fatalError("to do")
-        }
-        
-        mutating func encode(_ value: Float) throws {
-            fatalError("to do")
-        }
-        
-        mutating func encode(_ value: Int) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: Int8) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: Int16) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: Int32) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: Int64) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: UInt) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: UInt8) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: UInt16) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: UInt32) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode(_ value: UInt64) throws {
-            encoder.writeInt(value)
-        }
-        
-        mutating func encode<T>(_ value: T) throws where T : Encodable {
-            try encoder.writeEncodable(value)
-        }
-        
-        
     }
     
     struct KeyedContainer<K>: KeyedEncodingContainerProtocol where K: CodingKey {
+        typealias Key = K
+
         var codingPath: [CodingKey]
-        var encoder: BinaryEncoder
+        var stream: WriteableBinaryStream
         
-        init(for encoder: BinaryEncoder, path codingPath: [CodingKey]) {
-            self.encoder = encoder
+        init(for stream: WriteableBinaryStream, path codingPath: [CodingKey]) {
+            self.stream = stream
             self.codingPath = codingPath
         }
         
@@ -260,63 +118,63 @@ class BinaryEncoder: Encoder {
         }
         
         mutating func encode(_ value: Bool, forKey key: K) throws {
-            try encoder.write(value)
+            try stream.write(value)
         }
         
         mutating func encode(_ value: String, forKey key: K) throws {
-            try encoder.write(value)
+            try stream.write(value)
         }
         
         mutating func encode(_ value: Double, forKey key: K) throws {
-            try encoder.writeFloat(value)
+            try stream.writeFloat(value)
         }
         
         mutating func encode(_ value: Float, forKey key: K) throws {
-            try encoder.writeFloat(value)
+            try stream.writeFloat(value)
         }
         
         mutating func encode(_ value: Int, forKey key: K) throws {
-            encoder.writeInt(value)
+            stream.writeInt(value)
         }
         
         mutating func encode(_ value: Int8, forKey key: K) throws {
-            encoder.writeInt(value)
+            stream.writeInt(value)
         }
         
         mutating func encode(_ value: Int16, forKey key: K) throws {
-            encoder.writeInt(value)
+            stream.writeInt(value)
         }
         
         mutating func encode(_ value: Int32, forKey key: K) throws {
-            encoder.writeInt(value)
+            stream.writeInt(value)
         }
         
         mutating func encode(_ value: Int64, forKey key: K) throws {
-            encoder.writeInt(value)
+            stream.writeInt(value)
         }
         
         mutating func encode(_ value: UInt, forKey key: K) throws {
-            encoder.writeInt(value)
+            stream.writeInt(value)
         }
         
         mutating func encode(_ value: UInt8, forKey key: K) throws {
-            encoder.writeInt(value)
+            stream.writeInt(value)
         }
         
         mutating func encode(_ value: UInt16, forKey key: K) throws {
-            encoder.writeInt(value)
+            stream.writeInt(value)
         }
         
         mutating func encode(_ value: UInt32, forKey key: K) throws {
-            encoder.writeInt(value)
+            stream.writeInt(value)
         }
         
         mutating func encode(_ value: UInt64, forKey key: K) throws {
-            encoder.writeInt(value)
+            stream.writeInt(value)
         }
         
         mutating func encode<T>(_ value: T, forKey key: K) throws where T : Encodable {
-            try encoder.writeEncodable(value)
+            try stream.writeEncodable(value)
         }
         
         mutating func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type, forKey key: K) -> KeyedEncodingContainer<NestedKey> where NestedKey : CodingKey {
@@ -335,7 +193,6 @@ class BinaryEncoder: Encoder {
             fatalError("to do")
         }
         
-        typealias Key = K
         
         
     }
