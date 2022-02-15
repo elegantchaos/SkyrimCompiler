@@ -9,6 +9,7 @@ import Foundation
 struct RecordHeader: Codable {
     static let binaryEncodedSize = 16
     
+    let type: Tag
     let flags: UInt32?
     let id: UInt32?
     let timestamp: UInt16?
@@ -16,7 +17,8 @@ struct RecordHeader: Codable {
     let version: UInt16?
     let unused: UInt16?
     
-    init() {
+    init(type: Tag) {
+        self.type = type
         self.flags = nil
         self.id = nil
         self.timestamp = nil
@@ -25,7 +27,8 @@ struct RecordHeader: Codable {
         self.unused = nil
     }
     
-    init(_ stream: DataStream) async throws {
+    init(type: Tag, _ stream: DataStream) async throws {
+        self.type = type
         self.flags = try await stream.readNonZero(UInt32.self)
         self.id = try await stream.readNonZero(UInt32.self)
         self.timestamp = try await stream.readNonZero(UInt16.self)

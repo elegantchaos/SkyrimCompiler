@@ -43,7 +43,7 @@ class Processor {
             let stream = AsyncDataStream(iterator: iterator)
             let type = try await Tag(stream.read(UInt32.self))
             let size = try await stream.read(UInt32.self)
-            let header = try await RecordHeader(stream)
+            let header = try await RecordHeader(type: type, stream)
             let payloadSize = Int(type == GroupRecord.tag ? size - 24 : size)
             let data = try await stream.read(count: payloadSize)
             iterator = stream.iterator
@@ -165,7 +165,7 @@ class Processor {
             try record.encode(to: recordEncoder)
             let encoded = recordEncoder.binaryEncoder.data
 
-            try type.encode(to: binaryEncoder)
+            try type.binaryEncode(to: binaryEncoder)
             let size = encoded.count - RecordHeader.binaryEncodedSize
             try UInt32(size).encode(to: binaryEncoder)
             try encoded.encode(to: binaryEncoder)

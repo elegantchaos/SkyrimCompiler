@@ -40,7 +40,8 @@ let package = Package(
                 name: "SkyrimFileFormatTests",
                 dependencies: ["SkyrimFileFormat", "XCTestExtensions"],
                 resources: [
-                    .copy("Resources/Examples")
+                    .copy("Resources/Examples"),
+                    .copy("Resources/Unpacked"),
                 ]
             ),
     ]

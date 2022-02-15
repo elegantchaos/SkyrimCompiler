@@ -1,0 +1,20 @@
+{
+  "_header" : {
+    "type" : "TES4",
+    "version" : 44
+  },
+  "author" : "ScorpioSixNine",
+  "desc" : "Empty ESP",
+  "info" : {
+    "nextID" : 7564,
+    "number" : 0,
+    "version" : 1.7000000476837158
+  },
+  "masterData" : [
+
+  ],
+  "masters" : [
+
+  ],
+  "tagifiedStringCount" : 1
+}
