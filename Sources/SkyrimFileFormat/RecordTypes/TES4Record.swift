@@ -20,7 +20,7 @@ struct TES4Record: Codable, RecordProtocol {
     
     init(description: String? = nil, author: String? = nil) {
         self._header = .init(type: Self.tag)
-        self.info = .init(version: 44, number: 0, nextID: 0)
+        self.info = .init(version: 1.7, number: 0, nextID: 0)
         self.desc = description
         self.author = author
         self.masters = []

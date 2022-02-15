@@ -17,4 +17,8 @@ class FieldDecoder: BinaryDecoder {
         self.recordHeader = recordHeader
         super.init(bytes: data)
     }
+    
+    var version: Int {
+        Int(recordHeader.version ?? 44)
+    }
 }

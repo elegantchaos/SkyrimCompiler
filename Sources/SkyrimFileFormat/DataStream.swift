@@ -14,7 +14,7 @@ protocol DataStream {
 extension DataStream {
     func read<T>(_ type: T.Type, not: T) async throws -> T? where T: FixedWidthInteger {
         let value = try await read(type)
-        return value != 0 ? value : nil
+        return value != not ? value : nil
     }
 
     func readNonZero<T>(_ type: T.Type) async throws -> T? where T: FixedWidthInteger {

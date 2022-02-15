@@ -1,7 +1,6 @@
 {
   "_header" : {
-    "type" : "TES4",
-    "version" : 44
+    "type" : "TES4"
   },
   "author" : "ScorpioSixNine",
   "desc" : "Empty ESP",

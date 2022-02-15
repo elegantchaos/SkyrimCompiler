@@ -13,7 +13,7 @@ struct MODTField: Codable {
     init(from decoder: Decoder) throws {
         
         if let fieldDecoder = decoder as? FieldDecoder {
-            assert(fieldDecoder.recordHeader.version == 44) // TODO handle older format?
+            assert(fieldDecoder.version == 44) // TODO handle older format?
             var container = try decoder.unkeyedContainer()
             let count = try container.decode(UInt32.self)
             let count2 = (count >= 1) ? try container.decode(UInt32.self) : 0
