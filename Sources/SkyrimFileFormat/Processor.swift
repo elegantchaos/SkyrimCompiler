@@ -153,5 +153,9 @@ class Processor {
 
         try await pack(bytes: group.data.asyncBytes, to: childrenURL)
     }
+    
+    func save(_ records: [RecordProtocol]) -> Data {
+        return Data()
+    }
 }
 

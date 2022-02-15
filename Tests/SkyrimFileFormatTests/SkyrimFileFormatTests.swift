@@ -80,6 +80,14 @@ final class SkyrimFileFormatTests: XCTestCase {
         }
     }
 
+    func testPrintEmpty() async throws {
+        let records = try await loadExample(named: "Empty")
+        for record in records {
+            let json = try record.asJSON(with: context.processor)
+            print(String(data: json, encoding: .utf8)!)
+        }
+    }
+
     func testDialogueExample() async throws {
         _ = try await loadExample(named: "Dialogue")
     }
@@ -92,6 +100,19 @@ final class SkyrimFileFormatTests: XCTestCase {
         try await unpackExample(named: "Dialogue")
     }
 
+    func testEncoding() async throws {
+        let file: [RecordProtocol] = [
+            TES4Record()
+        ]
+        
+        let processor = Processor()
+        let data = processor.save(file)
+        
+        let url = Bundle.module.url(forResource: "Examples/Empty", withExtension: "esp")!
+        let raw = try Data(contentsOf: url)
+        
+        XCTAssertEqual(data.count, raw.count)
+    }
 }
 //
 //extension RecordProtocol {

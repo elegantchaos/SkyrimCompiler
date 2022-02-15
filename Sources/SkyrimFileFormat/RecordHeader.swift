@@ -15,6 +15,16 @@ struct RecordHeader: Codable {
     let version: UInt16?
     let unused: UInt16?
     
+    init(type: Tag) {
+        self.type = type.description
+        self.flags = nil
+        self.id = nil
+        self.timestamp = nil
+        self.versionInfo = nil
+        self.version = nil
+        self.unused = nil
+    }
+    
     init(type: Tag, _ stream: DataStream) async throws {
         self.type = type.description
         self.flags = try await stream.readNonZero(UInt32.self)
