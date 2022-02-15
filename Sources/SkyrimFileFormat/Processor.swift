@@ -157,11 +157,12 @@ class Processor {
     }
     
     func save(_ records: [RecordProtocol]) throws -> Data {
-        let encoder = BinaryEncoder()
+        let binaryEncoder = BinaryEncoder()
+        let recordEncoder = RecordEncoder(binaryEncoder: binaryEncoder, configuration: configuration)
         for record in records {
-            try record.encode(to: encoder)
+            try record.encode(to: recordEncoder)
         }
-        return encoder.data
+        return binaryEncoder.data
     }
 }
 

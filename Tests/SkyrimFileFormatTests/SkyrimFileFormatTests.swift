@@ -119,9 +119,10 @@ final class SkyrimFileFormatTests: XCTestCase {
             print(String(data: json, encoding: .utf8)!)
         }
 
+        print("DECODED -- EXPECTED")
         let count = min(data.count, raw.count)
         for n in 0..<count {
-            print("\(hexDigit: data[n]) -- \(hexDigit: raw[n])")
+            print("\(String(byte: data[n]))  \(hexDigit: data[n])   --   \(hexDigit: raw[n])  \(String(byte: raw[n]))")
         }
 
         XCTAssertEqual(data.count, raw.count)
@@ -129,7 +130,15 @@ final class SkyrimFileFormatTests: XCTestCase {
     }
 }
 
-
+public extension String {
+    init(byte: UInt8) {
+        if byte >= 32, let c = String(bytes: [byte], encoding: .ascii), !c.isEmpty {
+            self = c
+        } else {
+            self = " "
+        }
+    }
+}
 public extension String.StringInterpolation {
     mutating func appendInterpolation<T>(hexDigit: T) where T: FixedWidthInteger {
         appendInterpolation(String(format: "%02X", Int(hexDigit)))

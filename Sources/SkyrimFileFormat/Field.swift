@@ -32,10 +32,15 @@ struct Field: CustomStringConvertible {
 }
 
 extension Field {
-    struct Header {
+    struct Header: Codable {
         let type: Tag
         let size: UInt16
 
+        init(type: Tag, size: UInt16) {
+            self.type = type
+            self.size = size
+        }
+        
         init<S: AsyncIteratorProtocol>(_ iterator: inout AsyncBufferedIterator<S>) async throws where S.Element == UInt8 {
             let tag = try await iterator.next(littleEndian: UInt32.self)
             self.type = Tag(tag)
