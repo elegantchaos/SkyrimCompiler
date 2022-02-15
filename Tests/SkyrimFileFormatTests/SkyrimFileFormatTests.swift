@@ -121,31 +121,12 @@ final class SkyrimFileFormatTests: XCTestCase {
             print(String(data: json, encoding: .utf8)!)
         }
 
-        print("ENCODED -- EXPECTED")
-        compareData(encoded, raw)
-
-        XCTAssertEqual(encoded.count, raw.count)
+        XCTAssertEqual(encoded, raw)
 
     }
 }
 
-extension XCTest {
-    func compareData(_ d1: Data, _ d2: Data) {
-        let count = min(d1.count, d2.count)
-        for n in 0..<count {
-            print("\(String(byte: d1[n]))  \(hexDigit: d1[n])   --   \(hexDigit: d2[n])  \(String(byte: d2[n]))")
-        }
-        if d1.count > count {
-            for n in count..<d1.count {
-                print("\(String(byte: d1[n]))  \(hexDigit: d1[n])")
-            }
-        } else if d2.count > count {
-            for n in count..<d2.count {
-                print("        --   \(hexDigit: d2[n])  \(String(byte: d2[n]))")
-            }
-        }
-    }
-}
+
 public extension String {
     static let allowed: CharacterSet = CharacterSet.alphanumerics.union(.punctuationCharacters)
     

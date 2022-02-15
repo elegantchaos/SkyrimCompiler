@@ -7,6 +7,8 @@ import Bytes
 import Foundation
 
 struct RecordHeader: Codable {
+    static let binaryEncodedSize = 16
+    
     let flags: UInt32?
     let id: UInt32?
     let timestamp: UInt16?

@@ -166,7 +166,8 @@ class Processor {
             let encoded = recordEncoder.binaryEncoder.data
 
             try type.encode(to: binaryEncoder)
-            try UInt32(encoded.count).encode(to: binaryEncoder)
+            let size = encoded.count - RecordHeader.binaryEncodedSize
+            try UInt32(size).encode(to: binaryEncoder)
             try encoded.encode(to: binaryEncoder)
         }
         

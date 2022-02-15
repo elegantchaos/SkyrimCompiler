@@ -9,7 +9,6 @@ struct TES4Record: Codable, RecordProtocol {
     static var tag = Tag("TES4")
     
     let _header: RecordHeader
-    let _fields: UnpackedFields?
 
     var info: TES4HeaderField
     var author: String?
@@ -21,7 +20,6 @@ struct TES4Record: Codable, RecordProtocol {
     
     init(description: String? = nil, author: String? = nil) {
         self._header = .init()
-        self._fields = nil
         self.info = .init(version: 44, number: 0, nextID: 0)
         self.desc = description
         self.author = author
