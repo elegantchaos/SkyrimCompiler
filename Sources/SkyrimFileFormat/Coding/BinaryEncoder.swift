@@ -1,15 +1,25 @@
-//
-//  File.swift
-//  
-//
-//  Created by Sam Deane on 15/02/2022.
-//
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+//  Created by Sam Deane on 15/02/22.
+//  All code (c) 2022 - present day, Elegant Chaos Limited.
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import Foundation
 
-class RecordEncoder: Encoder {
-    var codingPath: [CodingKey] = []
-    var userInfo: [CodingUserInfoKey : Any] = [:]
+class BinaryEncoder: Encoder {
+    var codingPath: [CodingKey]
+    var userInfo: [CodingUserInfoKey : Any]
+    var data: Data
+    
+    init() {
+        self.codingPath = []
+        self.userInfo = [:]
+        self.data = Data()
+    }
+    
+    func encode(_ value: Encodable) throws -> Data {
+        try value.encode(to: self)
+        return data
+    }
     
     func container<Key>(keyedBy type: Key.Type) -> KeyedEncodingContainer<Key> where Key : CodingKey {
         return KeyedEncodingContainer(KeyedContainer(for: self, path: codingPath))
@@ -25,10 +35,10 @@ class RecordEncoder: Encoder {
     
     struct UnkeyedContainer: UnkeyedEncodingContainer {
         var codingPath: [CodingKey]
-        var encoder: RecordEncoder
+        var encoder: BinaryEncoder
         var count: Int
         
-        init(for encoder: RecordEncoder) {
+        init(for encoder: BinaryEncoder) {
             self.encoder = encoder
             self.codingPath = []
             self.count = 0
@@ -115,9 +125,9 @@ class RecordEncoder: Encoder {
     
     struct SingleValueContainer: SingleValueEncodingContainer {
         var codingPath: [CodingKey]
-        var encoder: RecordEncoder
+        var encoder: BinaryEncoder
         
-        init(for encoder: RecordEncoder, path codingPath: [CodingKey]) {
+        init(for encoder: BinaryEncoder, path codingPath: [CodingKey]) {
             self.encoder = encoder
             self.codingPath = codingPath
         }
@@ -191,9 +201,9 @@ class RecordEncoder: Encoder {
     
     struct KeyedContainer<K>: KeyedEncodingContainerProtocol where K: CodingKey {
         var codingPath: [CodingKey]
-        var encoder: RecordEncoder
+        var encoder: BinaryEncoder
         
-        init(for encoder: RecordEncoder, path codingPath: [CodingKey]) {
+        init(for encoder: BinaryEncoder, path codingPath: [CodingKey]) {
             self.encoder = encoder
             self.codingPath = codingPath
         }
