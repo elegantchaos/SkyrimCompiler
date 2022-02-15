@@ -103,13 +103,14 @@ final class SkyrimFileFormatTests: XCTestCase {
     func testEncoding() async throws {
         var record = TES4Record(description: "Empty ESP", author: "ScorpioSixNine")
         record.info = .init(version: 1.7, number: 0, nextID: 0x1D8C)
+        record.tagifiedStringCount = 1
         
         let file: [RecordProtocol] = [
             record
         ]
         
         let processor = Processor()
-        let data = try processor.save(file)
+        let encoded = try processor.save(file)
         
         let url = Bundle.module.url(forResource: "Examples/Empty", withExtension: "esp")!
         let raw = try Data(contentsOf: url)
@@ -120,21 +121,37 @@ final class SkyrimFileFormatTests: XCTestCase {
             print(String(data: json, encoding: .utf8)!)
         }
 
-        print("DECODED -- EXPECTED")
-        let count = min(data.count, raw.count)
-        for n in 0..<count {
-            print("\(String(byte: data[n]))  \(hexDigit: data[n])   --   \(hexDigit: raw[n])  \(String(byte: raw[n]))")
-        }
+        print("ENCODED -- EXPECTED")
+        compareData(encoded, raw)
 
-        XCTAssertEqual(data.count, raw.count)
+        XCTAssertEqual(encoded.count, raw.count)
 
     }
 }
 
+extension XCTest {
+    func compareData(_ d1: Data, _ d2: Data) {
+        let count = min(d1.count, d2.count)
+        for n in 0..<count {
+            print("\(String(byte: d1[n]))  \(hexDigit: d1[n])   --   \(hexDigit: d2[n])  \(String(byte: d2[n]))")
+        }
+        if d1.count > count {
+            for n in count..<d1.count {
+                print("\(String(byte: d1[n]))  \(hexDigit: d1[n])")
+            }
+        } else if d2.count > count {
+            for n in count..<d2.count {
+                print("        --   \(hexDigit: d2[n])  \(String(byte: d2[n]))")
+            }
+        }
+    }
+}
 public extension String {
+    static let allowed: CharacterSet = CharacterSet.alphanumerics.union(.punctuationCharacters)
+    
     init(byte: UInt8) {
-        if byte >= 32, let c = String(bytes: [byte], encoding: .ascii), !c.isEmpty {
-            self = c
+        if let s = String(bytes: [byte], encoding: .ascii), let c = s.unicodeScalars.first, Self.allowed.contains(c) {
+            self = s
         } else {
             self = " "
         }

@@ -16,8 +16,8 @@ struct TES4Record: Codable, RecordProtocol {
     var desc: String?
     var masters: [String]
     var masterData: [UInt64]
-    let tagifiedStringCount: UInt32
-    let unknownCounter: UInt32?
+    var tagifiedStringCount: UInt32
+    var unknownCounter: UInt32?
     
     init(description: String? = nil, author: String? = nil) {
         self._header = .init()
@@ -28,7 +28,7 @@ struct TES4Record: Codable, RecordProtocol {
         self.masters = []
         self.masterData = []
         self.tagifiedStringCount = 0
-        self.unknownCounter = 0
+        self.unknownCounter = nil
     }
     
     static var fieldMap = FieldTypeMap(paths: [
