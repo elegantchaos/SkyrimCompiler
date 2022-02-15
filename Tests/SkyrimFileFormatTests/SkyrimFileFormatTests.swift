@@ -101,19 +101,46 @@ final class SkyrimFileFormatTests: XCTestCase {
     }
 
     func testEncoding() async throws {
+        let record = TES4Record(description: "Empty ESP", author: "ScorpioSixNine")
+
         let file: [RecordProtocol] = [
-            TES4Record()
+            record
         ]
         
         let processor = Processor()
-        let data = processor.save(file)
+        let data = try processor.save(file)
         
         let url = Bundle.module.url(forResource: "Examples/Empty", withExtension: "esp")!
         let raw = try Data(contentsOf: url)
         
+        let records = try await loadExample(named: "Empty")
+        for record in records {
+            let json = try record.asJSON(with: context.processor)
+            print(String(data: json, encoding: .utf8)!)
+        }
+
+        let count = min(data.count, raw.count)
+        for n in 0..<count {
+            print("\(hexDigit: data[n]) -- \(hexDigit: raw[n])")
+        }
+
         XCTAssertEqual(data.count, raw.count)
+
     }
 }
+
+
+public extension String.StringInterpolation {
+    mutating func appendInterpolation<T>(hexDigit: T) where T: FixedWidthInteger {
+        appendInterpolation(String(format: "%02X", Int(hexDigit)))
+    }
+
+    mutating func appendInterpolation(hex: Int) {
+        appendInterpolation(String(format: "%0X", hex))
+    }
+}
+
+
 //
 //extension RecordProtocol {
 //    @objc func test(_ context: Context) async throws {

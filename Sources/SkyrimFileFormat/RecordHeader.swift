@@ -7,7 +7,7 @@ import Bytes
 import Foundation
 
 struct RecordHeader: Codable {
-    let type: String
+    let type: String // TODO: turn back into a Tag
     let flags: UInt32?
     let id: UInt32?
     let timestamp: UInt16?
@@ -36,6 +36,19 @@ struct RecordHeader: Codable {
     }
 }
 
+extension RecordHeader: BinaryEncodable {
+    func binaryEncode(to encoder: Encoder) throws {
+        var container = encoder.unkeyedContainer()
+        let tag = Tag(type)
+        try container.encode(tag)
+        try container.encode(flags ?? 0)
+        try container.encode(id ?? 0)
+        try container.encode(timestamp ?? 0)
+        try container.encode(versionInfo ?? 0)
+        try container.encode(version ?? 44)
+        try container.encode(unused ?? 0)
+    }
+}
 extension RecordHeader: MapDecodable {
     init() {
         type = ""

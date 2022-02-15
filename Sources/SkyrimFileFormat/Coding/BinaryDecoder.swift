@@ -39,7 +39,8 @@ class BinaryDecoder: BasicDecoder {
     }
     
     func read(until: Byte)  throws -> ArraySlice<Byte> {
-        guard let end = data.firstIndex(of: until) else { throw BasicDecoderError.outOfData }
+        
+        guard let end = data[index...].firstIndex(of: until) else { throw BasicDecoderError.outOfData }
         let slice = data[index..<end]
         index = end
         return slice
@@ -211,6 +212,7 @@ protocol BasicDecoder: Decoder {
     func read(_ count: Int) throws -> ArraySlice<Byte>
     func read(until: Byte)  throws -> ArraySlice<Byte>
     func readInt<T>(_ type: T.Type) throws -> T where T: FixedWidthInteger
+    func readFloat<T>(_ type: T.Type) throws -> T where T: BinaryFloatingPoint
     func readAll() -> ArraySlice<Byte>
     func remainingCount() -> Int
 }
@@ -236,15 +238,16 @@ extension BasicDecoderClient {
     }
     
     func decode(_ type: Bool.Type) throws -> Bool {
-        fatalError("to do")
+        let value = try decoder.readInt(UInt8.self)
+        return value != 0
     }
 
     func decode(_ type: Double.Type) throws -> Double {
-        fatalError("to do")
+        return try decoder.readFloat(type)
     }
     
     func decode(_ type: Float.Type) throws -> Float {
-        fatalError("to do")
+        return try decoder.readFloat(type)
     }
     
     func decode(_ type: Int.Type) throws -> Int {

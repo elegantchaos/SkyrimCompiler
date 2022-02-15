@@ -16,7 +16,7 @@ extension RecordProtocol {
     var header: RecordHeader { _header }
 
     func asJSON(with processor: Processor) throws -> Data {
-        return try processor.encoder.encode(self)
+        return try processor.jsonEncoder.encode(self)
     }
 }
 

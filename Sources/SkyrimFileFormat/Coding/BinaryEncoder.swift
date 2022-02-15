@@ -6,28 +6,66 @@
 import Bytes
 import Foundation
 
+protocol BinaryEncodable: Encodable {
+    func binaryEncode(to encoder: Encoder) throws
+}
+
+extension BinaryEncodable {
+    func binaryEncode(to encoder: Encoder) throws {
+        try encode(to: encoder)
+    }
+}
+
+enum BinaryEncodingError: Error {
+    case couldntEncodeString
+}
+
 class BinaryEncoder: Encoder {
     var codingPath: [CodingKey]
     var userInfo: [CodingUserInfoKey : Any]
     var data: Data
-    
+    var stringEncoding: String.Encoding
+
     init() {
         self.codingPath = []
         self.userInfo = [:]
         self.data = Data()
+        self.stringEncoding = .utf8
     }
     
-    func encode(_ value: Encodable) throws -> Data {
-        try value.encode(to: self)
+    func encode<T: Encodable>(_ value: T) throws -> Data {
+        data.removeAll()
+        try writeEncodable(value)
         return data
     }
     
-    func write<Value>(_ value: Value) where Value: FixedWidthInteger {
+    func writeInt<Value>(_ value: Value) where Value: FixedWidthInteger {
         data.append(contentsOf: value.littleEndianBytes)
     }
     
-    func write<Value>(_ value: Value) where Value: BinaryFloatingPoint {
+    func writeFloat<Value>(_ value: Value) throws where Value: BinaryFloatingPoint {
         data.append(contentsOf: value.littleEndianBytes)
+    }
+    
+    func write(_ value: Bool) throws {
+        self.writeInt(UInt8(value ? 1 : 0))
+    }
+    
+    func write(_ value: String) throws {
+        guard let encodedString = value.data(using: stringEncoding) else {
+            throw BinaryEncodingError.couldntEncodeString
+        }
+
+        data.append(encodedString)
+        data.append(UInt8(0))
+    }
+    
+    func writeEncodable<Value>(_ value: Value) throws where Value: Encodable {
+        if let binary = value as? BinaryEncodable {
+            try binary.binaryEncode(to: self)
+        } else {
+            try value.encode(to: self)
+        }
     }
     
     func container<Key>(keyedBy type: Key.Type) -> KeyedEncodingContainer<Key> where Key : CodingKey {
@@ -66,47 +104,47 @@ class BinaryEncoder: Encoder {
         }
         
         mutating func encode(_ value: Int) throws {
-            fatalError("to do")
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: Int8) throws {
-            fatalError("to do")
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: Int16) throws {
-            fatalError("to do")
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: Int32) throws {
-            fatalError("to do")
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: Int64) throws {
-            fatalError("to do")
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: UInt) throws {
-            fatalError("to do")
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: UInt8) throws {
-            fatalError("to do")
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: UInt16) throws {
-            fatalError("to do")
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: UInt32) throws {
-            fatalError("to do")
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: UInt64) throws {
-            fatalError("to do")
+            encoder.writeInt(value)
         }
         
         mutating func encode<T>(_ value: T) throws where T : Encodable {
-            fatalError("to do")
+            try encoder.writeEncodable(value)
         }
         
         mutating func encode(_ value: Bool) throws {
@@ -162,47 +200,47 @@ class BinaryEncoder: Encoder {
         }
         
         mutating func encode(_ value: Int) throws {
-            fatalError("to do")
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: Int8) throws {
-            fatalError("to do")
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: Int16) throws {
-            fatalError("to do")
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: Int32) throws {
-            fatalError("to do")
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: Int64) throws {
-            fatalError("to do")
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: UInt) throws {
-            fatalError("to do")
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: UInt8) throws {
-            fatalError("to do")
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: UInt16) throws {
-            fatalError("to do")
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: UInt32) throws {
-            fatalError("to do")
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: UInt64) throws {
-            fatalError("to do")
+            encoder.writeInt(value)
         }
         
         mutating func encode<T>(_ value: T) throws where T : Encodable {
-            fatalError("to do")
+            try encoder.writeEncodable(value)
         }
         
         
@@ -222,63 +260,63 @@ class BinaryEncoder: Encoder {
         }
         
         mutating func encode(_ value: Bool, forKey key: K) throws {
-            fatalError("to do")
+            try encoder.write(value)
         }
         
         mutating func encode(_ value: String, forKey key: K) throws {
-            fatalError("to do")
+            try encoder.write(value)
         }
         
         mutating func encode(_ value: Double, forKey key: K) throws {
-            encoder.write(value)
+            try encoder.writeFloat(value)
         }
         
         mutating func encode(_ value: Float, forKey key: K) throws {
-            encoder.write(value)
+            try encoder.writeFloat(value)
         }
         
         mutating func encode(_ value: Int, forKey key: K) throws {
-            encoder.write(value)
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: Int8, forKey key: K) throws {
-            encoder.write(value)
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: Int16, forKey key: K) throws {
-            encoder.write(value)
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: Int32, forKey key: K) throws {
-            encoder.write(value)
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: Int64, forKey key: K) throws {
-            encoder.write(value)
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: UInt, forKey key: K) throws {
-            encoder.write(value)
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: UInt8, forKey key: K) throws {
-            encoder.write(value)
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: UInt16, forKey key: K) throws {
-            encoder.write(value)
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: UInt32, forKey key: K) throws {
-            encoder.write(value)
+            encoder.writeInt(value)
         }
         
         mutating func encode(_ value: UInt64, forKey key: K) throws {
-            encoder.write(value)
+            encoder.writeInt(value)
         }
         
         mutating func encode<T>(_ value: T, forKey key: K) throws where T : Encodable {
-            fatalError("to do")
+            try encoder.writeEncodable(value)
         }
         
         mutating func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type, forKey key: K) -> KeyedEncodingContainer<NestedKey> where NestedKey : CodingKey {

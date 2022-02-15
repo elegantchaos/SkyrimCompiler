@@ -9,9 +9,9 @@ import XCTest
 class BinaryEncodingTests: XCTestCase {
     func testSimpleStruct() throws {
         let encoder = BinaryEncoder()
-        let test = Test(integer: 123, double: 123.456)
+        let test = Test(integer: 123, double: 123.456, bool: true, string: "Test")
         let data = try encoder.encode(test)
-        XCTAssertEqual(data.count, 16)
+        XCTAssertEqual(data.count, 22)
         
         let hex = String(hexForData: data)
         print(hex)
@@ -25,4 +25,6 @@ class BinaryEncodingTests: XCTestCase {
 private struct Test: Codable, Equatable {
     let integer: Int
     let double: Double
+    let bool: Bool
+    let string: String
 }

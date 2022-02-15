@@ -26,12 +26,15 @@ extension AsyncThrowingIteratorMapSequence: RecordSequence where Element == Reco
 class Processor {
     internal init(configuration: Configuration = .defaultConfiguration) {
         self.configuration = configuration
-        self.encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        self.jsonEncoder = JSONEncoder()
+        self.binaryEncoder = BinaryEncoder()
+
+        jsonEncoder.outputFormatting = [.prettyPrinted, .sortedKeys]
     }
     
     let configuration: Configuration
-    let encoder: JSONEncoder
+    let jsonEncoder: JSONEncoder
+    let binaryEncoder: BinaryEncoder
     
     
     
@@ -131,7 +134,6 @@ class Processor {
         let name = String(format: "%04d %@", index, label)
         let recordURL = url.appendingPathComponent(name)
 
-
         let encoded = try record.asJSON(with: self)
         try encoded.write(to: recordURL.appendingPathExtension("json"), options: .atomic)
     }
@@ -145,7 +147,7 @@ class Processor {
 
         let header = group.header
         let headerURL = groupURL.appendingPathComponent("header.json")
-        let encoded = try encoder.encode(header)
+        let encoded = try jsonEncoder.encode(header)
         try encoded.write(to: headerURL, options: .atomic)
 
         let childrenURL = groupURL.appendingPathComponent("records")
@@ -154,8 +156,12 @@ class Processor {
         try await pack(bytes: group.data.asyncBytes, to: childrenURL)
     }
     
-    func save(_ records: [RecordProtocol]) -> Data {
-        return Data()
+    func save(_ records: [RecordProtocol]) throws -> Data {
+        let encoder = BinaryEncoder()
+        for record in records {
+            try record.encode(to: encoder)
+        }
+        return encoder.data
     }
 }
 
