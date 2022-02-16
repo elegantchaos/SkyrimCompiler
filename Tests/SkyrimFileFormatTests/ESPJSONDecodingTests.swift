@@ -25,7 +25,7 @@ class ESPJSONDecodingTests: ProcessorTestCase {
     
     func testArmour() async throws {
         let records = try await loadESPS(named: "Armour")
-        XCTAssertEqual(records.count, 11)
+        XCTAssertEqual(records.count, 13)
         XCTAssertEqual(records.index[ARMORecord.tag]?.count, 1)
         XCTAssertEqual(records.index[ARMARecord.tag]?.count, 1)
         XCTAssertEqual(records.index[LVLIRecord.tag]?.count, 3)

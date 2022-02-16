@@ -66,7 +66,7 @@ struct ARMORecord: Codable, IdentifiedRecord {
         (.bodyTemplate, \.bodyTemplate, "BOD2")
     ])
     
-    struct DATAField: Codable {
+    struct DATAField: BinaryCodable {
         let base: UInt32
         let weight: Float
     }

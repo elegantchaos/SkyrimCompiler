@@ -91,7 +91,7 @@ class Processor {
         do {
             if let type = types.fieldType(forTag: header.type) {
                 let decoder = FieldDecoder(header: header, data: data, inRecord: recordType, withHeader: recordHeader)
-                let unpacked = try type.init(from: decoder)
+                let unpacked = try type.init(fromBinary: decoder)
                 return Field(header: header, value: unpacked)
             }
         } catch {

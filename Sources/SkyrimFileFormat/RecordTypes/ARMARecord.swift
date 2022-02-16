@@ -49,7 +49,7 @@ struct ARMARecord: IdentifiedRecord {
         (.unknown, \.unknown, "DNAM"),
     ])
     
-    struct DNAMField: Codable {
+    struct DNAMField: BinaryCodable {
         let malePriority: UInt8
         let femalePriority: UInt8
         let unknown: UInt32

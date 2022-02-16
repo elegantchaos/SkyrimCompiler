@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct DecalData: Codable {
+struct DecalData: BinaryCodable {
     let minWidth: Float
     let maxWidth: Float
     let minHeight: Float

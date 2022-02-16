@@ -7,7 +7,7 @@ import Foundation
 
 extension CodingKey {
     public var compactDescription: String {
-        if let int = intValue, stringValue.isEmpty {
+        if let int = intValue {
             return "\(int)"
         } else {
             return stringValue
@@ -33,6 +33,10 @@ extension DecodingError: CustomDebugStringConvertible {
         var description: String
         
         switch self {
+            case .typeMismatch(let type, let context):
+                description = "Wrong type at: \(context.codingPath.compactDescription). "
+                description += context.debugDescription
+
             case .keyNotFound(let key, let context):
                 var path = context.codingPath
                 path.append(key)

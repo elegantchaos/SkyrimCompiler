@@ -29,13 +29,13 @@ struct LVLIRecord: IdentifiedRecord {
         (.items, \.items, "LVLO"),
     ])
     
-    struct LevelledItem: Codable {
+    struct LevelledItem: BinaryCodable {
         let level: UInt32
         let item: FormID
         let amount: UInt32
     }
 
-    public struct LevelledListFlags: OptionSetFromEnum {
+    public struct LevelledListFlags: BinaryCodable, OptionSetFromEnum {
         public enum Options: String, EnumForOptionSet {
             case allLevels
             case eachTime

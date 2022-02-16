@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct TES4HeaderField: Codable {
+struct TES4HeaderField: BinaryCodable {
     let version: Float32
     let number: UInt32
     let nextID: UInt32

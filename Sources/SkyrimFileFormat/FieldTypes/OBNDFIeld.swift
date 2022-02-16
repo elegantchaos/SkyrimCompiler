@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct OBNDField: Codable {
+struct OBNDField: BinaryCodable {
     let x1: Int16
     let y1: Int16
     let z1: Int16

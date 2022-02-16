@@ -5,6 +5,6 @@
 
 import Foundation
 
-struct KWDAField: Codable {
+struct KWDAField: BinaryCodable {
     let formIDS: [FormID]
 }

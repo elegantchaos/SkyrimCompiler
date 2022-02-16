@@ -5,10 +5,10 @@
 
 import Foundation
 
-protocol SingleFieldArrayProtocol: Codable {
+protocol SingleFieldArrayProtocol: BinaryCodable {
 }
 
-struct SingleFieldArray<Value>: SingleFieldArrayProtocol where Value: Codable {
+struct SingleFieldArray<Value>: SingleFieldArrayProtocol where Value: BinaryCodable {
     let value: [Value]
     
     init(from decoder: Decoder) throws {

@@ -8,7 +8,7 @@ import Foundation
 /// Maps the coding keys for fields to their types
 struct FieldTypeMap {
     struct Entry {
-        let type: Decodable.Type
+        let type: BinaryDecodable.Type
         let readKey: Tag
     }
     
@@ -23,7 +23,7 @@ struct FieldTypeMap {
         tagToName = [:]
     }
     
-    init<K, T>(paths map: [(K,PartialKeyPath<T>, String)]) where K: CodingKey {
+    init<K, T>(paths map: [(K, PartialKeyPath<T>, String)]) where K: CodingKey {
         var entries = Map()
         var tagToName = NameMap()
         
@@ -36,7 +36,7 @@ struct FieldTypeMap {
             }
 
             let readTag = Tag(readKey)
-            entries[key.stringValue] = Entry(type: t as! Decodable.Type, readKey: readTag)
+            entries[key.stringValue] = Entry(type: t as! BinaryDecodable.Type, readKey: readTag)
             tagToName[readTag] = key.stringValue
         }
     
@@ -49,11 +49,11 @@ struct FieldTypeMap {
         return tagToName[tag] != nil
     }
 
-    func fieldType(forKey key: CodingKey) -> Decodable.Type? {
+    func fieldType(forKey key: CodingKey) -> BinaryDecodable.Type? {
         index[key.stringValue]?.type
     }
 
-    func fieldType(forTag tag: Tag) -> Decodable.Type? {
+    func fieldType(forTag tag: Tag) -> BinaryDecodable.Type? {
         guard let name = tagToName[tag] else { return nil }
         return index[name]?.type
     }

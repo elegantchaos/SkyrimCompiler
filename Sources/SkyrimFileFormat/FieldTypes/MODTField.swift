@@ -5,13 +5,14 @@
 
 import Foundation
 
-struct MODTField: Codable {
+struct MODTField: BinaryCodable {
     let data: [UInt32]
     let data2: [Data2]?
     let data3: [UInt32]?
+}
 
-    init(from decoder: Decoder) throws {
-        
+extension MODTField: BinaryDecodable {
+    init(fromBinary decoder: Decoder) throws {
         if let fieldDecoder = decoder as? FieldDecoder {
             assert(fieldDecoder.version == 44) // TODO handle older format?
             var container = try decoder.unkeyedContainer()
@@ -33,10 +34,9 @@ struct MODTField: Codable {
 
         }
     }
-
 }
 
-struct Data2: Codable {
+struct Data2: BinaryCodable {
     let unknown: UInt32
     let textureType: Tag
     let unknown2: UInt32

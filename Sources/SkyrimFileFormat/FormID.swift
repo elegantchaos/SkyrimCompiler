@@ -6,7 +6,7 @@
 import ElegantStrings
 import Foundation
 
-struct FormID: Codable {
+struct FormID: BinaryCodable {
     let id: UInt32
     let name: String
     

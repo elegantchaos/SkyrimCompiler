@@ -9,7 +9,7 @@ import CoreText
 
 
 
-public struct TextureFlags: OptionSetFromEnum
+public struct TextureFlags: BinaryCodable, OptionSetFromEnum
 {
     public enum Options: String, EnumForOptionSet {
         case noSpecularMap

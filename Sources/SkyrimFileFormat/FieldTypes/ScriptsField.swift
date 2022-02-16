@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct ScriptsField: Codable {
+struct ScriptsField: BinaryCodable {
     let version: Int16
     let objFormat: Int16
     let scriptCount: UInt16

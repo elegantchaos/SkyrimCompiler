@@ -5,21 +5,21 @@
 
 import Foundation
 
-struct AlternateTextureField: Codable {
+struct AlternateTextureField: BinaryCodable {
     let textures: [AlternateTexture]
 
-    init(from decoder: Decoder) throws {
+    init(fromBinary decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
         let count = try container.decode(UInt32.self)
         textures = try container.decodeArray(of: AlternateTexture.self, count: count)
     }
     
-    struct AlternateTexture: Codable {
+    struct AlternateTexture: BinaryCodable {
         let name: String
         let texture: FormID
         let index: UInt32
         
-        init(from decoder: Decoder) throws {
+        init(fromBinary decoder: Decoder) throws {
             var container = try decoder.unkeyedContainer()
             let size = try container.decode(UInt32.self)
             let bytes = try container.decodeArray(of: UInt8.self, count: size)

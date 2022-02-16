@@ -6,6 +6,38 @@
 import Bytes
 import Foundation
 
+protocol BinaryCodable: BinaryEncodable, BinaryDecodable {
+    
+}
+
+protocol BinaryDecodable: Decodable {
+    init(fromBinary: Decoder) throws
+}
+
+extension BinaryDecodable {
+    init(fromBinary decoder: Decoder) throws {
+        try self.init(from: decoder)
+    }
+}
+
+extension String: BinaryCodable {
+}
+
+extension UInt8: BinaryCodable {}
+extension UInt16: BinaryCodable {}
+extension UInt32: BinaryCodable {}
+extension UInt64: BinaryCodable {}
+extension Int8: BinaryCodable {}
+extension Int16: BinaryCodable {}
+extension Int32: BinaryCodable {}
+extension Int64: BinaryCodable {}
+
+extension Optional: BinaryDecodable where Wrapped: BinaryDecodable {
+}
+
+extension Optional: BinaryEncodable where Wrapped: BinaryEncodable {
+}
+
 class BinaryDecoder: Decoder, ReadableBinaryStream {
     var data: Bytes
     var index: Bytes.Index
@@ -21,14 +53,22 @@ class BinaryDecoder: Decoder, ReadableBinaryStream {
         self.userInfo = [:]
     }
 
-    func decode<T: Decodable>(_ kind: T.Type) -> T {
-        do {
+    func decode<T: Decodable>(_ kind: T.Type) throws -> T {
+        return try readDecodable(kind)
+    }
+
+    func readDecodable<T: Decodable>(_ kind: T.Type) throws -> T {
+        if let unconstrained = kind as? UnboundedDecodable.Type {
+            return try unconstrained.decode(bytes: remainingCount(), from: self) as! T
+        }
+
+        if let binaryDecodable = kind as? BinaryDecodable.Type {
+            return try binaryDecodable.init(fromBinary: self) as! T
+        } else {
             return try T(from: self)
-        } catch {
-            fatalError("arse")
         }
     }
-    
+
     func read(_ count: Int) throws -> ArraySlice<Byte> {
         let end = index.advanced(by: count)
         guard end <= data.endIndex else { throw BasicDecoderError.outOfData }
@@ -58,14 +98,6 @@ class BinaryDecoder: Decoder, ReadableBinaryStream {
     
     func readAll() -> ArraySlice<Byte> {
         return data[index...]
-    }
-    
-    func readDecodable<T>(_ type: T.Type) throws -> T where T : Decodable {
-        if let unconstrained = type as? UnboundedDecodable.Type {
-            return try unconstrained.decode(bytes: remainingCount(), from: self) as! T
-        }
-
-        return try T(from: self)
     }
     
     func remainingCount() -> Int {

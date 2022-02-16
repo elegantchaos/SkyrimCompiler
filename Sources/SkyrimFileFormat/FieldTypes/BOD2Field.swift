@@ -5,7 +5,7 @@
 
 import Foundation
 
-public struct BOD2Field: Codable {
+public struct BOD2Field: BinaryCodable {
     let partFlags: PartNodeFlags
     let skill: Skill
 

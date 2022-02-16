@@ -14,7 +14,7 @@ class BinaryEncodingTests: XCTestCase {
         XCTAssertEqual(data.count, 22)
         
         let decoder = BinaryDecoder(data: data)
-        let decoded = decoder.decode(Test.self)
+        let decoded = try decoder.decode(Test.self)
         XCTAssertEqual(test, decoded)
     }
 }
