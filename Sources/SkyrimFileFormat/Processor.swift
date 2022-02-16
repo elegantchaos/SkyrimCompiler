@@ -180,11 +180,11 @@ class Processor {
         case wrongFileExtension
     }
     
-    func loadESPS(_ url: URL) throws -> ESPS {
+    func loadESPS(_ url: URL) throws -> ESPBundle {
         guard url.pathExtension == "esps" else { throw Error.wrongFileExtension }
 
         let loaded = try loadRecords(from: url)
-        return ESPS(records: loaded)
+        return ESPBundle(records: loaded)
     }
 
     func loadRecords(from url: URL) throws -> [RecordProtocol] {
@@ -221,12 +221,4 @@ class Processor {
 
 struct RecordStub: Codable {
     let _header: RecordHeader
-}
-
-struct ESPS {
-    var records: [RecordProtocol]
-    var count: Int { records.count }
-    var header: TES4Record? {
-        records.first(where: { $0.tag == TES4Record.tag }) as? TES4Record
-    }
 }
