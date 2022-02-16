@@ -7,8 +7,9 @@ import Bytes
 import Foundation
 
 struct GroupRecord: RecordProtocol {
-    static var tag = Tag("GRUP")
-
+    static let tag = Tag("GRUP")
+    static let fileExtension = "espg"
+    
     let _header: RecordHeader
     
     init(header: RecordHeader) {
@@ -20,7 +21,6 @@ struct GroupRecord: RecordProtocol {
 
 extension GroupRecord: CustomStringConvertible {
     var description: String {
-        let type = GroupType(rawValue: header.id ?? 0)!
-        return "«group of \(type.label(flags: header.flags))»"
+        return "«group of \(header.label)»"
     }
 }

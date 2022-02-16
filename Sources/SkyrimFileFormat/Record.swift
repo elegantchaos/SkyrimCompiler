@@ -31,13 +31,7 @@ struct Record {
         return GroupType(rawValue: header.id ?? 0)
     }
 
-    var label: String {
-        if let type = groupType {
-            return type.label(flags: header.flags)
-        } else {
-            return type.description
-        }
-    }
+    var label: String { return header.label }
 }
 
 extension Record: CustomStringConvertible {

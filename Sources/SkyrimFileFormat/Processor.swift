@@ -143,7 +143,7 @@ class Processor {
     
     func export(group: Record, index: Int, asJSONTo url: URL) async throws {
         let name = String(format: "%04d %@", index, group.name)
-        let groupURL = url.appendingPathComponent(name).appendingPathExtension("epsg")
+        let groupURL = url.appendingPathComponent(name).appendingPathExtension(GroupRecord.fileExtension)
 
         try FileManager.default.createDirectory(at: groupURL, withIntermediateDirectories: true)
 
@@ -188,8 +188,12 @@ class Processor {
         var loaded: [RecordProtocol] = []
         let decoder = JSONDecoder()
         for url in urls {
-            if url.path == "epsg" {
+            if url.pathExtension == GroupRecord.fileExtension {
                 // handle groups
+                let headerURL = url.appendingPathComponent("header.json")
+                let data = try Data(contentsOf: headerURL)
+                let header = try decoder.decode(RecordHeader.self, from: data)
+                print("Group of type \(header.type)")
             } else {
                 let data = try Data(contentsOf: url)
                 let stub = try decoder.decode(RecordStub.self, from: data)

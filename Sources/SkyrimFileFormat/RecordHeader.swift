@@ -38,6 +38,21 @@ struct RecordHeader: Codable {
         self.version = try await stream.read(UInt16.self, not: 44)
         self.versionControlInfo2 = try await stream.readNonZero(UInt16.self)
     }
+    
+    var groupLabel: String? {
+        guard type == GroupRecord.tag, let groupType = GroupType(rawValue: id ?? 0) else { return nil }
+        switch groupType {
+            case .top:
+                return Tag(flags?.rawValue ?? 0).description
+                
+            default:
+                return String(describing: groupType)
+        }
+    }
+    
+    var label: String {
+        return groupLabel ?? type.description
+    }
 }
 
 extension RecordHeader: BinaryEncodable {

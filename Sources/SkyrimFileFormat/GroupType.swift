@@ -18,14 +18,4 @@ enum GroupType: UInt32 {
     case topicChildren
     case cellPersistentChildren
     case cellTemporaryChildren
-    
-    func label(flags: RecordHeaderFlags?) -> String {
-        switch self {
-            case .top:
-                return Tag(flags?.rawValue ?? 0).description
-                
-            default:
-                return String(describing: self)
-        }
-    }
 }
