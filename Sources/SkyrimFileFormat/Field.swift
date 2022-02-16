@@ -5,17 +5,8 @@
 
 import AsyncSequenceReader
 import Bytes
+import ElegantStrings
 import Foundation
-
-extension String {
-    init(hexForBytes bytes: Bytes) {
-        self.init(bytes.map({ String(format: "%02X", $0)}).joined(separator: ""))
-    }
-
-    init(hexForData data: Data) {
-        self.init(data.map({ String(format: "%02X", $0)}).joined(separator: ""))
-    }
-}
 
 struct Field: CustomStringConvertible {
     let header: Header
@@ -27,7 +18,7 @@ struct Field: CustomStringConvertible {
     
     var encodedValue: String {
         let data = value as? Bytes ?? []
-        return String(hexForBytes: data)
+        return String(hex: data)
     }
 }
 

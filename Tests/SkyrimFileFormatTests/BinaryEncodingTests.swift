@@ -13,9 +13,6 @@ class BinaryEncodingTests: XCTestCase {
         let data = try encoder.encode(test)
         XCTAssertEqual(data.count, 22)
         
-        let hex = String(hexForData: data)
-        print(hex)
-        
         let decoder = BinaryDecoder(data: data)
         let decoded = decoder.decode(Test.self)
         XCTAssertEqual(test, decoded)
