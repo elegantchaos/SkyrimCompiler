@@ -14,7 +14,7 @@ protocol RecordProtocol: Codable {
 }
 
 extension RecordProtocol {
-    var tag: Tag { Self.tag }
+    var type: Tag { _header.type }
     
     var header: RecordHeader { _header }
 
