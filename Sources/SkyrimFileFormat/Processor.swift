@@ -182,7 +182,12 @@ class Processor {
     
     func loadESPS(_ url: URL) throws -> ESPS {
         guard url.pathExtension == "esps" else { throw Error.wrongFileExtension }
-        
+
+        let loaded = try loadRecords(from: url)
+        return ESPS(records: loaded)
+    }
+
+    func loadRecords(from url: URL) throws -> [RecordProtocol] {
         let urls = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil)
 
         var loaded: [RecordProtocol] = []
@@ -193,18 +198,25 @@ class Processor {
                 let headerURL = url.appendingPathComponent("header.json")
                 let data = try Data(contentsOf: headerURL)
                 let header = try decoder.decode(RecordHeader.self, from: data)
-                print("Group of type \(header.type)")
+                loaded.append(GroupRecord(header: header))
+                let contentURL = url.appendingPathComponent("records")
+                loaded.append(contentsOf: try loadRecords(from: contentURL))
             } else {
                 let data = try Data(contentsOf: url)
                 let stub = try decoder.decode(RecordStub.self, from: data)
                 let type = configuration.recordClass(for: stub._header.type)
-                let decoded = try type.fromJSON(data, with: self)
-                loaded.append(decoded)
+                do {
+                    let decoded = try type.fromJSON(data, with: self)
+                    loaded.append(decoded)
+                } catch {
+                    print("Couldn't load record \(type): \(error)")
+                }
             }
         }
         
-        return ESPS(records: loaded)
+        return loaded
     }
+
 }
 
 struct RecordStub: Codable {
