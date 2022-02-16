@@ -6,10 +6,13 @@
 import Foundation
 
 public protocol OptionSetFromEnum: OptionSet, Codable where Options.AllCases.Index: FixedWidthInteger {
-    associatedtype Options: CaseIterable, Codable, Equatable
+    associatedtype Options: EnumForOptionSet
     init(arrayLiteral elements: Options...)
     init(from decoder: Decoder) throws
     init(knownRawValue: RawValue)
+}
+
+public protocol EnumForOptionSet: Codable, CaseIterable, Equatable, RawRepresentable where RawValue == String {
 }
 
 extension OptionSetFromEnum where RawValue: FixedWidthInteger, RawValue: Decodable {

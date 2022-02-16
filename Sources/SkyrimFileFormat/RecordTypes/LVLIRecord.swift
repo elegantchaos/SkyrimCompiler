@@ -36,7 +36,7 @@ struct LVLIRecord: IdentifiedRecord {
     }
 
     public struct LevelledListFlags: OptionSetFromEnum {
-        public enum Options: String, Codable, CaseIterable {
+        public enum Options: String, EnumForOptionSet {
             case allLevels
             case eachTime
             case useAll

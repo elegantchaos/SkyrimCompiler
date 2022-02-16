@@ -8,15 +8,23 @@ import Foundation
 protocol RecordProtocol: Codable {
     static var tag: Tag { get }
     func asJSON(with processor: Processor) throws -> Data
+    static func fromJSON(_ data: Data, with processor: Processor) throws -> RecordProtocol
     static var fieldMap: FieldTypeMap { get }
     var _header: RecordHeader { get }
 }
 
 extension RecordProtocol {
+    var tag: Tag { Self.tag }
+    
     var header: RecordHeader { _header }
 
     func asJSON(with processor: Processor) throws -> Data {
         return try processor.jsonEncoder.encode(self)
+    }
+    
+    static func fromJSON(_ data: Data, with processor: Processor) throws -> RecordProtocol {
+        let decoded = try processor.jsonDecoder.decode(Self.self, from: data)
+        return decoded
     }
 }
 

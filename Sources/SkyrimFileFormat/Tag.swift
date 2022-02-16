@@ -24,6 +24,17 @@ extension Tag: Equatable, Hashable {
 }
 
 extension Tag: Codable {
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let value = try? container.decode(UInt32.self) {
+            self.tag = value
+        } else {
+            let string = try container.decode(String.self)
+            guard string.count == 4 else { throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "Tag string wrong length"))}
+            self.tag = try UInt32(littleEndianBytes: string.utf8Bytes)
+        }
+    }
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(description)

@@ -27,6 +27,7 @@ class Processor {
     internal init(configuration: Configuration = .defaultConfiguration) {
         self.configuration = configuration
         self.jsonEncoder = JSONEncoder()
+        self.jsonDecoder = JSONDecoder()
         self.binaryEncoder = BinaryEncoder()
 
         jsonEncoder.outputFormatting = [.prettyPrinted, .sortedKeys]
@@ -34,6 +35,7 @@ class Processor {
     
     let configuration: Configuration
     let jsonEncoder: JSONEncoder
+    let jsonDecoder: JSONDecoder
     let binaryEncoder: BinaryEncoder
     
     
@@ -173,5 +175,38 @@ class Processor {
         
         return binaryEncoder.data
     }
+    
+    enum Error: Swift.Error {
+        case wrongFileExtension
+    }
+    
+    func loadESPS(_ url: URL) throws -> ESPS {
+        guard url.pathExtension == "esps" else { throw Error.wrongFileExtension }
+        
+        let urls = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil)
+
+        var loaded: [RecordProtocol] = []
+        let decoder = JSONDecoder()
+        for url in urls {
+            let data = try Data(contentsOf: url)
+            let stub = try decoder.decode(RecordStub.self, from: data)
+            let type = configuration.recordClass(for: stub._header.type)
+            let decoded = try type.fromJSON(data, with: self)
+            loaded.append(decoded)
+        }
+        
+        return ESPS(records: loaded)
+    }
 }
 
+struct RecordStub: Codable {
+    let _header: RecordHeader
+}
+
+struct ESPS {
+    var records: [RecordProtocol]
+    var count: Int { records.count }
+    var header: TES4Record? {
+        records.first(where: { $0.tag == TES4Record.tag }) as? TES4Record
+    }
+}

@@ -7,33 +7,32 @@ import XCTest
 
 @testable import SkyrimFileFormat
 
-struct RecordStub: Codable {
-    let _header: RecordHeader
-}
+
 
 class ESPJSONDecodingTests: ProcessorTestCase {
-    func loadESPS(named name: String) async throws -> [RecordProtocol] {
+    func loadESPS(named name: String) async throws -> ESPS {
         let url = Bundle.module.url(forResource: "Unpacked/\(name)", withExtension: "esps")!
-        
-        let urls = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil)
-        
-        let decoder = JSONDecoder()
-        for url in urls {
-            let data = try Data(contentsOf: url)
-            let decoded = try decoder.decode(RecordStub.self, from: data)
-            print(decoded._header)
-            print(url)
-        }
-//        var records: [RecordProtocol] = []
-//        for try await record in processor.realisedRecords(bytes: url.resourceBytes, processChildren: true) {
-//            print(record)
-//            records.append(record)
+        return try processor.loadESPS(url)
+//        let urls = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil)
+//
+//        var loaded: [RecordProtocol] = []
+//        let decoder = JSONDecoder()
+//        for url in urls {
+//            let data = try Data(contentsOf: url)
+//            let stub = try decoder.decode(RecordStub.self, from: data)
+//            let type = processor.configuration.recordClass(for: stub._header.type)
+//            let decoded = try type.fromJSON(data, with: processor)
+//            loaded.append(decoded)
 //        }
-        
-        return []
+//
+//        return loaded
     }
 
     func testEmpty() async throws {
         let records = try await loadESPS(named: "Empty")
+        XCTAssertEqual(records.count, 1)
+        let header = records.header
+        XCTAssertEqual(header?.tag, TES4Record.tag)
+        XCTAssertEqual(header?.info.version, 1.7)
     }
 }

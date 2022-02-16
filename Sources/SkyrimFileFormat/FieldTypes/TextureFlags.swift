@@ -7,16 +7,15 @@ import Foundation
 import CoreText
 
 
-public enum TextureFlag: String, Codable, CaseIterable {
-    case noSpecularMap
-    case hasFacegenTextures
-    case hasModelSpaceNormalMap
-}
+
 
 public struct TextureFlags: OptionSetFromEnum
 {
-    public typealias Options = TextureFlag
-
+    public enum Options: String, EnumForOptionSet {
+        case noSpecularMap
+        case hasFacegenTextures
+        case hasModelSpaceNormalMap
+    }
     public init(rawValue: UInt16) {
         self.rawValue = rawValue
     }
