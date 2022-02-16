@@ -10,7 +10,7 @@ struct RecordHeader: Codable {
     static let binaryEncodedSize = 16
     
     let type: Tag
-    let flags: UInt32?
+    let flags: RecordHeaderFlags?
     let id: UInt32?
     let timestamp: UInt16?
     let versionControlInfo1: UInt16?
@@ -29,7 +29,9 @@ struct RecordHeader: Codable {
     
     init(type: Tag, _ stream: DataStream) async throws {
         self.type = type
-        self.flags = try await stream.readNonZero(UInt32.self)
+        
+        let flags = try await stream.readNonZero(UInt32.self)
+        self.flags = flags.map { RecordHeaderFlags(rawValue: $0) }
         self.id = try await stream.readNonZero(UInt32.self)
         self.timestamp = try await stream.readNonZero(UInt16.self)
         self.versionControlInfo1 = try await stream.readNonZero(UInt16.self)
@@ -41,7 +43,7 @@ struct RecordHeader: Codable {
 extension RecordHeader: BinaryEncodable {
     func binaryEncode(to encoder: Encoder) throws {
         var container = encoder.unkeyedContainer()
-        try container.encode(flags ?? 0)
+        try container.encode(flags?.rawValue ?? 0)
         try container.encode(id ?? 0)
         try container.encode(timestamp ?? 0)
         try container.encode(versionControlInfo1 ?? 0)
@@ -54,28 +56,33 @@ extension RecordHeader: BinaryEncodable {
 
 struct RecordHeaderFlags: OptionSetFromEnum {
     enum Options: String, EnumForOptionSet {
-        case master
-        case bit2
-        case bit3
-        case bit4
-        case deletedGroup
-        case deletedRecord
-        case constant
-        case localized
-        case mustUpdateAnims
-        case light
-        case questItem
-        case initiallyDisabled
-        case ignored
-        case visibleWhenDistant
-        case randomAnimationStart
-        case dangerous
-        case compressed
-        case cantWait
-        case ignoreObjectInteraction
-        case isMarker
-        case obstacle
-        case navMeshGen
+        case master                     // 00000001
+        case bit2                       // 00000002
+        case bit3                       // 00000004
+        case bit4                       // 00000008
+        case deletedGroup               // 00000010
+        case deletedRecord              // 00000020
+        case constant                   // 00000040
+        case localized                  // 00000080
+        case mustUpdateAnims            // 00000100
+        case light                      // 00000200
+        case questItem                  // 00000400
+        case initiallyDisabled          // 00000800
+        case ignored                    // 00001000
+        case bit14                      // 00002000
+        case bit15                      // 00004000
+        case visibleWhenDistant         // 00008000
+        case randomAnimationStart       // 00010000
+        case dangerous                  // 00020000
+        case compressed                 // 00040000
+        case cantWait                   // 00080000
+        case ignoreObjectInteraction    // 00100000
+        case bit22                      // 00200000
+        case bit23                      // 00400000
+        case isMarker                   // 00800000
+        case bit25                      // 01000000
+        case obstacle                   // 02000000
+        case navMeshGen                 // 04000000
     }
     
     let rawValue: UInt32

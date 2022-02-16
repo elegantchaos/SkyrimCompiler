@@ -1,0 +1,16 @@
+{
+  "flags" : [
+    "master",
+    "bit2",
+    "deletedRecord",
+    "constant",
+    "mustUpdateAnims",
+    "questItem",
+    "initiallyDisabled",
+    "navMeshGen"
+  ],
+  "id" : 7,
+  "timestamp" : 11336,
+  "type" : "GRUP",
+  "version" : 0
+}

@@ -1,0 +1,17 @@
+{
+  "_fields" : {
+    "OBND" : [
+      "000000000000000000000000"
+    ]
+  },
+  "_header" : {
+    "id" : 16780644,
+    "type" : "TXST"
+  },
+  "colorMap" : "clothes\\blackgloves\\glovesm_d.dds",
+  "editorID" : "BlackGloves03",
+  "flags" : [
+
+  ],
+  "normalMap" : "clothes\\farmclothes03\\glovesm_n.dds"
+}

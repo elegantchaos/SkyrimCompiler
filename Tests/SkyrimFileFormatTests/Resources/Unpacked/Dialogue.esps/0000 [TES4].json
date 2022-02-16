@@ -2,18 +2,19 @@
   "_header" : {
     "type" : "TES4"
   },
-  "author" : "ScorpioSixNine",
-  "desc" : "Empty ESP",
+  "author" : "DEFAULT",
   "info" : {
-    "nextID" : 7564,
-    "number" : 0,
+    "nextID" : 8937,
+    "number" : 8,
     "version" : 1.7000000476837158
   },
   "masterData" : [
-
+    0,
+    0
   ],
   "masters" : [
-
+    "Skyrim.esm",
+    "Update.esm"
   ],
   "tagifiedStringCount" : 1
 }

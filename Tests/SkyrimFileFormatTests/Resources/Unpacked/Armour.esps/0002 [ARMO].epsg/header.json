@@ -1,0 +1,19 @@
+{
+  "flags" : [
+    "master",
+    "constant",
+    "light",
+    "ignored",
+    "bit15",
+    "randomAnimationStart",
+    "compressed",
+    "cantWait",
+    "bit23",
+    "bit25",
+    "obstacle",
+    "navMeshGen"
+  ],
+  "timestamp" : 11325,
+  "type" : "GRUP",
+  "version" : 0
+}

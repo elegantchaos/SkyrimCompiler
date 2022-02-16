@@ -1,0 +1,88 @@
+{
+  "_header" : {
+    "id" : 16780643,
+    "type" : "ARMA"
+  },
+  "bodyTemplate" : {
+    "partFlags" : [
+      "hands"
+    ],
+    "skill" : "none"
+  },
+  "editorID" : "BlackGloves03AA",
+  "model2" : "Clothes\\FarmClothes03\\farmerglovesm_1.nif",
+  "model2AlternateTextures" : [
+    {
+      "textures" : [
+        {
+          "index" : 0,
+          "name" : "gloveslow",
+          "texture" : "0x01000D64"
+        }
+      ]
+    }
+  ],
+  "model2Textures" : {
+    "data" : [
+
+    ]
+  },
+  "model3" : "Clothes\\FarmClothes03\\farmerglovesf_1.nif",
+  "model3AlternateTextures" : [
+    {
+      "textures" : [
+        {
+          "index" : 0,
+          "name" : "gloveslow02",
+          "texture" : "0x01000D64"
+        }
+      ]
+    }
+  ],
+  "model3Textures" : {
+    "data" : [
+
+    ]
+  },
+  "model4AlternateTextures" : [
+
+  ],
+  "model5AlternateTextures" : [
+
+  ],
+  "primaryRace" : "0x00000019",
+  "races" : [
+    "0x00013740",
+    "0x0008883A",
+    "0x00013741",
+    "0x0008883C",
+    "0x00097A3D",
+    "0x00013742",
+    "0x0008883D",
+    "0x00067CD8",
+    "0x000A82BA",
+    "0x00013743",
+    "0x00088840",
+    "0x00013744",
+    "0x00088844",
+    "0x00013745",
+    "0x00088845",
+    "0x0010760A",
+    "0x00013746",
+    "0x00088794",
+    "0x00013747",
+    "0x000A82B9",
+    "0x00013748",
+    "0x00088846",
+    "0x00013749",
+    "0x00088884"
+  ],
+  "unknown" : {
+    "detectionSound" : 0,
+    "femalePriority" : 0,
+    "malePriority" : 0,
+    "unknown" : 514,
+    "unknown2" : 22,
+    "weaponAdjust" : 0
+  }
+}

@@ -2,18 +2,18 @@
   "_header" : {
     "type" : "TES4"
   },
-  "author" : "ScorpioSixNine",
-  "desc" : "Empty ESP",
+  "author" : "AirChomp",
+  "desc" : "Adds a black variant of the common farmer gloves, buyable at Radient Raiment and lootable from Warlocks.",
   "info" : {
     "nextID" : 7564,
-    "number" : 0,
+    "number" : 12,
     "version" : 1.7000000476837158
   },
   "masterData" : [
-
+    0
   ],
   "masters" : [
-
+    "Skyrim.esm"
   ],
   "tagifiedStringCount" : 1
 }

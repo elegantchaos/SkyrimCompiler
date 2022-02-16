@@ -21,6 +21,6 @@ struct GroupRecord: RecordProtocol {
 extension GroupRecord: CustomStringConvertible {
     var description: String {
         let type = GroupType(rawValue: header.id ?? 0)!
-        return "«group of \(type.label(flags: header.flags ?? 0))»"
+        return "«group of \(type.label(flags: header.flags))»"
     }
 }

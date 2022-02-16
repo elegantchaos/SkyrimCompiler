@@ -188,11 +188,15 @@ class Processor {
         var loaded: [RecordProtocol] = []
         let decoder = JSONDecoder()
         for url in urls {
-            let data = try Data(contentsOf: url)
-            let stub = try decoder.decode(RecordStub.self, from: data)
-            let type = configuration.recordClass(for: stub._header.type)
-            let decoded = try type.fromJSON(data, with: self)
-            loaded.append(decoded)
+            if url.path == "epsg" {
+                // handle groups
+            } else {
+                let data = try Data(contentsOf: url)
+                let stub = try decoder.decode(RecordStub.self, from: data)
+                let type = configuration.recordClass(for: stub._header.type)
+                let decoded = try type.fromJSON(data, with: self)
+                loaded.append(decoded)
+            }
         }
         
         return ESPS(records: loaded)

@@ -33,7 +33,7 @@ struct Record {
 
     var label: String {
         if let type = groupType {
-            return type.label(flags: header.flags ?? 0)
+            return type.label(flags: header.flags)
         } else {
             return type.description
         }
