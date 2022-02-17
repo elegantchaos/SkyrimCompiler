@@ -4,10 +4,10 @@
     "type" : "ARMA"
   },
   "bodyTemplate" : {
+    "armorType" : "clothing",
     "partFlags" : [
       "hands"
-    ],
-    "skill" : "none"
+    ]
   },
   "editorID" : "BlackGloves03AA",
   "model2" : "Clothes\\FarmClothes03\\farmerglovesm_1.nif",

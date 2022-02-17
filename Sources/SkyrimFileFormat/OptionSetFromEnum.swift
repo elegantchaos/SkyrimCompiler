@@ -15,6 +15,8 @@ public protocol OptionSetFromEnum: OptionSet, Codable where Options.AllCases.Ind
 public protocol EnumForOptionSet: Codable, CaseIterable, Equatable, RawRepresentable where RawValue == String {
 }
 
+// TODO: add support for encoding/decoding as a single string when only one flag is present
+
 extension OptionSetFromEnum where RawValue: FixedWidthInteger, RawValue: Decodable {
     public init(arrayLiteral elements: Options...) {
         var value: RawValue = 0

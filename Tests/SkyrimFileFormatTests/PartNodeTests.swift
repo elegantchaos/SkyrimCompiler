@@ -11,7 +11,6 @@ class PartNodeTests: XCTestCase {
         let partNode: PartNodeFlags = [.head, .addOn11, .body]
         let encoder = JSONEncoder()
         let data = try encoder.encode(partNode)
-        print(String(data: data, encoding: .utf8)!)
         
         let decoder = JSONDecoder()
         let decoded = try decoder.decode(PartNodeFlags.self, from: data)

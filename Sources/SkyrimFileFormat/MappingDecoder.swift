@@ -96,20 +96,6 @@ class MappingDecoder: Decoder {
         func decodeNil(forKey key: K) throws -> Bool {
             return false
         }
-        
-//        func decode(_ type: Bool.Type, forKey key: K) throws -> Bool {
-//            fatalError("to do")
-//        }
-//
-//        func decode(_ type: String.Type, forKey key: K) throws -> String {
-//            print("decode \(type) for key \(key) path \(codingPath)")
-//            return "string"
-//        }
-//
-//        func decode(_ type: Double.Type, forKey key: K) throws -> Double {
-//            fatalError("to do")
-//        }
-//
 
         func decode<T>(_ type: T.Type, forKey key: K) throws -> T where T : Decodable {
             decoder.map[key.stringValue] = type

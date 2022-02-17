@@ -6,10 +6,10 @@
   "armature" : "0x01000D63",
   "armourRating" : 0,
   "bodyTemplate" : {
+    "armorType" : "clothing",
     "partFlags" : [
       "hands"
-    ],
-    "skill" : "none"
+    ]
   },
   "bounds" : {
     "x1" : 0,

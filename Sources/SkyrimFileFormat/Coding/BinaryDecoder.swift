@@ -136,12 +136,11 @@ class BinaryDecoder: Decoder, ReadableBinaryStream {
         }
         
         func contains(_ key: K) -> Bool {
-            print("Contains \(key.stringValue)")
-            fatalError("to do")
+            fatalError("contains \(key.compactDescription)")
         }
         
         func decodeNil(forKey key: K) throws -> Bool {
-            fatalError("to do")
+            fatalError("decodeNil \(key.compactDescription)")
         }
         
         func decode(_ type: Float.Type, forKey key: K) throws -> Float {

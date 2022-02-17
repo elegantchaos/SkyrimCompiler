@@ -17,7 +17,8 @@ class EnumDecodingTests: XCTestCase {
         let s = TestStruct(flags: .one)
         let encoder = JSONEncoder()
         let data = try! encoder.encode(s)
-        print(String(data: data, encoding: .utf8)!)
+        let json = String(data: data, encoding: .utf8)!
+        XCTAssertEqual(json, "{\"flags\":\"one\"}")
     }
     
     func testDecoding() {

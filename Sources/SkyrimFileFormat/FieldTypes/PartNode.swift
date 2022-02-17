@@ -5,8 +5,6 @@
 
 import Foundation
 
-
-
 public struct PartNodeFlags: OptionSetFromEnum
 {
     public enum Options: String, EnumForOptionSet {

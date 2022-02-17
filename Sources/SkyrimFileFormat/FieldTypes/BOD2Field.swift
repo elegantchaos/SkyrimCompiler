@@ -7,27 +7,12 @@ import Foundation
 
 public struct BOD2Field: BinaryCodable {
     let partFlags: PartNodeFlags
-    let skill: Skill
+    let armorType: ArmorType
 
-    enum Skill: String, DecodableFromIntOrString {
+    enum ArmorType: String, DecodableFromIntOrString {
         case light
         case heavy
-        case none
-        
-//        init(from decoder: Decoder) throws {
-//            self = try decodeFromStringOrInt(from: decoder)
-//            let container = try decoder.singleValueContainer()
-//            if let uint = try? container.decode(UInt32.self) {
-//                self = Self.allCases[Int(uint)]
-//            } else {
-//                let string = try container.decode(String.self)
-//                if let value = Self(rawValue: string) {
-//                    self = value
-//                } else {
-//                    throw DecodingError.valueNotFound(Skill.self, .init(codingPath: decoder.codingPath, debugDescription: "Couldn't decode Skill"))
-//                }
-//            }
-//        }
+        case clothing
     }
 }
 

@@ -22,7 +22,7 @@ let package = Package(
         .package(url: "https://github.com/elegantchaos/AsyncSequenceReader.git", from: "0.1.0"),
         .package(url: "https://github.com/elegantchaos/Bytes.git", .branch("float-support")),
         .package(url: "https://github.com/elegantchaos/Coercion.git", from: "1.1.3"),
-        .package(url: "https://github.com/elegantchaos/ElegantStrings.git", from: "1.1.0"),
+        .package(url: "https://github.com/elegantchaos/ElegantStrings.git", from: "1.1.1"),
         .package(url: "https://github.com/elegantchaos/XCTestExtensions.git", from: "1.4.3"),
     ],
     targets: [

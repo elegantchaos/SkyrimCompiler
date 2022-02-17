@@ -44,7 +44,6 @@ class RecordEncoder: Encoder, WriteableRecordStream {
     }
     
     func writeEncodable<Value>(_ value: Value) throws where Value: Encodable {
-        print(Value.self)
         try binaryEncoder.writeEncodable(value)
     }
     
@@ -102,6 +101,17 @@ class RecordEncoder: Encoder, WriteableRecordStream {
                 case "_header":
                     try encoder.writeEncodable(value)
 
+                case "_fields":
+                    let fields = value as! UnpackedFields
+                    for (type,list) in fields {
+                        for field in list {
+                            if let data = field.hexData {
+                                let header = Field.Header(type: Tag(type), size: UInt16(data.count))
+                                try encoder.writeEncodable(header)
+                                try encoder.writeEncodable(data)
+                            }
+                        }
+                    }
                 default:
                     guard let tag = encoder.fieldMap.fieldTag(forKey: key) else {
                         throw RecordEncodingError.unknownField

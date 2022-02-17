@@ -15,13 +15,17 @@ class ProcessorTestCase: XCTestCase {
         
         var records: [RecordProtocol] = []
         for try await record in processor.realisedRecords(bytes: url.resourceBytes, processChildren: true) {
-            print(record)
             records.append(record)
         }
         
         return records
     }
-    
+
+    func loadExampleData(named name: String) throws -> Data {
+        let url = Bundle.module.url(forResource: "Examples/\(name)", withExtension: "esp")!
+        return try Data(contentsOf: url)
+    }
+
     func outputURL(for url: URL) -> URL {
         let output: URL
         if ProcessInfo.processInfo.environment["OutputToDesktop"] == "1" {
