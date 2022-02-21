@@ -16,18 +16,34 @@ class ESPRoundTripTests: ProcessorTestCase {
         XCTAssertEqual(encoded, original)
     }
 
+    func roundTrip(record: RecordProtocol) async throws {
+        print("Round trip test for \(record)")
+
+        let encoder = BinaryEncoder()
+        try processor.encode(record, using: encoder)
+        let encoded = encoder.data
+
+        let originalJSON = String(data: try record.asJSON(with: processor), encoding: .utf8)!
+
+        let encodedStream = BytesAsyncSequence(bytes: encoded.littleEndianBytes)
+        for try await decoded in processor.records(bytes: encodedStream, processChildren: false) {
+            let decodedJSON = String(data: try decoded.asJSON(with: processor), encoding: .utf8)!
+            XCTAssertEqual(originalJSON, decodedJSON)
+            break
+        }
+        
+        for child in record._children {
+            try await roundTrip(record: child)
+        }
+    }
+    
     func roundTripByRecordExample(named name: String) async throws {
         let records = try await loadExample(named: name)
         for record in records {
-            let originalJSON = try record.asJSON(with: processor)
-            let encoded = try processor.save([record])
-            
-            print(record.header)
-
-            let encodedStream = BytesAsyncSequence(bytes: encoded.littleEndianBytes)
-            for try await decoded in processor.records(bytes: encodedStream, processChildren: false) {
-                let decodedJSON = try decoded.asJSON(with: processor)
-                XCTAssertEqual(originalJSON, decodedJSON)
+            do {
+                try await roundTrip(record: record)
+            } catch {
+                print(error)
             }
         }
     }
