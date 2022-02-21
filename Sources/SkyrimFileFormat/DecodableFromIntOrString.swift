@@ -29,6 +29,7 @@ extension DecodableFromIntOrString {
         let container = try decoder.singleValueContainer()
         let uint = try container.decode(UInt32.self)
         let index = Self.allCases.index(Self.allCases.startIndex, offsetBy: Int(uint))
+        guard index < Self.allCases.endIndex else { throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "Index \(index) out of range for \(Self.self)"))}
         self = Self.allCases[index]
     }
     
