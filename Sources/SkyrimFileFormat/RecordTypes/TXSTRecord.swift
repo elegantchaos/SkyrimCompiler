@@ -12,6 +12,7 @@ struct TXSTRecord: Codable, IdentifiedRecord {
     let _fields: UnpackedFields?
 
     let editorID: String
+    let bounds: OBNDField
     let colorMap: String
     let normalMap: String?
     let mask: String?
@@ -25,6 +26,7 @@ struct TXSTRecord: Codable, IdentifiedRecord {
 
     static var fieldMap = FieldTypeMap(paths: [
         (CodingKeys.editorID, \Self.editorID, "EDID"),
+        (.bounds, \.bounds, "OBND"),
         (.colorMap, \.colorMap, "TX00"),
         (.normalMap, \.normalMap, "TX01"),
         (.mask, \.mask, "TX02"),
