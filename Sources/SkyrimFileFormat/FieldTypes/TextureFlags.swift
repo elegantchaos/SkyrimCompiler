@@ -9,13 +9,14 @@ import CoreText
 
 
 
-struct TextureFlags: BinaryCodable, OptionSetFromEnum
+struct TextureFlags: OptionSetFromEnum
 {
     public enum Options: String, EnumForOptionSet {
         case noSpecularMap
         case hasFacegenTextures
         case hasModelSpaceNormalMap
     }
+    
     public init(rawValue: UInt16) {
         self.rawValue = rawValue
     }
