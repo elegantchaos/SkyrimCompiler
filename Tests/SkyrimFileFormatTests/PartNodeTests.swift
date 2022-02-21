@@ -3,7 +3,7 @@
 //  All code (c) 2022 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-import SkyrimFileFormat
+@testable import SkyrimFileFormat
 import XCTest
 
 class PartNodeTests: XCTestCase {

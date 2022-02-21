@@ -5,7 +5,7 @@
 
 import Foundation
 
-public struct PartNodeFlags: OptionSetFromEnum
+struct PartNodeFlags: OptionSetFromEnum
 {
     public enum Options: String, EnumForOptionSet {
         case head
