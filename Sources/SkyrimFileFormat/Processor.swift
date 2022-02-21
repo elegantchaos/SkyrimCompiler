@@ -47,7 +47,7 @@ class Processor {
             let size = try await stream.read(UInt32.self)
             let header = try await RecordHeader(type: type, stream)
             let payloadSize = Int(type == GroupRecord.tag ? size - 24 : size)
-            let data = try await stream.read(count: payloadSize)
+            let data = LoadedRecordData(data: try await stream.read(count: payloadSize))
             iterator = stream.iterator
 
             return try await RecordData(type: type, header: header, data: data)
@@ -56,11 +56,6 @@ class Processor {
         return records
     }
 
-//    func records<I: AsyncByteSequence>(bytes: I, processChildren: Bool) -> RecordSequence<I> {
-//        let records = RecordSequence(data: bytes, processor: self, processChildren: processChildren)
-//        return records
-//    }
-//
     func records<I: AsyncByteSequence>(bytes: I, processChildren: Bool) -> AsyncThrowingMapSequence<AsyncThrowingIteratorMapSequence<I, RecordData>, RecordProtocol> {
         let wrapped = recordData(bytes: bytes).map { recordData in
             try await self.record(from: recordData, processChildren: processChildren)
@@ -73,15 +68,9 @@ class Processor {
         if record.isGroup {
             var children: [RecordProtocol] = []
             if processChildren {
-//                let r = recordData(bytes: record.data.asyncBytes)
                 for try await child in recordData(bytes: record.data.asyncBytes) {
                     children.append(try await self.record(from: child, processChildren: processChildren))
                 }
-//                let childRecordIterator = WrappedRecordDataIterator(iterator: r.makeAsyncIterator())
-//                let childIterator = RecordIterator(childRecordIterator, processor: self, processChildren: processChildren)
-//                while let child = try await childIterator.next() {
-//                    children.append(child)
-//                }
             }
             
             return GroupRecord(header: record.header, children: children)
@@ -103,11 +92,11 @@ class Processor {
         return sequence
     }
     
-    func decodedFields(type: Tag, header: RecordHeader, data: Bytes) async throws -> DecodedFields {
+    func decodedFields(type: Tag, header: RecordHeader, data: RecordDataProvider) async throws -> DecodedFields {
         let map = try configuration.fields(forRecord: type)
         let fp = DecodedFields(map, for: type, header: header)
         
-        var bytes = BytesAsyncSequence(bytes: data)
+        var bytes = data.asyncBytes
         
         let fields = fields(bytes: &bytes, types: map, inRecord: type, withHeader: header)
         for try await field in fields {
