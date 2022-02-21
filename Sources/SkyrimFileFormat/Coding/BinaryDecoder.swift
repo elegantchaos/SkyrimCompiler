@@ -16,11 +16,27 @@ protocol BinaryDecodable: Decodable {
 
 extension BinaryDecodable {
     init(fromBinary decoder: BinaryDecoder) throws {
+        print("fallback binary decoding for \(Self.self)")
+        
+        if Self.self == String.self {
+            print("blaj")
+        }
+        
         try self.init(from: decoder)
     }
 }
 
 extension String: BinaryCodable {
+    init(fromBinary decoder: BinaryDecoder) throws {
+        let container = try decoder.singleValueContainer()
+        self = try container.decode(String.self)
+    }
+    
+    func binaryEncode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(data(using: .ascii))
+        try container.encode(UInt8(0))
+    }
 }
 
 extension UInt8: BinaryCodable {}
@@ -136,13 +152,11 @@ class BinaryDecoder: Decoder, ReadableBinaryStream {
         }
         
         func contains(_ key: K) -> Bool {
-            return true
-            fatalError("contains \(key.compactDescription)")
+            return true // we can't know if the key is present, we have to assume that it is
         }
         
         func decodeNil(forKey key: K) throws -> Bool {
-            return false
-            fatalError("decodeNil \(key.compactDescription)")
+            return false // we can't know if the optional value is present, we have to assume that it is
         }
         
         func decode(_ type: Float.Type, forKey key: K) throws -> Float {
@@ -191,6 +205,10 @@ class BinaryDecoder: Decoder, ReadableBinaryStream {
             return try decoder.readInt(type)
         }
 
+        func decode(_ type: String.Type, forKey key: K) throws -> String {
+            return try decoder.readString()
+        }
+        
         func decode<T>(_ type: T.Type, forKey key: K) throws -> T where T : Decodable {
             return try decoder.readDecodable(type)
 //            if let unconstrained = type as? UnboundedDecodable.Type {
