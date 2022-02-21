@@ -16,13 +16,24 @@ struct ESPBundle {
     
     init(records: [RecordProtocol]) {
         var index = Index()
-        for record in records {
+        var ordered: [RecordProtocol] = []
+
+        func register(_ record: RecordProtocol) {
             var list = index[record.type] ?? []
             list.append(record)
             index[record.type] = list
+            ordered.append(record)
+        }
+
+        for record in records {
+            register(record)
+            for child in record._children {
+                register(child)
+            }
         }
         
-        self.records = records
+        self.records = ordered
         self.index = index
     }
+    
 }

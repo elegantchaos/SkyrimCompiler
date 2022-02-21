@@ -11,6 +11,7 @@ protocol RecordProtocol: Codable {
     static func fromJSON(_ data: Data, with processor: Processor) throws -> RecordProtocol
     static var fieldMap: FieldTypeMap { get }
     var _header: RecordHeader { get }
+    var _children: [RecordProtocol] { get } // TODO: make this an iterator so that we can defer loading of children
 }
 
 extension RecordProtocol {
@@ -26,6 +27,8 @@ extension RecordProtocol {
         let decoded = try processor.jsonDecoder.decode(Self.self, from: data)
         return decoded
     }
+    
+    var _children: [RecordProtocol] { [] }
 }
 
 protocol IdentifiedRecord: RecordProtocol {

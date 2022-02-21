@@ -168,7 +168,7 @@ class Processor {
             let encoded = recordEncoder.binaryEncoder.data
 
             try type.binaryEncode(to: binaryEncoder)
-            let size = encoded.count - RecordHeader.binaryEncodedSize
+            let size = encoded.count - RecordHeader.binaryEncodedSize + ((type == GroupRecord.tag) ? 24 : 0)
             try UInt32(size).encode(to: binaryEncoder)
             try encoded.encode(to: binaryEncoder)
         }
@@ -198,9 +198,10 @@ class Processor {
                 let headerURL = url.appendingPathComponent("header.json")
                 let data = try Data(contentsOf: headerURL)
                 let header = try decoder.decode(RecordHeader.self, from: data)
-                loaded.append(GroupRecord(header: header))
                 let contentURL = url.appendingPathComponent("records")
-                loaded.append(contentsOf: try loadRecords(from: contentURL))
+                let children = try loadRecords(from: contentURL)
+                let group = GroupRecord(header: header, children: children)
+                loaded.append(group)
             } else {
                 let data = try Data(contentsOf: url)
                 let stub = try decoder.decode(RecordStub.self, from: data)

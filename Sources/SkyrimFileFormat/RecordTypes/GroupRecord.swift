@@ -11,12 +11,25 @@ struct GroupRecord: RecordProtocol {
     static let fileExtension = "espg"
     
     let _header: RecordHeader
+    let _children: [RecordProtocol]
     
-    init(header: RecordHeader) {
+    init(header: RecordHeader, children: [RecordProtocol]) {
         self._header = header
+        self._children = children
     }
 
     static var fieldMap = FieldTypeMap()
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(_header)
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        _header = try container.decode(RecordHeader.self)
+        _children = []
+    }
 }
 
 extension GroupRecord: CustomStringConvertible {

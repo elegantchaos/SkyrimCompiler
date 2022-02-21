@@ -23,44 +23,31 @@ class WrappedRecordIterator<I: AsyncByteSequence>: RecordIterator {
 }
 
 class RealisedRecordIterator: AsyncIteratorProtocol {
-    
-    var records: [RecordIterator]
+    var records: RecordIterator
     let processor: Processor
     let processChildren: Bool
 
     init(_ root: RecordIterator, processor: Processor, processChildren: Bool) {
-        self.records = [root]
+        self.records = root
         self.processor = processor
         self.processChildren = processChildren
     }
 
-    func nextRecord() async throws -> Record? {
-        while(records.count > 0) {
-            if let record = try await records.last?.next() {
-                if processChildren && record.isGroup {
-                    let r = processor.records(bytes: record.data.asyncBytes)
-                    let childIterator = WrappedRecordIterator(iterator: r.makeAsyncIterator())
-                    records.append(childIterator)
-                }
-                
-                return record
-            }
-            
-            records.removeLast()
-        }
-        
-        return nil
-    }
-    
     func next() async throws -> RecordProtocol? {
-        guard let record = try await nextRecord() else { return nil }
+        guard let record = try await records.next() else { return nil }
 
         do {
             let header = record.header
-            if record.isGroup {
-                return GroupRecord(header: record.header)
-            } else {
-                
+            if processChildren && record.isGroup {
+                var children: [RecordProtocol] = []
+                let r = processor.records(bytes: record.data.asyncBytes)
+                let childRecordIterator = WrappedRecordIterator(iterator: r.makeAsyncIterator())
+                let childIterator = RealisedRecordIterator(childRecordIterator, processor: processor, processChildren: processChildren)
+                while let child = try await childIterator.next() {
+                    children.append(child)
+                }
+                                
+                return GroupRecord(header: record.header, children: children)
             }
 
             let fields = try await processor.decodedFields(type: record.type, header: record.header, data: record.data)
