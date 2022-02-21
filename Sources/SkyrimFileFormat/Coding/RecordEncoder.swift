@@ -129,7 +129,12 @@ class RecordEncoder: Encoder, WriteableRecordStream {
                         }
                     } else {
                         let binaryEncoder = BinaryEncoder()
-                        try value.encode(to: binaryEncoder)
+                        
+                        if let binaryEncodableValue = value as? BinaryEncodable {
+                            try binaryEncodableValue.binaryEncode(to: binaryEncoder)
+                        } else {
+                            try value.encode(to: binaryEncoder)
+                        }
                         let encoded = binaryEncoder.data
                         
                         let header = Field.Header(type: tag, size: UInt16(encoded.count))

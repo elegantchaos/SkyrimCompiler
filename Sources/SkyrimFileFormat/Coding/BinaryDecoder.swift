@@ -190,11 +190,12 @@ class BinaryDecoder: Decoder, ReadableBinaryStream {
         }
 
         func decode<T>(_ type: T.Type, forKey key: K) throws -> T where T : Decodable {
-            if let unconstrained = type as? UnboundedDecodable.Type {
-                return try unconstrained.decode(bytes: decoder.remainingCount(), from: decoder) as! T
-            }
-
-            return try T(from: decoder)
+            return try decoder.readDecodable(type)
+//            if let unconstrained = type as? UnboundedDecodable.Type {
+//                return try unconstrained.decode(bytes: decoder.remainingCount(), from: decoder) as! T
+//            }
+//
+//            return try T(from: decoder)
         }
         
         func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type, forKey key: K) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
