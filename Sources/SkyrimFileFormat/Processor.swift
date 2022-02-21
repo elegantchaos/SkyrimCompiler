@@ -103,16 +103,16 @@ class Processor {
     }
     
     func inflate(header: Field.Header, data: Bytes, types: FieldTypeMap, inRecord recordType: Tag, withHeader recordHeader: RecordHeader) async throws -> Field {
-        do {
-            if let type = types.fieldType(forTag: header.type) {
+        if let type = types.fieldType(forTag: header.type) {
+            do {
                 let decoder = FieldDecoder(header: header, data: data, inRecord: recordType, withHeader: recordHeader)
                 let unpacked = try type.init(fromBinary: decoder)
                 return Field(header: header, value: unpacked)
+            } catch {
+                print("Error unpacking \(header.type) - \(type). Falling back to basic field.\n\n\(error)")
             }
-        } catch {
-            print("Error unpacking \(header.type). Falling back to basic field.\n\n\(error)")
         }
-        
+
         return Field(header: header, value: data)
     }
 
@@ -176,19 +176,23 @@ class Processor {
     func save(_ records: [RecordProtocol]) throws -> Data {
         let binaryEncoder = BinaryEncoder()
         for record in records {
-            let type = type(of: record).tag
-            let fields = try configuration.fields(forRecord: type)
-            let recordEncoder = RecordEncoder(fields: fields)
-            try record.encode(to: recordEncoder)
-            let encoded = recordEncoder.binaryEncoder.data
-
-            try type.binaryEncode(to: binaryEncoder)
-            let size = encoded.count - RecordHeader.binaryEncodedSize + ((type == GroupRecord.tag) ? 24 : 0)
-            try UInt32(size).encode(to: binaryEncoder)
-            try encoded.encode(to: binaryEncoder)
+            try encode(record, using: binaryEncoder)
         }
         
         return binaryEncoder.data
+    }
+    
+    func encode(_ record: RecordProtocol, using encoder: BinaryEncoder) throws {
+        let type = type(of: record).tag
+        let fields = try configuration.fields(forRecord: type)
+        let recordEncoder = RecordEncoder(fields: fields)
+        try record.encode(to: recordEncoder)
+        let encoded = recordEncoder.binaryEncoder.data
+
+        try type.binaryEncode(to: encoder)
+        let size = encoded.count - RecordHeader.binaryEncodedSize + ((type == GroupRecord.tag) ? 24 : 0)
+        try UInt32(size).encode(to: encoder)
+        try encoded.encode(to: encoder)
     }
     
     enum Error: Swift.Error {
