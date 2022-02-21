@@ -17,10 +17,10 @@ extension ProcessorProtocol {
     var configuration: Configuration { processor.configuration }
 }
 
-protocol RecordSequence: AsyncSequence where Element == Record {
+protocol RecordDataSequence: AsyncSequence where Element == RecordData {
 }
 
-extension AsyncThrowingIteratorMapSequence: RecordSequence where Element == Record {
+extension AsyncThrowingIteratorMapSequence: RecordDataSequence where Element == RecordData {
 }
 
 class Processor {
@@ -40,8 +40,8 @@ class Processor {
     
     
     
-    func records<I: AsyncByteSequence>(bytes: I) -> AsyncThrowingIteratorMapSequence<I, Record> {
-        let records = bytes.iteratorMap { iterator -> Record in
+    func recordData<I: AsyncByteSequence>(bytes: I) -> AsyncThrowingIteratorMapSequence<I, RecordData> {
+        let records = bytes.iteratorMap { iterator -> RecordData in
             let stream = AsyncDataStream(iterator: iterator)
             let type = try await Tag(stream.read(UInt32.self))
             let size = try await stream.read(UInt32.self)
@@ -50,17 +50,48 @@ class Processor {
             let data = try await stream.read(count: payloadSize)
             iterator = stream.iterator
 
-            return try await Record(type: type, header: header, data: data)
+            return try await RecordData(type: type, header: header, data: data)
         }
 
         return records
     }
 
-    func realisedRecords<I: AsyncByteSequence>(bytes: I, processChildren: Bool) -> RealisedRecordSequence<I> {
-        let records = RealisedRecordSequence(data: bytes, processor: self, processChildren: processChildren)
-        return records
+//    func records<I: AsyncByteSequence>(bytes: I, processChildren: Bool) -> RecordSequence<I> {
+//        let records = RecordSequence(data: bytes, processor: self, processChildren: processChildren)
+//        return records
+//    }
+//
+    func records<I: AsyncByteSequence>(bytes: I, processChildren: Bool) -> AsyncThrowingMapSequence<AsyncThrowingIteratorMapSequence<I, RecordData>, RecordProtocol> {
+        let wrapped = recordData(bytes: bytes).map { recordData in
+            try await self.record(from: recordData, processChildren: processChildren)
+        }
+        
+        return wrapped
     }
 
+    func record(from record: RecordData, processChildren: Bool) async throws -> RecordProtocol {
+        if record.isGroup {
+            var children: [RecordProtocol] = []
+            if processChildren {
+//                let r = recordData(bytes: record.data.asyncBytes)
+                for try await child in recordData(bytes: record.data.asyncBytes) {
+                    children.append(try await self.record(from: child, processChildren: processChildren))
+                }
+//                let childRecordIterator = WrappedRecordDataIterator(iterator: r.makeAsyncIterator())
+//                let childIterator = RecordIterator(childRecordIterator, processor: self, processChildren: processChildren)
+//                while let child = try await childIterator.next() {
+//                    children.append(child)
+//                }
+            }
+            
+            return GroupRecord(header: record.header, children: children)
+        } else {
+            let fields = try await decodedFields(type: record.type, header: record.header, data: record.data)
+            let recordClass = configuration.recordClass(for: record.type)
+            let decoder = RecordDecoder(header: record.header, fields: fields)
+            return try recordClass.init(from: decoder)
+        }
+    }
     
     func fields<I>(bytes: inout I, types: FieldTypeMap, inRecord recordType: Tag, withHeader recordHeader: RecordHeader) -> AsyncThrowingIteratorMapSequence<I, Field> where I: AsyncSequence, I.Element == Byte {
         let sequence = bytes.iteratorMap { iterator -> Field in
@@ -103,7 +134,7 @@ class Processor {
 
     
     func pack<I: AsyncByteSequence>(bytes: I, to url: URL) async throws {
-        let records = records(bytes: bytes)
+        let records = recordData(bytes: bytes)
         var index = 0
         for try await record in records {
             do {
@@ -120,7 +151,7 @@ class Processor {
     }
 
     
-    func export(record rawRecord: Record, index: Int, asJSONTo url: URL) async throws {
+    func export(record rawRecord: RecordData, index: Int, asJSONTo url: URL) async throws {
         let header = rawRecord.header
         let fields = try await decodedFields(type: rawRecord.type, header: rawRecord.header, data: rawRecord.data)
         let recordClass = configuration.records[rawRecord.type] ?? RawRecord.self
@@ -141,7 +172,7 @@ class Processor {
     }
     
     
-    func export(group: Record, index: Int, asJSONTo url: URL) async throws {
+    func export(group: RecordData, index: Int, asJSONTo url: URL) async throws {
         let name = String(format: "%04d %@", index, group.name)
         let groupURL = url.appendingPathComponent(name).appendingPathExtension(GroupRecord.fileExtension)
 

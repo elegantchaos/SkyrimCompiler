@@ -14,7 +14,7 @@ class ProcessorTestCase: XCTestCase {
         let url = Bundle.module.url(forResource: "Examples/\(name)", withExtension: "esp")!
         
         var records: [RecordProtocol] = []
-        for try await record in processor.realisedRecords(bytes: url.resourceBytes, processChildren: true) {
+        for try await record in processor.records(bytes: url.resourceBytes, processChildren: true) {
             records.append(record)
         }
         

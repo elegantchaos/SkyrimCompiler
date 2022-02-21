@@ -6,7 +6,7 @@
 import Bytes
 import Foundation
 
-struct Record {
+struct RecordData {
     init(type: Tag, header: RecordHeader, data: Bytes) async throws {
         self.type = type
         self.header = header
@@ -34,7 +34,7 @@ struct Record {
     var label: String { return header.label }
 }
 
-extension Record: CustomStringConvertible {
+extension RecordData: CustomStringConvertible {
     var description: String {
         return "«\(name)»"
     }

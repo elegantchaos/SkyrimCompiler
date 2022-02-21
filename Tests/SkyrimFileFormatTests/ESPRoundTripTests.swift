@@ -25,7 +25,7 @@ class ESPRoundTripTests: ProcessorTestCase {
             print(record.header)
 
             let encodedStream = BytesAsyncSequence(bytes: encoded.littleEndianBytes)
-            for try await decoded in processor.realisedRecords(bytes: encodedStream, processChildren: false) {
+            for try await decoded in processor.records(bytes: encodedStream, processChildren: false) {
                 let decodedJSON = try decoded.asJSON(with: processor)
                 XCTAssertEqual(originalJSON, decodedJSON)
             }
