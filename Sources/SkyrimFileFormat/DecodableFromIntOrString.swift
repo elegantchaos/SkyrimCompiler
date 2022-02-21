@@ -5,14 +5,65 @@
 
 import Foundation
 
-protocol DecodableFromIntOrString: Codable, CaseIterable, RawRepresentable where RawValue == String {
+protocol DecodableFromIntOrString: BinaryCodable, CaseIterable, RawRepresentable where RawValue == String {
     init(from decoder: Decoder) throws
 }
 
 extension DecodableFromIntOrString {
     init(from decoder: Decoder) throws {
-        self = try decodeFromStringOrInt(from: decoder)
+        let container = try decoder.singleValueContainer()
+        if let uint = try? container.decode(UInt32.self) {
+            let index = Self.allCases.index(Self.allCases.startIndex, offsetBy: Int(uint))
+            self = Self.allCases[index]
+        } else {
+            let string = try container.decode(String.self)
+            if let value = Self(rawValue: string) {
+                self = value
+            } else {
+                throw DecodingError.valueNotFound(Self.self, .init(codingPath: decoder.codingPath, debugDescription: "Couldn't decode \(Self.self)"))
+            }
+        }
     }
+    
+    init(fromBinary decoder: BinaryDecoder) throws {
+        let container = try decoder.singleValueContainer()
+        let uint = try container.decode(UInt32.self)
+        let index = Self.allCases.index(Self.allCases.startIndex, offsetBy: Int(uint))
+        self = Self.allCases[index]
+    }
+    
+    func binaryEncode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        let uint = UInt32(indexInCases)
+        try container.encode(uint)
+    }
+
+    var indexInCases: Int {
+        var n = 0
+        for c in Self.allCases {
+            if c == self {
+                return n
+            }
+            n += 1
+        }
+        fatalError("This instance isn't in allCases")
+    }
+    
+    func decodeFromStringOrInt(from decoder: Decoder) throws -> Self {
+        let container = try decoder.singleValueContainer()
+        if let uint = try? container.decode(UInt32.self) {
+            let index = Self.allCases.index(Self.allCases.startIndex, offsetBy: Int(uint))
+            return Self.allCases[index]
+        } else {
+            let string = try container.decode(String.self)
+            if let value = Self(rawValue: string) {
+                return value
+            } else {
+                throw DecodingError.valueNotFound(Self.self, .init(codingPath: decoder.codingPath, debugDescription: "Couldn't decode \(Self.self)"))
+            }
+        }
+    }
+
 }
 
 func decodeFromStringOrInt<T>(from decoder: Decoder) throws -> T where T: CaseIterable, T: RawRepresentable, T.RawValue == String {

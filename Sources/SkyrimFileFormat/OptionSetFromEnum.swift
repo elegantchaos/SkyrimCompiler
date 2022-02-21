@@ -5,20 +5,23 @@
 
 import Foundation
 
-public protocol OptionSetFromEnum: OptionSet, Codable where Options.AllCases.Index: FixedWidthInteger {
+protocol OptionSetFromEnum: OptionSet, BinaryCodable where Options.AllCases.Index: FixedWidthInteger, RawValue: FixedWidthInteger, RawValue: BinaryCodable {
     associatedtype Options: EnumForOptionSet
     init(arrayLiteral elements: Options...)
     init(from decoder: Decoder) throws
     init(knownRawValue: RawValue)
+    
+    init(fromBinary decoder: BinaryDecoder) throws
+    func encodeBinary(to encoder: BinaryEncoder) throws
 }
 
-public protocol EnumForOptionSet: Codable, CaseIterable, Equatable, RawRepresentable where RawValue == String {
+protocol EnumForOptionSet: Codable, CaseIterable, Equatable, RawRepresentable where RawValue == String {
 }
 
 // TODO: add support for encoding/decoding as a single string when only one flag is present
 
-extension OptionSetFromEnum where RawValue: FixedWidthInteger, RawValue: Decodable {
-    public init(arrayLiteral elements: Options...) {
+extension OptionSetFromEnum {
+    init(arrayLiteral elements: Options...) {
         var value: RawValue = 0
         let cases = Options.allCases
         for node in elements {
@@ -30,11 +33,11 @@ extension OptionSetFromEnum where RawValue: FixedWidthInteger, RawValue: Decodab
         self.init(knownRawValue: value)
     }
 
-    public init(knownRawValue: RawValue) {
+    init(knownRawValue: RawValue) {
         self.init(rawValue: knownRawValue)!
     }
     
-    public init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
         let cases = Options.allCases
         let container = try decoder.singleValueContainer()
         if let value = try? container.decode(RawValue.self) {
@@ -49,7 +52,7 @@ extension OptionSetFromEnum where RawValue: FixedWidthInteger, RawValue: Decodab
         }
     }
 
-    public func encode(to encoder: Encoder) throws {
+    func encode(to encoder: Encoder) throws {
         var index = RawValue(1)
 
         var container = encoder.unkeyedContainer()
@@ -59,5 +62,15 @@ extension OptionSetFromEnum where RawValue: FixedWidthInteger, RawValue: Decodab
             }
             index = index << 1
         }
+    }
+    
+    init(fromBinary decoder: BinaryDecoder) throws {
+        let container = try decoder.singleValueContainer()
+        try self.init(rawValue: container.decode(RawValue.self))
+    }
+    
+    func encodeBinary(to encoder: BinaryEncoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(rawValue)
     }
 }
