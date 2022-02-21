@@ -11,9 +11,18 @@ protocol ReadableBinaryStream {
     func read(until: Byte)  throws -> ArraySlice<Byte>
     func readInt<T>(_ type: T.Type) throws -> T where T: FixedWidthInteger
     func readFloat<T>(_ type: T.Type) throws -> T where T: BinaryFloatingPoint
+    func readString() throws -> String
     func readAll() -> ArraySlice<Byte>
     func remainingCount() -> Int
     func readDecodable<T>(_ type: T.Type) throws -> T where T: Decodable
+}
+
+extension ReadableBinaryStream {
+    func readString() throws -> String {
+        let bytes = try read(until: 0)
+        guard let string = String(bytes: bytes, encoding: .utf8) else { throw BasicDecoderError.badStringEncoding }
+        return string
+    }
 }
 
 enum BasicDecoderError: Error {
@@ -31,9 +40,7 @@ extension ReadableBinaryStreamDecodingAdaptor {
     }
     
     func decode(_ type: String.Type) throws -> String {
-        let bytes = try stream.read(until: 0)
-        guard let string = String(bytes: bytes, encoding: .utf8) else { throw BasicDecoderError.badStringEncoding }
-        return string
+        return try stream.readString()
     }
     
     func decode(_ type: Bool.Type) throws -> Bool {

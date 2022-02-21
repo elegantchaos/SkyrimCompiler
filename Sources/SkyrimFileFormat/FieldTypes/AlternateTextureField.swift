@@ -14,6 +14,14 @@ struct AlternateTextureField: BinaryCodable {
         textures = try container.decodeArray(of: AlternateTexture.self, count: count)
     }
     
+    func binaryEncode(to encoder: Encoder) throws {
+        var container = encoder.unkeyedContainer()
+        try container.encode(UInt32(textures.count))
+        for texture in textures {
+            try container.encode(texture)
+        }
+    }
+
     struct AlternateTexture: BinaryCodable {
         let name: String
         let texture: FormID
@@ -30,6 +38,14 @@ struct AlternateTextureField: BinaryCodable {
             self.name = name
             self.texture = try container.decode(FormID.self)
             self.index = try container.decode(UInt32.self)
+        }
+        
+        func binaryEncode(to encoder: Encoder) throws {
+            var container = encoder.unkeyedContainer()
+            try container.encode(UInt32(name.count))
+            try container.encode(name.data(using: .ascii))
+            try container.encode(texture)
+            try container.encode(index)
         }
     }
 }
