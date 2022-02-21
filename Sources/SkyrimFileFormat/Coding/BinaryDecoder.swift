@@ -11,11 +11,11 @@ protocol BinaryCodable: BinaryEncodable, BinaryDecodable {
 }
 
 protocol BinaryDecodable: Decodable {
-    init(fromBinary: Decoder) throws
+    init(fromBinary: BinaryDecoder) throws
 }
 
 extension BinaryDecodable {
-    init(fromBinary decoder: Decoder) throws {
+    init(fromBinary decoder: BinaryDecoder) throws {
         try self.init(from: decoder)
     }
 }
@@ -136,10 +136,12 @@ class BinaryDecoder: Decoder, ReadableBinaryStream {
         }
         
         func contains(_ key: K) -> Bool {
+            return true
             fatalError("contains \(key.compactDescription)")
         }
         
         func decodeNil(forKey key: K) throws -> Bool {
+            return false
             fatalError("decodeNil \(key.compactDescription)")
         }
         
