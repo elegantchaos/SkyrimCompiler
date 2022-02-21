@@ -1,12 +1,15 @@
 {
-  "_fields" : {
-    "OBND" : [
-      "000000000000000000000000"
-    ]
-  },
   "_header" : {
     "id" : 16780644,
     "type" : "TXST"
+  },
+  "bounds" : {
+    "x1" : 0,
+    "x2" : 0,
+    "y1" : 0,
+    "y2" : 0,
+    "z1" : 0,
+    "z2" : 0
   },
   "colorMap" : "clothes\\blackgloves\\glovesm_d.dds",
   "editorID" : "BlackGloves03",
