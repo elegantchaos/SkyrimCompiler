@@ -19,6 +19,16 @@ extension RecordDataProvider {
         data.asyncBytes
     }
 }
+
+protocol AsyncByteProvider {
+    associatedtype Sequence: AsyncByteSequence
+    var asyncBytes: Sequence { get }
+}
+
+extension LoadedRecordData: AsyncByteProvider {
+    
+}
+
 struct RecordData {
     let type: Tag
     let header: RecordHeader

@@ -17,10 +17,7 @@ extension ProcessorProtocol {
     var configuration: Configuration { processor.configuration }
 }
 
-protocol RecordDataSequence: AsyncSequence where Element == RecordData {
-}
-
-extension AsyncThrowingIteratorMapSequence: RecordDataSequence where Element == RecordData {
+protocol RecordDataIterator: AsyncIteratorProtocol where Element == RecordData {
 }
 
 class Processor {
@@ -37,8 +34,6 @@ class Processor {
     let jsonEncoder: JSONEncoder
     let jsonDecoder: JSONDecoder
     let binaryEncoder: BinaryEncoder
-    
-    
     
     func recordData<I: AsyncByteSequence>(bytes: I) -> AsyncThrowingIteratorMapSequence<I, RecordData> {
         let records = bytes.iteratorMap { iterator -> RecordData in
