@@ -5,7 +5,7 @@
 
 import Foundation
 
-protocol RecordProtocol: Codable {
+protocol RecordProtocol: Codable, CustomStringConvertible {
     static var tag: Tag { get }
     func asJSON(with processor: Processor) throws -> Data
     static func fromJSON(_ data: Data, with processor: Processor) throws -> RecordProtocol
@@ -29,6 +29,12 @@ extension RecordProtocol {
     }
     
     var _children: [RecordProtocol] { [] }
+}
+
+extension RecordProtocol {
+    var description: String {
+        "«\(type)»"
+    }
 }
 
 protocol IdentifiedRecord: RecordProtocol {
