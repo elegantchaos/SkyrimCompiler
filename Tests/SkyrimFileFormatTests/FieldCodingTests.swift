@@ -39,7 +39,7 @@ class FieldCodingTests: ProcessorTestCase {
                         """
         )
         
-        let decodedFromJSON = decode(AlternateTextureField.AlternateTexture.self, fromJSON: json)
+        let decodedFromJSON = try decode(AlternateTextureField.AlternateTexture.self, fromJSON: json)
         XCTAssertEqual(decoded, decodedFromJSON)
     }
     
@@ -80,7 +80,7 @@ class FieldCodingTests: ProcessorTestCase {
                         """
         )
         
-        let decodedFromJSON = decode(AlternateTextureField.self, fromJSON: json)
+        let decodedFromJSON = try decode(AlternateTextureField.self, fromJSON: json)
         XCTAssertEqual(decoded, decodedFromJSON)
 
     }
@@ -114,14 +114,14 @@ class FieldCodingTests: ProcessorTestCase {
                         """
         )
         
-        let decodedFromJSON = decode(BOD2Field.self, fromJSON: json)
+        let decodedFromJSON = try decode(BOD2Field.self, fromJSON: json)
         XCTAssertEqual(decoded, decodedFromJSON)
 
     }
     
     
     func testDecalData() throws {
-        print(Float32(8.0).littleEndianBytes.map({ String(format: "%0X", $0)}))
+//        print(Float32(8.0).littleEndianBytes.map({ String(format: "%0X", $0)}))
         let data = Data([
             0x00, 0x00, 0x00, 0x00, // 0.0
             0x00, 0x00, 0x80, 0x3F, // 1.0
@@ -181,7 +181,58 @@ class FieldCodingTests: ProcessorTestCase {
                         """
         )
         
-        let decodedFromJSON = decode(DecalData.self, fromJSON: json)
+        let decodedFromJSON = try decode(DecalData.self, fromJSON: json)
+        XCTAssertEqual(decoded, decodedFromJSON)
+
+    }
+    
+    func testMODTField() throws {
+        let data = Data([
+            0x04, 0x00, 0x00, 0x00, // count == 4
+            0x01, 0x00, 0x00, 0x00, // count2 == 1
+            0x01, 0x00, 0x00, 0x00, // count3 == 1
+            0x01, 0x02, 0x03, 0x04, // array 1 - entry 1
+            0x05, 0x06, 0x07, 0x08, // array 1 - entry 2
+            0x05, 0x06, 0x07, 0x08, // array 2 - entry 1 - unknown
+            0x54, 0x65, 0x73, 0x74, // array 2 - entry 1 - tag: "Test"
+            0xA1, 0xA2, 0xA3, 0xA4, // array 2 - entry 1 - flag
+            0xB1, 0xB2, 0xB3, 0xB4  // array 3 (1 entry)
+        ])
+        
+        let decoder = DataDecoder(data: data)
+        let decoded = try decoder.decode(MODTField.self)
+        XCTAssertEqual(decoded.data, [0xB4B3B2B1])
+        XCTAssertEqual(decoded.data2?.count, 1)
+        XCTAssertEqual(decoded.data3, [0x04030201, 0x08070605])
+        XCTAssertEqual(decoded.data2, [.init(unknown: 0x08070605, textureType: Tag("Test"), unknown2: 0xA4A3A2A1)])
+
+        let encoder = DataEncoder()
+        let encoded = try encoder.encode(decoded)
+        XCTAssertEqual(data, encoded)
+
+        let json = asJSON(decoded)
+        XCTAssertEqual(json,
+                        """
+                        {
+                          "data" : [
+                            3031675569
+                          ],
+                          "data2" : [
+                            {
+                              "textureType" : "Test",
+                              "unknown" : 134678021,
+                              "unknown2" : 2762187425
+                            }
+                          ],
+                          "data3" : [
+                            67305985,
+                            134678021
+                          ]
+                        }
+                        """
+        )
+        
+        let decodedFromJSON = try decode(MODTField.self, fromJSON: json)
         XCTAssertEqual(decoded, decodedFromJSON)
 
     }

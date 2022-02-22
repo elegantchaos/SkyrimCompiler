@@ -12,10 +12,14 @@ struct MODTField: Codable {
     let data3: [UInt32]?
 }
 
+extension MODTField: Equatable { }
+
 extension MODTField: BinaryCodable {
     init(fromBinary decoder: BinaryDecoder) throws {
-        let fieldDecoder = decoder as? FieldDecoder
-        assert(fieldDecoder?.version == 44) // TODO handle older format?
+        if let fieldDecoder = decoder as? FieldDecoder {
+            assert(fieldDecoder.version == 44) // TODO handle older format?
+        }
+        
         var container = try decoder.unkeyedContainer()
         let count3 = try container.decode(UInt32.self)
         let count2 = (count3 >= 1) ? try container.decode(UInt32.self) : 0
@@ -27,19 +31,12 @@ extension MODTField: BinaryCodable {
         self.data = data
         self.data2 = data2.count > 0 ? data2 : nil
         self.data3 = data3.count > 0 ? data3 : nil
-//        } else {
-//            let container = try decoder.container(keyedBy: Self.CodingKeys)
-//            data = try container.decode([UInt32].self, forKey: Self.CodingKeys.data)
-//            data2 = try container.decode([Data2].self, forKey: Self.CodingKeys.data2)
-//            data3 = try container.decode([UInt32].self, forKey: Self.CodingKeys.data3)
-//
-//        }
     }
     
     func binaryEncode(to encoder: BinaryEncoder) throws {
         let count3 = UInt32(data3?.count ?? 0)
         let count2 = UInt32(data2?.count ?? 0)
-        let count1 = data.count
+        let count1 = UInt32(data.count)
         
         var count = count3
         if count2 > 0 {
@@ -72,10 +69,13 @@ extension MODTField: BinaryCodable {
             try container.encode(value)
         }
     }
+
+    struct Data2: Codable {
+        let unknown: UInt32
+        let textureType: Tag
+        let unknown2: UInt32
+    }
 }
 
-struct Data2: BinaryCodable {
-    let unknown: UInt32
-    let textureType: Tag
-    let unknown2: UInt32
-}
+extension MODTField.Data2: Equatable { }
+
