@@ -17,3 +17,5 @@ public struct BOD2Field: BinaryCodable {
     }
 }
 
+extension BOD2Field: Equatable {
+}
