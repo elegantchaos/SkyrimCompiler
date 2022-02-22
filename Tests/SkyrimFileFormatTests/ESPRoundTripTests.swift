@@ -45,6 +45,7 @@ class ESPRoundTripTests: ProcessorTestCase {
                 try await roundTrip(record: record)
             } catch {
                 print(error)
+                throw error
             }
         }
     }
