@@ -36,20 +36,16 @@
   "maleArmour" : "Clothes\\FarmClothes03\\farmerglovesmGO.nif",
   "maleModelData" : {
     "data" : [
-      2,
-      0,
-      0
-    ],
-    "data2" : [
-
-    ],
-    "data3" : [
 
     ]
   },
   "maleTextures" : {
     "textures" : [
-
+      {
+        "index" : 0,
+        "name" : "gloveGO:0",
+        "texture" : "0x01000D64"
+      }
     ]
   },
   "pickupSound" : "0x0003E879",

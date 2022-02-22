@@ -7,16 +7,18 @@ import BinaryCoding
 import Foundation
 
 struct DecalData: BinaryCodable {
-    let minWidth: Float
-    let maxWidth: Float
-    let minHeight: Float
-    let maxHeight: Float
-    let depth: Float
-    let shininess: Float
-    let parallaxScale: Float
+    let minWidth: Float32
+    let maxWidth: Float32
+    let minHeight: Float32
+    let maxHeight: Float32
+    let depth: Float32
+    let shininess: Float32
+    let parallaxScale: Float32
     let parallaxPasses: UInt8
     let flags: UInt8
     let unknown1: UInt8
     let unknown2: UInt8
-    let rgb: UInt32
+    let rgb: RGBColor
 }
+
+extension DecalData: Equatable { }

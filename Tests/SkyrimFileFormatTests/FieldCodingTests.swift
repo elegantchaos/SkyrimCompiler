@@ -118,4 +118,71 @@ class FieldCodingTests: ProcessorTestCase {
         XCTAssertEqual(decoded, decodedFromJSON)
 
     }
+    
+    
+    func testDecalData() throws {
+        print(Float32(8.0).littleEndianBytes.map({ String(format: "%0X", $0)}))
+        let data = Data([
+            0x00, 0x00, 0x00, 0x00, // 0.0
+            0x00, 0x00, 0x80, 0x3F, // 1.0
+            0x00, 0x00, 0x00, 0x00, // 0.0
+            0x00, 0x00, 0x80, 0x3F, // 1.0
+            0x00, 0x00, 0x00, 0x40, // 2.0
+            0x00, 0x00, 0x80, 0x40, // 4.0
+            0x00, 0x00, 0x00, 0x41, // 8.0
+            0x01,
+            0xF0,
+            0x00,
+            0x00,
+            0x00, 0xFF, 0xFF, 0xFF
+        ])
+        
+        let decoder = DataDecoder(data: data)
+        let decoded = try decoder.decode(DecalData.self)
+        XCTAssertEqual(decoded.minWidth, 0.0)
+        XCTAssertEqual(decoded.maxWidth, 1.0)
+        XCTAssertEqual(decoded.minHeight, 0.0)
+        XCTAssertEqual(decoded.maxHeight, 1.0)
+        XCTAssertEqual(decoded.depth, 2.0)
+        XCTAssertEqual(decoded.shininess, 4.0)
+        XCTAssertEqual(decoded.parallaxScale, 8.0)
+        XCTAssertEqual(decoded.parallaxPasses, 1)
+        XCTAssertEqual(decoded.flags, 0xF0)
+        XCTAssertEqual(decoded.unknown1, 0)
+        XCTAssertEqual(decoded.unknown2, 0)
+        XCTAssertEqual(decoded.rgb, .init(alpha: 0, red: 255, green: 255, blue: 255))
+
+        let encoder = DataEncoder()
+        let encoded = try encoder.encode(decoded)
+        XCTAssertEqual(data, encoded)
+
+        let json = asJSON(decoded)
+        XCTAssertEqual(json,
+                        """
+                        {
+                          "depth" : 2,
+                          "flags" : 240,
+                          "maxHeight" : 1,
+                          "maxWidth" : 1,
+                          "minHeight" : 0,
+                          "minWidth" : 0,
+                          "parallaxPasses" : 1,
+                          "parallaxScale" : 8,
+                          "rgb" : {
+                            "alpha" : 0,
+                            "blue" : 255,
+                            "green" : 255,
+                            "red" : 255
+                          },
+                          "shininess" : 4,
+                          "unknown1" : 0,
+                          "unknown2" : 0
+                        }
+                        """
+        )
+        
+        let decodedFromJSON = decode(DecalData.self, fromJSON: json)
+        XCTAssertEqual(decoded, decodedFromJSON)
+
+    }
 }

@@ -14,20 +14,16 @@
   "model2AlternateTextures" : [
     {
       "textures" : [
-
+        {
+          "index" : 0,
+          "name" : "gloveslow",
+          "texture" : "0x01000D64"
+        }
       ]
     }
   ],
   "model2Textures" : {
     "data" : [
-      2,
-      0,
-      0
-    ],
-    "data2" : [
-
-    ],
-    "data3" : [
 
     ]
   },
@@ -35,20 +31,16 @@
   "model3AlternateTextures" : [
     {
       "textures" : [
-
+        {
+          "index" : 0,
+          "name" : "gloveslow02",
+          "texture" : "0x01000D64"
+        }
       ]
     }
   ],
   "model3Textures" : {
     "data" : [
-      2,
-      0,
-      0
-    ],
-    "data2" : [
-
-    ],
-    "data3" : [
 
     ]
   },

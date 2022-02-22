@@ -3,11 +3,8 @@
 //  All code (c) 2022 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import BinaryCoding
 import Foundation
-import CoreText
-
-
-
 
 struct TextureFlags: OptionSetFromEnum
 {

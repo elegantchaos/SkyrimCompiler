@@ -9,7 +9,7 @@ import Foundation
 /// Maps the coding keys for fields to their types
 struct FieldTypeMap {
     struct Entry {
-        let type: BinaryDecodable.Type
+        let type: BinaryDecodable.Type // TODO: Codable may be enough here.
         let readKey: Tag
     }
     
