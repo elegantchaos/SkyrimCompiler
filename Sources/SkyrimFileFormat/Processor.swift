@@ -107,10 +107,12 @@ class Processor {
         if let type = types.fieldType(forTag: header.type) {
             do {
                 let decoder = FieldDecoder(header: header, data: data, inRecord: recordType, withHeader: recordHeader)
+                decoder.enableLogging = true
+                print("Unpacking field \(header.type) - \(type)")
                 let unpacked = try type.init(fromBinary: decoder)
                 return Field(header: header, value: unpacked)
             } catch {
-                print("Error unpacking \(header.type) - \(type). Falling back to basic field.\n\n\(error)")
+                print("Unpack failed. Falling back to basic field.\n\n\(error)")
             }
         }
 
