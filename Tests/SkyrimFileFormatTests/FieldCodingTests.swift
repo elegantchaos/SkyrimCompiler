@@ -27,6 +27,20 @@ class FieldCodingTests: ProcessorTestCase {
         let encoder = DataEncoder()
         let encoded = try encoder.encode(decoded)
         XCTAssertEqual(data, encoded)
+        
+        let json = asJSON(decoded)
+        XCTAssertEqual(json,
+                        """
+                        {
+                          "index" : 15,
+                          "name" : "Test",
+                          "texture" : "0x04030201"
+                        }
+                        """
+        )
+        
+        let decodedFromJSON = decode(AlternateTextureField.AlternateTexture.self, fromJSON: json)
+        XCTAssertEqual(decoded, decodedFromJSON)
     }
     
     func testAlternateTextures() throws {
@@ -50,5 +64,24 @@ class FieldCodingTests: ProcessorTestCase {
         let encoder = DataEncoder()
         let encoded = try encoder.encode(decoded)
         XCTAssertEqual(data, encoded)
+
+        let json = asJSON(decoded)
+        XCTAssertEqual(json,
+                        """
+                        {
+                          "textures" : [
+                            {
+                              "index" : 15,
+                              "name" : "Test",
+                              "texture" : "0x04030201"
+                            }
+                          ]
+                        }
+                        """
+        )
+        
+        let decodedFromJSON = decode(AlternateTextureField.self, fromJSON: json)
+        XCTAssertEqual(decoded, decodedFromJSON)
+
     }
 }
