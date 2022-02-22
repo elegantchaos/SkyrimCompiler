@@ -11,9 +11,6 @@ protocol OptionSetFromEnum: OptionSet, BinaryCodable where Options.AllCases.Inde
     init(arrayLiteral elements: Options...)
     init(from decoder: Decoder) throws
     init(knownRawValue: RawValue)
-    
-    init(fromBinary decoder: BinaryDecoder) throws
-    func encodeBinary(to encoder: BinaryEncoder) throws
 }
 
 protocol EnumForOptionSet: Codable, CaseIterable, Equatable, RawRepresentable where RawValue == String {
@@ -70,7 +67,7 @@ extension OptionSetFromEnum {
         try self.init(rawValue: container.decode(RawValue.self))
     }
     
-    func encodeBinary(to encoder: BinaryEncoder) throws {
+    func binaryEncode(to encoder: BinaryEncoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(rawValue)
     }
