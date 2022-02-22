@@ -9,13 +9,13 @@ import Foundation
 struct AlternateTextureField: BinaryCodable {
     let textures: [AlternateTexture]
 
-    init(fromBinary decoder: Decoder) throws {
+    init(fromBinary decoder: BinaryDecoder) throws {
         var container = try decoder.unkeyedContainer()
         let count = try container.decode(UInt32.self)
         textures = try container.decodeArray(of: AlternateTexture.self, count: count)
     }
     
-    func binaryEncode(to encoder: Encoder) throws {
+    func binaryEncode(to encoder: BinaryEncoder) throws {
         var container = encoder.unkeyedContainer()
         try container.encode(UInt32(textures.count))
         for texture in textures {
@@ -28,7 +28,7 @@ struct AlternateTextureField: BinaryCodable {
         let texture: FormID
         let index: UInt32
         
-        init(fromBinary decoder: Decoder) throws {
+        init(fromBinary decoder: BinaryDecoder) throws {
             var container = try decoder.unkeyedContainer()
             let size = try container.decode(UInt32.self)
             let bytes = try container.decodeArray(of: UInt8.self, count: size)
@@ -41,10 +41,10 @@ struct AlternateTextureField: BinaryCodable {
             self.index = try container.decode(UInt32.self)
         }
         
-        func binaryEncode(to encoder: Encoder) throws {
+        func binaryEncode(to encoder: BinaryEncoder) throws {
             var container = encoder.unkeyedContainer()
             try container.encode(UInt32(name.count))
-            try container.encode(name.data(using: .ascii))
+            try container.encode(name.data(using: encoder.stringEncoding))
             try container.encode(texture)
             try container.encode(index)
         }

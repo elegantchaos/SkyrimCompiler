@@ -34,7 +34,7 @@ extension DecodableFromIntOrString {
         self = Self.allCases[index]
     }
     
-    func binaryEncode(to encoder: Encoder) throws {
+    func binaryEncode(to encoder: BinaryEncoder) throws {
         var container = encoder.singleValueContainer()
         let uint = UInt32(indexInCases)
         try container.encode(uint)
