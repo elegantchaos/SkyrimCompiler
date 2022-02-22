@@ -3,6 +3,7 @@
 //  All code (c) 2022 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import BinaryCoding
 import Foundation
 
 struct MODTField: Codable {
@@ -12,7 +13,7 @@ struct MODTField: Codable {
 }
 
 extension MODTField: BinaryCodable {
-    init(fromBinary decoder: Decoder) throws {
+    init(fromBinary decoder: BinaryDecoder) throws {
         let fieldDecoder = decoder as? FieldDecoder
         assert(fieldDecoder?.version == 44) // TODO handle older format?
         var container = try decoder.unkeyedContainer()
@@ -35,7 +36,7 @@ extension MODTField: BinaryCodable {
 //        }
     }
     
-    func binaryEncode(to encoder: Encoder) throws {
+    func binaryEncode(to encoder: BinaryEncoder) throws {
         let count3 = UInt32(data3?.count ?? 0)
         let count2 = UInt32(data2?.count ?? 0)
         let count1 = data.count

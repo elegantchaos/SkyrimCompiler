@@ -20,6 +20,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/elegantchaos/AsyncSequenceReader.git", from: "0.1.0"),
+        .package(url: "https://github.com/elegantchaos/BinaryCoding.git", .branch("main")),
         .package(url: "https://github.com/elegantchaos/Bytes.git", .branch("float-support")),
         .package(url: "https://github.com/elegantchaos/Coercion.git", from: "1.1.3"),
         .package(url: "https://github.com/elegantchaos/ElegantStrings.git", from: "1.1.1"),
@@ -30,6 +31,7 @@ let package = Package(
             name: "SkyrimFileFormat",
             dependencies: [
                 "AsyncSequenceReader",
+                "BinaryCoding",
                 "Bytes",
                 "Coercion",
                 "ElegantStrings"

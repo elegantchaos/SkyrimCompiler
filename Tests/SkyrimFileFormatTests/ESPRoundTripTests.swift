@@ -3,6 +3,7 @@
 //  All code (c) 2022 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import BinaryCoding
 import XCTest
 import XCTestExtensions
 @testable import SkyrimFileFormat
@@ -19,7 +20,7 @@ class ESPRoundTripTests: ProcessorTestCase {
     func roundTrip(record: RecordProtocol) async throws {
         print("Round trip test for \(record)")
 
-        let encoder = BinaryEncoder()
+        let encoder = DataEncoder()
         try processor.encode(record, using: encoder)
         let encoded = encoder.data
 

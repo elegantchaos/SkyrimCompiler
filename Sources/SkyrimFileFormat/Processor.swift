@@ -4,6 +4,7 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import AsyncSequenceReader
+import BinaryCoding
 import Bytes
 import Foundation
 
@@ -25,7 +26,7 @@ class Processor {
         self.configuration = configuration
         self.jsonEncoder = JSONEncoder()
         self.jsonDecoder = JSONDecoder()
-        self.binaryEncoder = BinaryEncoder()
+        self.binaryEncoder = DataEncoder()
 
         jsonEncoder.outputFormatting = [.prettyPrinted, .sortedKeys]
     }
@@ -174,7 +175,7 @@ class Processor {
     }
     
     func save(_ records: [RecordProtocol]) throws -> Data {
-        let binaryEncoder = BinaryEncoder()
+        let binaryEncoder = DataEncoder()
         for record in records {
             try encode(record, using: binaryEncoder)
         }

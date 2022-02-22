@@ -3,6 +3,7 @@
 //  All code (c) 2022 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import BinaryCoding
 import Bytes
 import Foundation
 
@@ -51,7 +52,7 @@ extension Tag: ExpressibleByStringLiteral {
 }
 
 extension Tag: BinaryEncodable {
-    func binaryEncode(to encoder: Encoder) throws {
+    func binaryEncode(to encoder: BinaryEncoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(tag)
     }

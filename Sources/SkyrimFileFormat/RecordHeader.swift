@@ -3,6 +3,7 @@
 //  All code (c) 2022 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import BinaryCoding
 import Bytes
 import Foundation
 
@@ -56,7 +57,7 @@ struct RecordHeader: Codable {
 }
 
 extension RecordHeader: BinaryEncodable {
-    func binaryEncode(to encoder: Encoder) throws {
+    func binaryEncode(to encoder: BinaryEncoder) throws {
         var container = encoder.unkeyedContainer()
         try container.encode(flags?.rawValue ?? 0)
         try container.encode(id ?? 0)

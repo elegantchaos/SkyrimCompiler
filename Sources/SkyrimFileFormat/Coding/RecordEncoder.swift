@@ -3,6 +3,7 @@
 //  All code (c) 2022 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import BinaryCoding
 import Bytes
 import Foundation
 
@@ -13,13 +14,13 @@ enum RecordEncodingError: Error {
 class RecordEncoder: Encoder, WriteableRecordStream {
     var codingPath: [CodingKey]
     var userInfo: [CodingUserInfoKey : Any]
-    var binaryEncoder: BinaryEncoder
+    var binaryEncoder: DataEncoder
     var fieldMap: FieldTypeMap
     
     init(fields: FieldTypeMap) {
         self.codingPath = []
         self.userInfo = [:]
-        self.binaryEncoder = BinaryEncoder()
+        self.binaryEncoder = DataEncoder()
         self.fieldMap = fields
     }
     
@@ -40,7 +41,7 @@ class RecordEncoder: Encoder, WriteableRecordStream {
     }
     
     func write(_ value: String) throws {
-        try binaryEncoder.write(value)
+        try binaryEncoder.writeString(value)
     }
     
     func writeEncodable<Value>(_ value: Value) throws where Value: Encodable {
@@ -119,7 +120,7 @@ class RecordEncoder: Encoder, WriteableRecordStream {
 
                     if let array = value as? CodableArray {
                         try array.forEach { element in
-                            let binaryEncoder = BinaryEncoder()
+                            let binaryEncoder = DataEncoder()
                             try element.encode(to: binaryEncoder)
                             let encoded = binaryEncoder.data
                             
@@ -128,7 +129,7 @@ class RecordEncoder: Encoder, WriteableRecordStream {
                             try encoder.writeEncodable(encoded)
                         }
                     } else {
-                        let binaryEncoder = BinaryEncoder()
+                        let binaryEncoder = DataEncoder()
                         
                         if let binaryEncodableValue = value as? BinaryEncodable {
                             try binaryEncodableValue.binaryEncode(to: binaryEncoder)

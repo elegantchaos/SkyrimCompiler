@@ -3,9 +3,10 @@
 //  All code (c) 2022 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import BinaryCoding
 import Foundation
 
-protocol RecordProtocol: Codable, CustomStringConvertible {
+protocol RecordProtocol: BinaryCodable, CustomStringConvertible {
     static var tag: Tag { get }
     func asJSON(with processor: Processor) throws -> Data
     static func fromJSON(_ data: Data, with processor: Processor) throws -> RecordProtocol

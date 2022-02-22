@@ -3,10 +3,11 @@
 //  All code (c) 2022 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import BinaryCoding
 import Bytes
 import Foundation
 
-class FieldDecoder: BinaryDecoder {
+class FieldDecoder: DataDecoder {
     let header: Field.Header
     let recordType: Tag
     let recordHeader: RecordHeader

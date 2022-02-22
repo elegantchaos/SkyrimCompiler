@@ -3,6 +3,7 @@
 //  All code (c) 2022 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import BinaryCoding
 import Foundation
 
 protocol OptionSetFromEnum: OptionSet, BinaryCodable where Options.AllCases.Index: FixedWidthInteger, RawValue: FixedWidthInteger, RawValue: BinaryCodable {
