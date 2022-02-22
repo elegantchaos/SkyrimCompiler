@@ -56,3 +56,7 @@ extension FormID: BinaryCodable {
         try container.encode(id)
     }
 }
+
+extension FormID: Equatable {
+    
+}

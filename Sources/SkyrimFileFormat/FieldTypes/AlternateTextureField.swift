@@ -6,7 +6,7 @@
 import BinaryCoding
 import Foundation
 
-struct AlternateTextureField: BinaryCodable {
+struct AlternateTextureField: BinaryCodable, Equatable {
     let textures: [AlternateTexture]
 
     init(fromBinary decoder: BinaryDecoder) throws {
@@ -23,7 +23,7 @@ struct AlternateTextureField: BinaryCodable {
         }
     }
 
-    struct AlternateTexture: BinaryCodable {
+    struct AlternateTexture: BinaryCodable, Equatable {
         let name: String
         let texture: FormID
         let index: UInt32
