@@ -84,4 +84,38 @@ class FieldCodingTests: ProcessorTestCase {
         XCTAssertEqual(decoded, decodedFromJSON)
 
     }
+    
+    func testBOD2Field() throws {
+        let data = Data([
+            0x01, 0x40, 0x10, 0x00, // flags 0x00104001 head, addOn3, decapitateHead
+            0x02, 0x00, 0x00, 0x00, // clothing
+        ])
+        
+        let decoder = DataDecoder(data: data)
+        let decoded = try decoder.decode(BOD2Field.self)
+        XCTAssertEqual(decoded.partFlags, [.head, .addOn3, .decapitateHead])
+        XCTAssertEqual(decoded.armorType, .clothing)
+        
+        let encoder = DataEncoder()
+        let encoded = try encoder.encode(decoded)
+        XCTAssertEqual(data, encoded)
+
+        let json = asJSON(decoded)
+        XCTAssertEqual(json,
+                        """
+                        {
+                          "armorType" : "clothing",
+                          "partFlags" : [
+                            "head",
+                            "addOn3",
+                            "decapitateHead"
+                          ]
+                        }
+                        """
+        )
+        
+        let decodedFromJSON = decode(BOD2Field.self, fromJSON: json)
+        XCTAssertEqual(decoded, decodedFromJSON)
+
+    }
 }
