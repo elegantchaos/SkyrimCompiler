@@ -7,7 +7,7 @@ import BinaryCoding
 import ElegantStrings
 import Foundation
 
-struct FormID: BinaryCodable {
+struct FormID: Codable {
     let id: UInt32
     let name: String
     
@@ -25,7 +25,11 @@ struct FormID: BinaryCodable {
             id = UInt32(value)
         }
 
-        name = "" // TODO: in theory we could look up the name/editorID from an index and fill it in here
+        name = Self.lookupName(forID: id, in: decoder)
+    }
+    
+    static func lookupName(forID id: UInt32, in decoder: Decoder) -> String {
+        return "" // TODO: in theory we could look up the name/editorID from an index and fill it in here
     }
     
     func encode(to encoder: Encoder) throws {
@@ -37,5 +41,18 @@ struct FormID: BinaryCodable {
     enum CodingKeys: CodingKey {
         case id
         case name
+    }
+}
+
+extension FormID: BinaryCodable {
+    init(fromBinary decoder: BinaryDecoder) throws {
+        let container = try decoder.singleValueContainer()
+        id = try container.decode(UInt32.self)
+        name = Self.lookupName(forID: id, in: decoder)
+    }
+    
+    func binaryEncode(to encoder: BinaryEncoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(id)
     }
 }
