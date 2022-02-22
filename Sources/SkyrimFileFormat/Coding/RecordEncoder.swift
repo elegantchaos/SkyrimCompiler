@@ -118,24 +118,25 @@ class RecordEncoder: Encoder, WriteableRecordStream {
                         throw RecordEncodingError.unknownField
                     }
 
-                    if let array = value as? CodableArray {
-                        try array.forEach { element in
-                            let binaryEncoder = DataEncoder()
-                            try element.encode(to: binaryEncoder)
-                            let encoded = binaryEncoder.data
-                            
+                    let binaryEncoder = DataEncoder()
+
+                    if let array = value as? FieldCodableArray {
+                        // if the type is an array, we need to write out each of its elements
+                        // separately with the same field tag
+                        for encoded in try array.elements(encodedWith: binaryEncoder) {
                             let header = Field.Header(type: tag, size: UInt16(encoded.count))
                             try encoder.writeEncodable(header)
                             try encoder.writeEncodable(encoded)
                         }
-                    } else {
-                        let binaryEncoder = DataEncoder()
                         
-                        if let binaryEncodableValue = value as? BinaryEncodable {
-                            try binaryEncodableValue.binaryEncode(to: binaryEncoder)
-                        } else {
-                            try value.encode(to: binaryEncoder)
-                        }
+                        
+                    } else {
+//                        if let binaryEncodableValue = value as? BinaryEncodable {
+//                            try binaryEncodableValue.binaryEncode(to: binaryEncoder)
+//                        } else {
+//                            try value.encode(to: binaryEncoder)
+//                        }
+                        try value.binaryEncode(to: binaryEncoder)
                         let encoded = binaryEncoder.data
                         
                         let header = Field.Header(type: tag, size: UInt16(encoded.count))
