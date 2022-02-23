@@ -7,6 +7,8 @@ import Foundation
 
 struct ESPBundle {
     typealias Index = [Tag:[RecordProtocol]]
+    
+    let name: String
     var records: [RecordProtocol]
     var index: Index
     var count: Int { records.count }
@@ -14,7 +16,7 @@ struct ESPBundle {
         records.first(where: { $0.type == TES4Record.tag }) as? TES4Record
     }
     
-    init(records: [RecordProtocol]) {
+    init(name: String, records: [RecordProtocol]) {
         var index = Index()
         var ordered: [RecordProtocol] = []
 
@@ -32,6 +34,7 @@ struct ESPBundle {
             }
         }
         
+        self.name = name
         self.records = ordered
         self.index = index
     }

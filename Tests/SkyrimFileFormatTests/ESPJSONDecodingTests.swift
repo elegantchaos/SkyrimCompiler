@@ -12,7 +12,7 @@ import XCTest
 class ESPJSONDecodingTests: ProcessorTestCase {
     func loadESPS(named name: String) async throws -> ESPBundle {
         let url = Bundle.module.url(forResource: "Unpacked/\(name)", withExtension: "esps")!
-        return try processor.loadESPS(url)
+        return try processor.load(url: url)
     }
 
     func testEmpty() async throws {

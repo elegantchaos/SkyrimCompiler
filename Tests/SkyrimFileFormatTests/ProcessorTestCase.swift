@@ -10,15 +10,9 @@ import XCTest
 class ProcessorTestCase: XCTestCase {
     let processor = Processor()
     
-    func loadExample(named name: String) async throws -> [RecordProtocol] {
+    func unpackExample(named name: String) async throws -> ESPBundle {
         let url = Bundle.module.url(forResource: "Examples/\(name)", withExtension: "esp")!
-        
-        var records: [RecordProtocol] = []
-        for try await record in processor.records(bytes: url.resourceBytes, processChildren: true) {
-            records.append(record)
-        }
-        
-        return records
+        return try await processor.unpack(url: url)
     }
 
     func loadExampleData(named name: String) throws -> Data {
@@ -26,16 +20,15 @@ class ProcessorTestCase: XCTestCase {
         return try Data(contentsOf: url)
     }
 
-    func outputURL(for url: URL) -> URL {
+    var outputDirectoryURL: URL {
         let output: URL
         if ProcessInfo.processInfo.environment["OutputToDesktop"] == "1" {
             let root = ("~/Desktop/Test Results" as NSString).expandingTildeInPath
-            output = URL(fileURLWithPath: root).appendingPathComponent(url.lastPathComponent).deletingPathExtension().appendingPathExtension("esps")
+            output = URL(fileURLWithPath: root)
         } else {
-            output = temporaryFile(named: url.deletingPathExtension().lastPathComponent, extension: "esps")
+            output = temporaryDirectory()
         }
         
-        try? FileManager.default.removeItem(at: output)
         try? FileManager.default.createDirectory(at: output, withIntermediateDirectories: true)
         return output
     }

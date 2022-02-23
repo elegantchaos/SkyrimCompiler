@@ -10,19 +10,13 @@ import XCTestExtensions
 
 final class ESPEncodingTests: ProcessorTestCase {
     
-    func encodeExample(named name: String, content: [RecordProtocol]) async throws {
+    func packAndCompareExample(_ bundle: ESPBundle) async throws {
         let processor = Processor()
-        let encoded = try processor.save(content)
+        let encoded = try processor.pack(bundle)
         
-        let url = Bundle.module.url(forResource: "Examples/\(name)", withExtension: "esp")!
+        let url = Bundle.module.url(forResource: "Examples/\(bundle.name)", withExtension: "esp")!
         let raw = try Data(contentsOf: url)
         
-        let records = try await loadExample(named: name)
-        for record in records {
-            let json = try record.asJSON(with: processor)
-            print(String(data: json, encoding: .utf8)!)
-        }
-
         XCTAssertEqual(encoded, raw)
     }
     
@@ -30,7 +24,8 @@ final class ESPEncodingTests: ProcessorTestCase {
         var record = TES4Record(description: "Empty ESP", author: "ScorpioSixNine")
         record.info = .init(version: 1.7, number: 0, nextID: 0x1D8C)
         record.tagifiedStringCount = 1
-        
-        try await encodeExample(named: "Empty", content: [record])
+
+        let bundle = ESPBundle(name: "Empty", records: [record])
+        try await packAndCompareExample(bundle)
     }
 }

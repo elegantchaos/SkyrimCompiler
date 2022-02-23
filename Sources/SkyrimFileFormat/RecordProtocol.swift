@@ -20,6 +20,13 @@ extension RecordProtocol {
     
     var header: RecordHeader { _header }
 
+    var isGroup: Bool { _header.type == GroupRecord.tag }
+    
+    var name: String {
+        guard let id = _header.id, id != 0 else { return "[\(_header.label)]" }
+        return String(format: "[%@:%08X]", _header.label, id)
+    }
+
     func asJSON(with processor: Processor) throws -> Data {
         return try processor.jsonEncoder.encode(self)
     }

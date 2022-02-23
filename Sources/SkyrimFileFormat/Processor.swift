@@ -21,6 +21,13 @@ extension ProcessorProtocol {
 protocol RecordDataIterator: AsyncIteratorProtocol where Element == RecordData {
 }
 
+/// Performs four main operations on ESPs:
+///
+/// - load: takes an `.esps` bundle and returns an `ESPBundle` instance
+/// - save: takes an `ESPBundle` instance and outputs an `.esps` bundle
+/// - unpack: takes an `.esp` file and returns an `ESPBundle` instance
+/// - pack: takes an `ESPBundle` instance and outputs an `.esp` file
+/// 
 class Processor {
     internal init(configuration: Configuration = .defaultConfiguration) {
         self.configuration = configuration
@@ -36,6 +43,56 @@ class Processor {
     let jsonDecoder: JSONDecoder
     let binaryEncoder: BinaryEncoder
     
+    /// Load a bundle of records from an `.esps` directory.
+    public func load(url: URL) throws -> ESPBundle {
+        let records = try loadRecords(from: url)
+        let name = url.deletingPathExtension().lastPathComponent
+        return ESPBundle(name: name, records: records)
+    }
+    
+    /// Save a bundle to an `.esps` directory.
+    public func save(_ bundle: ESPBundle, to folder: URL) async throws {
+        let url = folder.appendingPathComponent(bundle.name).appendingPathExtension(".esps")
+        try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+        try await save(records: bundle.records, to: url)
+    }
+    
+    /// Unpack an `.esp` file
+    public func unpack(url: URL) async throws -> ESPBundle {
+        let name = url.deletingPathExtension().lastPathComponent
+        return try await unpack(name: name, bytes: url.resourceBytes)
+    }
+
+    /// Unpack an `.esp` file from a byte stream
+    public func unpack<I: AsyncByteSequence>(name: String, bytes: I) async throws -> ESPBundle {
+        var unpacked: [RecordProtocol] = []
+        for try await record in records(bytes: bytes, processChildren: true) {
+            unpacked.append(record)
+        }
+        
+        return ESPBundle(name: name, records: unpacked)
+    }
+
+    /// Pack a bundle to an `.esp` file
+    public func pack(_ bundle: ESPBundle, to url: URL) throws {
+        let data = try pack(bundle)
+        try data.write(to: url, options: .atomic)
+    }
+    
+    /// Pack a bundle to Data
+    public func pack(_ bundle: ESPBundle) throws -> Data {
+        return try save(bundle.records)
+    }
+    
+    /// Pack a single record to Data
+    public func pack(_ record: RecordProtocol) throws -> Data {
+        let encoder = DataEncoder()
+        try encode(record, using: encoder)
+        return encoder.data
+    }
+}
+
+private extension Processor {
     func recordData<I: AsyncByteSequence>(bytes: I) -> AsyncThrowingIteratorMapSequence<I, RecordData> {
         let records = bytes.iteratorMap { iterator -> RecordData in
             let stream = AsyncDataStream(iterator: iterator)
@@ -120,33 +177,21 @@ class Processor {
     }
 
     
-    func pack<I: AsyncByteSequence>(bytes: I, to url: URL) async throws {
-        let records = recordData(bytes: bytes)
+    func save(records: [RecordProtocol], to url: URL) async throws {
         var index = 0
-        for try await record in records {
-            do {
-                if record.isGroup {
-                    try await export(group: record, index: index, asJSONTo: url)
-                } else {
-                    try await export(record: record, index: index, asJSONTo: url)
-                }
-            } catch {
-                print(error)
+        for record in records {
+            if let group = record as? GroupRecord {
+                try await save(group: group, index: index, asJSONTo: url)
+            } else {
+                try await save(record: record, index: index, asJSONTo: url)
             }
             index += 1
         }
     }
 
     
-    func export(record rawRecord: RecordData, index: Int, asJSONTo url: URL) async throws {
-        let header = rawRecord.header
-        let fields = try await decodedFields(type: rawRecord.type, header: rawRecord.header, data: rawRecord.data)
-        let recordClass = configuration.records[rawRecord.type] ?? RawRecord.self
-
-        let decoder = RecordDecoder(header: header, fields: fields)
-        let record = try recordClass.init(from: decoder)
-        
-        var label = rawRecord.name
+    func save(record: RecordProtocol, index: Int, asJSONTo url: URL) async throws {
+        var label = record.name
         if let identified = record as? IdentifiedRecord {
             label = "\(identified.editorID) \(label)"
         }
@@ -159,7 +204,7 @@ class Processor {
     }
     
     
-    func export(group: RecordData, index: Int, asJSONTo url: URL) async throws {
+    func save(group: GroupRecord, index: Int, asJSONTo url: URL) async throws {
         let name = String(format: "%04d %@", index, group.name)
         let groupURL = url.appendingPathComponent(name).appendingPathExtension(GroupRecord.fileExtension)
 
@@ -173,16 +218,23 @@ class Processor {
         let childrenURL = groupURL.appendingPathComponent("records")
         try FileManager.default.createDirectory(at: childrenURL, withIntermediateDirectories: true)
 
-        try await pack(bytes: group.data.asyncBytes, to: childrenURL)
+        try await save(records: group._children, to: childrenURL)
     }
     
     func save(_ records: [RecordProtocol]) throws -> Data {
         let binaryEncoder = DataEncoder()
         for record in records {
-            try encode(record, using: binaryEncoder)
+            try save(record, using: binaryEncoder)
         }
         
         return binaryEncoder.data
+    }
+    
+    func save(_ record: RecordProtocol, using encoder: BinaryEncoder) throws {
+        try encode(record, using: encoder)
+        for child in record._children {
+            try save(child, using: encoder)
+        }
     }
     
     func encode(_ record: RecordProtocol, using encoder: BinaryEncoder) throws {
@@ -202,13 +254,6 @@ class Processor {
         case wrongFileExtension
     }
     
-    func loadESPS(_ url: URL) throws -> ESPBundle {
-        guard url.pathExtension == "esps" else { throw Error.wrongFileExtension }
-
-        let loaded = try loadRecords(from: url)
-        return ESPBundle(records: loaded)
-    }
-
     func loadRecords(from url: URL) throws -> [RecordProtocol] {
         let urls = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil)
 

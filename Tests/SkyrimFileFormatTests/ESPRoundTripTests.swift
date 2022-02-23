@@ -10,8 +10,8 @@ import XCTestExtensions
 
 class ESPRoundTripTests: ProcessorTestCase {
     func roundTripExample(named name: String) async throws {
-        let records = try await loadExample(named: name)
-        let encoded = try processor.save(records)
+        let bundle = try await unpackExample(named: name)
+        let encoded = try processor.pack(bundle)
         let original = try loadExampleData(named: name)
         
         XCTAssertEqual(encoded, original)
@@ -20,18 +20,14 @@ class ESPRoundTripTests: ProcessorTestCase {
     func roundTrip(record: RecordProtocol) async throws {
         print("Round trip test for \(record)")
 
-        let encoder = DataEncoder()
-        try processor.encode(record, using: encoder)
-        let encoded = encoder.data
-
+        let encoded = try processor.pack(record)
         let originalJSON = String(data: try record.asJSON(with: processor), encoding: .utf8)!
 
         let encodedStream = BytesAsyncSequence(bytes: encoded.littleEndianBytes)
-        for try await decoded in processor.records(bytes: encodedStream, processChildren: false) {
-            let decodedJSON = String(data: try decoded.asJSON(with: processor), encoding: .utf8)!
-            XCTAssertEqual(originalJSON, decodedJSON)
-            break
-        }
+        let unpacked = try await processor.unpack(name: name, bytes: encodedStream)
+        let unpackedRecord = unpacked.records.first!
+        let decodedJSON = String(data: try unpackedRecord.asJSON(with: processor), encoding: .utf8)!
+        XCTAssertEqual(originalJSON, decodedJSON)
         
         for child in record._children {
             try await roundTrip(record: child)
@@ -39,8 +35,8 @@ class ESPRoundTripTests: ProcessorTestCase {
     }
     
     func roundTripByRecordExample(named name: String) async throws {
-        let records = try await loadExample(named: name)
-        for record in records {
+        let bundle = try await unpackExample(named: name)
+        for record in bundle.records {
             do {
                 try await roundTrip(record: record)
             } catch {
@@ -55,7 +51,7 @@ class ESPRoundTripTests: ProcessorTestCase {
     }
     
     func testRoundTripArmour() async throws {
-        try await roundTripByRecordExample(named: "Armour")
+        try await roundTripExample(named: "Armour")
     }
 
 }

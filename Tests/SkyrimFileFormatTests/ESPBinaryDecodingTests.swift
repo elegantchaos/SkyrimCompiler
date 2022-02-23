@@ -9,19 +9,17 @@ import XCTestExtensions
 @testable import SkyrimFileFormat
 
 final class ESPBinaryDecodingTests: ProcessorTestCase {
-    func unpackExample(named name: String) async throws {
-        let url = Bundle.module.url(forResource: "Examples/\(name)", withExtension: "esp")!
-        let output = outputURL(for: url)
-        
-        try await processor.pack(bytes: url.resourceBytes, to: output)
-        await show(output)
+    func saveExample(named name: String) async throws {
+        let bundle = try await unpackExample(named: name)
+        try await processor.save(bundle, to: outputDirectoryURL)
+        await show(outputDirectoryURL)
     }
-    
+
 
     
     func testArmour() async throws {
-        let records = try await loadExample(named: "Armour")
-        for record in records {
+        let bundle = try await unpackExample(named: "Armour")
+        for record in bundle.records {
             if record is ARMORecord {
                 let json = try record.asJSON(with: processor)
                 print(String(data: json, encoding: .utf8)!)
@@ -30,26 +28,26 @@ final class ESPBinaryDecodingTests: ProcessorTestCase {
     }
 
     func testPrintEmpty() async throws {
-        let records = try await loadExample(named: "Empty")
-        for record in records {
+        let bundle = try await unpackExample(named: "Empty")
+        for record in bundle.records {
             let json = try record.asJSON(with: processor)
             print(String(data: json, encoding: .utf8)!)
         }
     }
 
     func testDialogueExample() async throws {
-        _ = try await loadExample(named: "Dialogue")
+        _ = try await unpackExample(named: "Dialogue")
     }
 
     func testUnpackEmpty() async throws {
-        try await unpackExample(named: "Empty")
+        try await saveExample(named: "Empty")
     }
 
     func testUnpackArmour() async throws {
-        try await unpackExample(named: "Armour")
+        try await saveExample(named: "Armour")
     }
 
     func testUnpackDialogue() async throws {
-        try await unpackExample(named: "Dialogue")
+        try await saveExample(named: "Dialogue")
     }
 }
