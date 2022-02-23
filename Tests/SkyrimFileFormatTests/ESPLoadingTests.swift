@@ -9,14 +9,9 @@ import XCTest
 
 
 
-class ESPJSONDecodingTests: ProcessorTestCase {
-    func loadESPS(named name: String) async throws -> ESPBundle {
-        let url = Bundle.module.url(forResource: "Unpacked/\(name)", withExtension: "esps")!
-        return try processor.load(url: url)
-    }
-
+class ESPLoadingTests: ProcessorTestCase {
     func testEmpty() async throws {
-        let records = try await loadESPS(named: "Empty")
+        let records = try await loadExample(named: "Empty")
         XCTAssertEqual(records.count, 1)
         let header = records.header
         XCTAssertEqual(header?.type, TES4Record.tag)
@@ -24,8 +19,8 @@ class ESPJSONDecodingTests: ProcessorTestCase {
     }
     
     func testArmour() async throws {
-        let records = try await loadESPS(named: "Armour")
-        XCTAssertEqual(records.count, 13)
+        let records = try await loadExample(named: "Armour")
+        XCTAssertEqual(records.count, 6)
         XCTAssertEqual(records.index[ARMORecord.tag]?.count, 1)
         XCTAssertEqual(records.index[ARMARecord.tag]?.count, 1)
         XCTAssertEqual(records.index[LVLIRecord.tag]?.count, 3)

@@ -10,6 +10,7 @@ struct ESPBundle {
     
     let name: String
     var records: [RecordProtocol]
+    var allRecords: [RecordProtocol]
     var index: Index
     var count: Int { records.count }
     var header: TES4Record? {
@@ -35,7 +36,8 @@ struct ESPBundle {
         }
         
         self.name = name
-        self.records = ordered
+        self.records = records
+        self.allRecords = ordered
         self.index = index
     }
     

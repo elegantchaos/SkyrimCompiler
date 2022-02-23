@@ -14,19 +14,23 @@ class ESPRoundTripTests: ProcessorTestCase {
         let encoded = try processor.pack(bundle)
         let original = try loadExampleData(named: name)
         
+        let decoded = try await processor.unpack(name: "Test", bytes: encoded.asyncBytes)
+        XCTAssertEqual(bundle.count, decoded.count)
+
+        XCTAssertEqual(encoded.count, original.count)
         XCTAssertEqual(encoded, original)
     }
 
     func roundTrip(record: RecordProtocol) async throws {
         print("Round trip test for \(record)")
 
-        let encoded = try processor.pack(record)
+        let packed = try processor.pack(record)
+        let unpacked = try await processor.unpack(name: name, bytes: packed.asyncBytes).records.first!
+        let repacked = try processor.pack(unpacked)
+        XCTAssertEqual(packed, repacked)
+        
         let originalJSON = String(data: try record.asJSON(with: processor), encoding: .utf8)!
-
-        let encodedStream = BytesAsyncSequence(bytes: encoded.littleEndianBytes)
-        let unpacked = try await processor.unpack(name: name, bytes: encodedStream)
-        let unpackedRecord = unpacked.records.first!
-        let decodedJSON = String(data: try unpackedRecord.asJSON(with: processor), encoding: .utf8)!
+        let decodedJSON = String(data: try unpacked.asJSON(with: processor), encoding: .utf8)!
         XCTAssertEqual(originalJSON, decodedJSON)
         
         for child in record._children {

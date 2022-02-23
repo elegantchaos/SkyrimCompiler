@@ -8,7 +8,7 @@ import XCTestExtensions
 
 @testable import SkyrimFileFormat
 
-final class ESPEncodingTests: ProcessorTestCase {
+final class ESPPackingTests: ProcessorTestCase {
     
     func packAndCompareExample(_ bundle: ESPBundle) async throws {
         let processor = Processor()

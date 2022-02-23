@@ -15,22 +15,20 @@ class ProcessorTestCase: XCTestCase {
         return try await processor.unpack(url: url)
     }
 
+    func loadExample(named name: String) async throws -> ESPBundle {
+        let url = Bundle.module.url(forResource: "Unpacked/\(name)", withExtension: "esps")!
+        return try processor.load(url: url)
+    }
+
     func loadExampleData(named name: String) throws -> Data {
         let url = Bundle.module.url(forResource: "Examples/\(name)", withExtension: "esp")!
         return try Data(contentsOf: url)
     }
-
-    var outputDirectoryURL: URL {
-        let output: URL
-        if ProcessInfo.processInfo.environment["OutputToDesktop"] == "1" {
-            let root = ("~/Desktop/Test Results" as NSString).expandingTildeInPath
-            output = URL(fileURLWithPath: root)
-        } else {
-            output = temporaryDirectory()
-        }
-        
-        try? FileManager.default.createDirectory(at: output, withIntermediateDirectories: true)
-        return output
+    
+    func saveExample(named name: String) async throws {
+        let bundle = try await unpackExample(named: name)
+        let url = try await processor.save(bundle, to: outputDirectory())
+        await show(url)
     }
 }
 

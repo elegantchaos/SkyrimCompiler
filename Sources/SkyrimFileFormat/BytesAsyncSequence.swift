@@ -50,3 +50,8 @@ extension Bytes {
     }
 }
 
+extension Data {
+    var asyncBytes: BytesAsyncSequence {
+        BytesAsyncSequence(bytes: self.littleEndianBytes)
+    }
+}

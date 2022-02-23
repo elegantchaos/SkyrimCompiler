@@ -33,7 +33,6 @@ class Processor {
         self.configuration = configuration
         self.jsonEncoder = JSONEncoder()
         self.jsonDecoder = JSONDecoder()
-        self.binaryEncoder = DataEncoder()
 
         jsonEncoder.outputFormatting = [.prettyPrinted, .sortedKeys]
     }
@@ -41,7 +40,6 @@ class Processor {
     let configuration: Configuration
     let jsonEncoder: JSONEncoder
     let jsonDecoder: JSONDecoder
-    let binaryEncoder: BinaryEncoder
     
     /// Load a bundle of records from an `.esps` directory.
     public func load(url: URL) throws -> ESPBundle {
@@ -50,11 +48,13 @@ class Processor {
         return ESPBundle(name: name, records: records)
     }
     
-    /// Save a bundle to an `.esps` directory.
-    public func save(_ bundle: ESPBundle, to folder: URL) async throws {
-        let url = folder.appendingPathComponent(bundle.name).appendingPathExtension(".esps")
+    /// Save a bundle to an `.esps` directory in a given location.
+    /// Returns the URL to the saved directory.
+    @discardableResult public func save(_ bundle: ESPBundle, to folder: URL) async throws -> URL {
+        let url = folder.appendingPathComponent(bundle.name).appendingPathExtension("esps")
         try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
         try await save(records: bundle.records, to: url)
+        return url
     }
     
     /// Unpack an `.esp` file
@@ -81,13 +81,14 @@ class Processor {
     
     /// Pack a bundle to Data
     public func pack(_ bundle: ESPBundle) throws -> Data {
-        return try save(bundle.records)
+        return try pack(records: bundle.records)
     }
     
     /// Pack a single record to Data
     public func pack(_ record: RecordProtocol) throws -> Data {
         let encoder = DataEncoder()
-        try encode(record, using: encoder)
+        encoder.userInfo[.configurationUserInfoKey] = configuration
+        try record.binaryEncode(to: encoder)
         return encoder.data
     }
 }
@@ -221,8 +222,10 @@ private extension Processor {
         try await save(records: group._children, to: childrenURL)
     }
     
-    func save(_ records: [RecordProtocol]) throws -> Data {
+    func pack(records: [RecordProtocol]) throws -> Data {
         let binaryEncoder = DataEncoder()
+        binaryEncoder.userInfo[.configurationUserInfoKey] = configuration
+
         for record in records {
             try save(record, using: binaryEncoder)
         }
@@ -231,24 +234,29 @@ private extension Processor {
     }
     
     func save(_ record: RecordProtocol, using encoder: BinaryEncoder) throws {
-        try encode(record, using: encoder)
-        for child in record._children {
-            try save(child, using: encoder)
+        try record.binaryEncode(to: encoder)
+        if record._children.count > 0, let dc = encoder as? DataEncoder {
+            let position = dc.data.count
+            for child in record._children {
+                try save(child, using: encoder)
+            }
+            let childrenSize = dc.data.count - position
+            print(childrenSize) // TODO: patch up the payload size for the group
         }
     }
     
-    func encode(_ record: RecordProtocol, using encoder: BinaryEncoder) throws {
-        let type = type(of: record).tag
-        let fields = try configuration.fields(forRecord: type)
-        let recordEncoder = RecordEncoder(fields: fields)
-        try record.encode(to: recordEncoder)
-        let encoded = recordEncoder.binaryEncoder.data
-
-        try type.binaryEncode(to: encoder)
-        let size = encoded.count - RecordHeader.binaryEncodedSize + ((type == GroupRecord.tag) ? 24 : 0)
-        try UInt32(size).encode(to: encoder)
-        try encoded.encode(to: encoder)
-    }
+//    func encode(_ record: RecordProtocol, using encoder: BinaryEncoder) throws {
+//        let type = record.header.type
+//        let fields = try configuration.fields(forRecord: type)
+//        let recordEncoder = RecordEncoder(fields: fields)
+//        try record.encode(to: recordEncoder)
+//        let encoded = recordEncoder.data
+//
+//        try type.binaryEncode(to: encoder)
+//        let size = encoded.count - RecordHeader.binaryEncodedSize + (record.isGroup ? 24 : 0)
+//        try UInt32(size).encode(to: encoder)
+//        try encoded.encode(to: encoder)
+//    }
     
     enum Error: Swift.Error {
         case wrongFileExtension

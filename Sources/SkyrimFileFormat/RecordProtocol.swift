@@ -45,6 +45,32 @@ extension RecordProtocol {
     }
 }
 
+extension CodingUserInfoKey {
+    static var configurationUserInfoKey: CodingUserInfoKey {
+        return CodingUserInfoKey(rawValue: "Configuration")!
+    }
+}
+
+extension RecordProtocol {
+    func binaryEncode(to encoder: BinaryEncoder) throws {
+
+        
+        if let configuration = encoder.userInfo[.configurationUserInfoKey] as? Configuration {
+            let type = header.type
+            let fields = try configuration.fields(forRecord: type)
+            let recordEncoder = RecordEncoder(fields: fields)
+            try encode(to: recordEncoder)
+            let recordData = recordEncoder.data
+            let payloadSize = recordData.count
+
+            try type.binaryEncode(to: encoder)
+            let size = payloadSize - RecordHeader.binaryEncodedSize + (isGroup ? 24 : 0)
+            try UInt32(size).encode(to: encoder)
+            try recordData.encode(to: encoder)
+        }
+
+    }
+}
 protocol IdentifiedRecord: RecordProtocol {
     var editorID: String { get }
 }
