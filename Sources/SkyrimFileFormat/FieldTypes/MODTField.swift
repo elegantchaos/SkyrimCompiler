@@ -46,19 +46,26 @@ extension MODTField: BinaryCodable {
             count += 1
         }
         
+        if count == 0 { // a completely empty record is stored as three 0 counts, not one
+            count = 2
+        }
+        
         var container = encoder.unkeyedContainer()
         try container.encode(count)
-        if count2 > 0 {
+        if count >= 1 {
             try container.encode(count2)
         }
-        if count1 > 0 {
+        
+        if count >= 2 {
             try container.encode(count1)
         }
+        
         if let items = data3 {
             for value in items {
                 try container.encode(value)
             }
         }
+        
         if let items = data2 {
             for item in items {
                 try container.encode(item)

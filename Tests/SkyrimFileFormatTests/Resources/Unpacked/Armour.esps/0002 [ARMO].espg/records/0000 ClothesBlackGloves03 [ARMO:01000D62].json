@@ -3,7 +3,9 @@
     "id" : 16780642,
     "type" : "ARMO"
   },
-  "armature" : "0x01000D63",
+  "armature" : [
+    "0x01000D63"
+  ],
   "armourRating" : 0,
   "bodyTemplate" : {
     "armorType" : "clothing",

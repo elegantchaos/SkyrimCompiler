@@ -17,53 +17,63 @@ struct ARMORecord: Codable, IdentifiedRecord {
     let editorID: String
     let bounds: OBNDField
     let fullName: String?
+    let enchantment: FormID?
+    let enchantmentAmount: UInt16?
     let maleArmour: String
-    let maleInventoryImage: String?
-    let maleMessageImage: String?
     let maleModelData: MODTField?
     let maleTextures: AlternateTextureField?
+    let maleInventoryImage: String?
+    let maleMessageImage: String?
     let femaleArmour: String?
-    let femaleInventoryImage: String?
-    let femaleMessageImage: String?
     let femaleModelData: MODTField?
     let femaleTextures: AlternateTextureField?
+    let femaleInventoryImage: String?
+    let femaleMessageImage: String?
+    let bodyTemplate: BOD2Field
     let pickupSound: FormID
     let dropSound: FormID
+    let equipSlot: FormID?
+    let bashImpactDataSet: FormID?
+    let bashMaterial: FormID?
+    let race: FormID
     let keywordCount: UInt32
     let keywords: SingleFieldArray<FormID>
     let desc: String
+    let armature: [FormID]
+    let data: DATAField
     let armourRating: UInt32
     let template: FormID?
-    let data: DATAField
-    let armature: FormID
-    let race: FormID
-    let bodyTemplate: BOD2Field
 
     static var fieldMap = FieldTypeMap(paths: [
         (CodingKeys.editorID, \Self.editorID, "EDID"),
         (.bounds, \.bounds, "OBND"),
         (.fullName, \.fullName, "FULL"),
+        (.enchantment, \.enchantment, "EITM"),
+        (.enchantmentAmount, \.enchantmentAmount, "EAMT"),
         (.maleArmour, \.maleArmour, "MOD2"),
-        (.maleInventoryImage, \.maleInventoryImage, "ICON"),
-        (.maleMessageImage, \.maleMessageImage, "MICO"),
         (.maleModelData, \.maleModelData, "MO2T"),
         (.maleTextures, \.maleTextures, "MO2S"),
+        (.maleInventoryImage, \.maleInventoryImage, "ICON"),
+        (.maleMessageImage, \.maleMessageImage, "MICO"),
         (.femaleArmour, \.femaleArmour, "MOD4"),
-        (.femaleInventoryImage, \.femaleInventoryImage, "ICO2"),
-        (.femaleMessageImage, \.femaleMessageImage, "MIC2"),
         (.femaleModelData, \.femaleModelData, "MO4T"),
         (.femaleTextures, \.femaleTextures, "MO4S"),
+        (.femaleInventoryImage, \.femaleInventoryImage, "ICO2"),
+        (.femaleMessageImage, \.femaleMessageImage, "MIC2"),
+        (.bodyTemplate, \.bodyTemplate, "BOD2"),
         (.pickupSound, \.pickupSound, "YNAM"),
         (.dropSound, \.dropSound, "ZNAM"),
+        (.equipSlot, \.equipSlot, "ETYP"),
+        (.bashImpactDataSet, \.bashImpactDataSet, "BIDS"),
+        (.bashMaterial, \.bashMaterial, "BAMT"),
+        (.race, \.race, "RNAM"),
         (.keywordCount, \.keywordCount, "KSIZ"),
         (.keywords, \.keywords, "KWDA"),
         (.desc, \.desc, "DESC"),
-        (.armourRating, \.armourRating, "DNAM"),
-        (.template, \.template, "TNAM"),
         (.armature, \.armature, "MODL"),
         (.data, \.data, "DATA"),
-        (.race, \.race, "RNAM"),
-        (.bodyTemplate, \.bodyTemplate, "BOD2")
+        (.armourRating, \.armourRating, "DNAM"),
+        (.template, \.template, "TNAM"),
     ])
     
     struct DATAField: BinaryCodable {

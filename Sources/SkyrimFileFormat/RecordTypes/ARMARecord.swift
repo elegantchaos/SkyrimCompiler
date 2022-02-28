@@ -15,7 +15,7 @@ struct ARMARecord: IdentifiedRecord {
     let editorID: String
     let bodyTemplate: BOD2Field
     let primaryRace: FormID
-    let races: [FormID]
+    let unknown: DNAMField
     let model2: String
     let model2Textures: MODTField?
     let model2AlternateTextures: [AlternateTextureField]
@@ -28,13 +28,19 @@ struct ARMARecord: IdentifiedRecord {
     let model5: String?
     let model5Textures: MODTField?
     let model5AlternateTextures: [AlternateTextureField]
-    let unknown: DNAMField
-    
+    let baseMaleTexture: FormID?
+    let baseFemaleTexture: FormID?
+    let baseMaleFirstPersonTexture: FormID?
+    let baseFemaleFirstPersonTexture: FormID?
+    let races: [FormID]
+    let footstepSound: FormID?
+    let artObject: FormID?
+
     static var fieldMap = FieldTypeMap(paths: [
         (CodingKeys.editorID, \Self.editorID, "EDID"),
         (.bodyTemplate, \.bodyTemplate, "BOD2"),
         (.primaryRace, \.primaryRace, "RNAM"),
-        (.races, \.races, "MODL"),
+        (.unknown, \.unknown, "DNAM"),
         (.model2, \.model2, "MOD2"),
         (.model2Textures, \.model2Textures, "MO2T"),
         (.model2AlternateTextures, \.model2AlternateTextures, "MO2S"),
@@ -47,7 +53,13 @@ struct ARMARecord: IdentifiedRecord {
         (.model5, \.model5, "MOD5"),
         (.model5Textures, \.model5Textures, "MO5T"),
         (.model5AlternateTextures, \.model5AlternateTextures, "MO5S"),
-        (.unknown, \.unknown, "DNAM"),
+        (.baseMaleTexture, \.baseMaleTexture, "NAM0"),
+        (.baseFemaleTexture, \.baseFemaleTexture, "NAM1"),
+        (.baseMaleFirstPersonTexture, \.baseMaleFirstPersonTexture, "NAM2"),
+        (.baseFemaleFirstPersonTexture, \.baseFemaleFirstPersonTexture, "NAM3"),
+        (.races, \.races, "MODL"),
+        (.footstepSound, \.footstepSound, "SNDD"),
+        (.artObject, \.artObject, "ONAM")
     ])
     
     struct DNAMField: BinaryCodable {
