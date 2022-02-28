@@ -11,12 +11,12 @@ import XCTestExtensions
 class BSATests: XCTestCase {
     func testLoading() throws {
         let url = Bundle.module.url(forResource: "Example", withExtension: "bsa")!
-        let bsa = try BSAFile(url: url)
+        let bsa = try BSArchive(url: url)
         
         XCTAssertEqual(bsa.header.fileID, "BSA\0")
         XCTAssertEqual(bsa.header.version, 105)
         XCTAssertEqual(bsa.header.offset, 36)
-        XCTAssertEqual(bsa.header.flags, 7)
+        XCTAssertEqual(bsa.header.flags, [.includeFileNames, .includeDirectoryNames, .compressed])
         XCTAssertEqual(bsa.header.folderCount, 1)
         XCTAssertEqual(bsa.header.fileCount, 1)
         XCTAssertEqual(bsa.header.totalFolderNameLength, 29)
