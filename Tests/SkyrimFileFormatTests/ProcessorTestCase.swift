@@ -11,7 +11,7 @@ class ProcessorTestCase: XCTestCase {
     let processor = Processor()
     
     func unpackExample(named name: String) async throws -> ESPBundle {
-        let url = Bundle.module.url(forResource: "Examples/\(name)", withExtension: "esp")!
+        let url = Bundle.module.url(forResource: "\(name)", withExtension: "esp")!
         return try await processor.unpack(url: url)
     }
 
@@ -21,7 +21,7 @@ class ProcessorTestCase: XCTestCase {
     }
 
     func loadExampleData(named name: String) throws -> Data {
-        let url = Bundle.module.url(forResource: "Examples/\(name)", withExtension: "esp")!
+        let url = Bundle.module.url(forResource: "\(name)", withExtension: "esp")!
         return try Data(contentsOf: url)
     }
     

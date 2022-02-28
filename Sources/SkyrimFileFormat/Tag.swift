@@ -7,10 +7,10 @@ import BinaryCoding
 import Bytes
 import Foundation
 
-struct Tag {
-    let tag: UInt32
+public struct Tag {
+    public let tag: UInt32
     
-    init(_ tag: UInt32) {
+    public init(_ tag: UInt32) {
         self.tag = tag
     }
 
@@ -25,7 +25,7 @@ extension Tag: Equatable, Hashable {
 }
 
 extension Tag: Codable {
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         if let value = try? container.decode(UInt32.self) {
             self.tag = value
@@ -36,7 +36,7 @@ extension Tag: Codable {
         }
     }
     
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(description)
     }
@@ -52,14 +52,14 @@ extension Tag: ExpressibleByStringLiteral {
 }
 
 extension Tag: BinaryEncodable {
-    func binaryEncode(to encoder: BinaryEncoder) throws {
+    public func binaryEncode(to encoder: BinaryEncoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(tag)
     }
 }
 
 extension Tag: CustomStringConvertible {
-    var description: String {
+    public var description: String {
         if let string = String(bytes: tag.littleEndianBytes, encoding: .ascii) {
             return string
         }

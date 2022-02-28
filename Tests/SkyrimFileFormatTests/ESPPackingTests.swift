@@ -14,7 +14,7 @@ final class ESPPackingTests: ProcessorTestCase {
         let processor = Processor()
         let encoded = try processor.pack(bundle)
         
-        let url = Bundle.module.url(forResource: "Examples/\(bundle.name)", withExtension: "esp")!
+        let url = Bundle.module.url(forResource: "\(bundle.name)", withExtension: "esp")!
         let raw = try Data(contentsOf: url)
         
         XCTAssertEqual(encoded, raw)
