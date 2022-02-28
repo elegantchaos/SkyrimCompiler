@@ -234,14 +234,16 @@ private extension Processor {
     }
     
     func save(_ record: RecordProtocol, using encoder: BinaryEncoder) throws {
-        try record.binaryEncode(to: encoder)
-        if record._children.count > 0, let dc = encoder as? DataEncoder {
-            let position = dc.data.count
+        if record.isGroup {
+            let childEncoder = DataEncoder()
             for child in record._children {
-                try save(child, using: encoder)
+                try child.encode(to: childEncoder)
             }
-            let childrenSize = dc.data.count - position
-            print(childrenSize) // TODO: patch up the payload size for the group
+            
+            let group = BinaryGroupRecord(header: record._header, children: childEncoder.data)
+            try group.binaryEncode(to: encoder)
+        } else {
+            try record.binaryEncode(to: encoder)
         }
     }
     

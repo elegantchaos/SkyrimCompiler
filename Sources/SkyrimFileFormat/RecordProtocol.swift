@@ -56,6 +56,8 @@ extension RecordProtocol {
 
         
         if let configuration = encoder.userInfo[.configurationUserInfoKey] as? Configuration {
+            assert(!isGroup)
+
             let type = header.type
             let fields = try configuration.fields(forRecord: type)
             let recordEncoder = RecordEncoder(fields: fields)

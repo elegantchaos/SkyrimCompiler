@@ -19,6 +19,12 @@ class ESPRoundTripTests: ProcessorTestCase {
 
         XCTAssertEqual(encoded.count, original.count)
         XCTAssertEqual(encoded, original)
+        
+        let originalURL = outputFile(named: "\(name)-original", extension: "data")
+        print(originalURL)
+        try original.write(to: originalURL)
+        let encodedURL = outputFile(named: "\(name)-encoded", extension: "data")
+        try encoded.write(to: encodedURL)
     }
 
     func roundTrip(record: RecordProtocol) async throws {

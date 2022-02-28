@@ -3,6 +3,7 @@
 //  All code (c) 2022 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import BinaryCoding
 import Bytes
 import Foundation
 
@@ -33,6 +34,41 @@ struct GroupRecord: RecordProtocol {
 }
 
 extension GroupRecord: CustomStringConvertible {
+    var description: String {
+        return "«group of \(header.label)»"
+    }
+}
+
+
+struct BinaryGroupRecord: RecordProtocol {
+    static let tag = Tag("GRUP")
+    static var fieldMap = FieldTypeMap()
+
+    let _header: RecordHeader
+    let _children: Data
+    
+    init(header: RecordHeader, children: Data) {
+        self._header = header
+        self._children = children
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        _header = try container.decode(RecordHeader.self)
+        _children = Data()
+    }
+    
+    func binaryEncode(to encoder: BinaryEncoder) throws {
+        assert(isGroup)
+        var container = encoder.unkeyedContainer()
+        try container.encode(_header.type)
+        try container.encode(UInt32(_children.count + 24))
+        try container.encode(_header)
+        try container.encode(_children)
+    }
+}
+
+extension BinaryGroupRecord: CustomStringConvertible {
     var description: String {
         return "«group of \(header.label)»"
     }
