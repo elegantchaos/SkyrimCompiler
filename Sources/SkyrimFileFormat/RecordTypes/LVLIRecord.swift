@@ -6,7 +6,7 @@
 import BinaryCoding
 import Foundation
 
-struct LVLIRecord: IdentifiedRecord {
+struct LVLIRecord: IdentifiedRecord, PartialRecord {
     static var tag = Tag("LVLI")
 
     let _header: RecordHeader

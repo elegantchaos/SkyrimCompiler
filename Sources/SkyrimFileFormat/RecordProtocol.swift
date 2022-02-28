@@ -72,7 +72,18 @@ extension RecordProtocol {
         }
 
     }
+    
+    var hasUnprocessedFields: Bool {
+        guard let partial = self as? PartialRecord else { return false }
+        guard let count = partial._fields?.count else { return false }
+        return count > 0
+    }
 }
+
 protocol IdentifiedRecord: RecordProtocol {
     var editorID: String { get }
+}
+
+protocol PartialRecord: RecordProtocol {
+    var _fields: UnpackedFields? { get }
 }

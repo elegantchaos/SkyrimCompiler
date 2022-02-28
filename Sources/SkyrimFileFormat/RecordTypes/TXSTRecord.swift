@@ -6,7 +6,7 @@
 import BinaryCoding
 import Foundation
 
-struct TXSTRecord: Codable, IdentifiedRecord {
+struct TXSTRecord: Codable, IdentifiedRecord, PartialRecord {
     static var tag = Tag("TXST")
     
     let _header: RecordHeader

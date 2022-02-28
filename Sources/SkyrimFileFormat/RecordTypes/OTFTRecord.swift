@@ -6,7 +6,7 @@
 import BinaryCoding
 import Foundation
 
-struct OTFTRecord: IdentifiedRecord {
+struct OTFTRecord: IdentifiedRecord, PartialRecord {
     static var tag = Tag("OTFT")
     
     let _header: RecordHeader

@@ -6,7 +6,7 @@
 import BinaryCoding
 import Foundation
 
-struct ARMARecord: IdentifiedRecord {
+struct ARMARecord: IdentifiedRecord, PartialRecord {
     static var tag = Tag("ARMA")
     
     let _header: RecordHeader

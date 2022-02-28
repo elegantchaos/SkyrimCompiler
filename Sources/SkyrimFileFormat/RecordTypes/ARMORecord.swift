@@ -8,7 +8,7 @@ import Bytes
 import Foundation
 
 
-struct ARMORecord: Codable, IdentifiedRecord {
+struct ARMORecord: Codable, IdentifiedRecord, PartialRecord {
     static var tag = Tag("ARMO")
     
     let _header: RecordHeader

@@ -165,8 +165,6 @@ private extension Processor {
         if let type = types.fieldType(forTag: header.type) {
             do {
                 let decoder = FieldDecoder(header: header, data: data, inRecord: recordType, withHeader: recordHeader)
-                decoder.enableLogging = true
-                print("Unpacking field \(header.type) - \(type)")
                 let unpacked = try type.init(fromBinary: decoder)
                 return Field(header: header, value: unpacked)
             } catch {

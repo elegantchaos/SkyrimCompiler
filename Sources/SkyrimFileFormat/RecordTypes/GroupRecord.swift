@@ -23,7 +23,7 @@ struct GroupRecord: RecordProtocol {
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
-        try container.encode(_header)
+        try container.encode(_header) // TODO: re-interpret header using group flags?
     }
 
     func binaryEncode(to encoder: BinaryEncoder) throws {
@@ -38,7 +38,7 @@ struct GroupRecord: RecordProtocol {
         var container = encoder.unkeyedContainer()
         try container.encode(_header.type)
         try container.encode(UInt32(childEncoder.data.count + 24))
-        try container.encode(_header)
+        try container.encode(_header) // TODO: re-interpret header using group flags?
         try container.encode(childEncoder.data)
     }
 
@@ -54,38 +54,3 @@ extension GroupRecord: CustomStringConvertible {
         return "«group of \(header.label)»"
     }
 }
-
-//
-//struct BinaryGroupRecord: RecordProtocol {
-//    static let tag = Tag("GRUP")
-//    static var fieldMap = FieldTypeMap()
-//
-//    let _header: RecordHeader
-//    let _children: Data
-//
-//    init(header: RecordHeader, children: Data) {
-//        self._header = header
-//        self._children = children
-//    }
-//
-//    init(from decoder: Decoder) throws {
-//        let container = try decoder.singleValueContainer()
-//        _header = try container.decode(RecordHeader.self)
-//        _children = Data()
-//    }
-//
-//    func binaryEncode(to encoder: BinaryEncoder) throws {
-//        assert(isGroup)
-//        var container = encoder.unkeyedContainer()
-//        try container.encode(_header.type)
-//        try container.encode(UInt32(_children.count + 24))
-//        try container.encode(_header)
-//        try container.encode(_children)
-//    }
-//}
-//
-//extension BinaryGroupRecord: CustomStringConvertible {
-//    var description: String {
-//        return "«group of \(header.label)»"
-//    }
-//}

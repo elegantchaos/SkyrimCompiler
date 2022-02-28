@@ -5,11 +5,11 @@
 
 import Foundation
 
-struct RawRecord: RecordProtocol {
+struct RawRecord: RecordProtocol, PartialRecord {
     static var tag = Tag("????")
 
     let _header: RecordHeader
-    let _fields: UnpackedFields
+    let _fields: UnpackedFields?
     
     init(header: RecordHeader, fields: DecodedFields) throws {
         self._header = header
@@ -21,7 +21,8 @@ struct RawRecord: RecordProtocol {
 
 extension RawRecord: CustomStringConvertible {
     var description: String {
-        let fieldDescription = Set(_fields.keys).joined(separator: ", ")
+        let fields = _fields ?? [:]
+        let fieldDescription = Set(fields.keys).joined(separator: ", ")
         return "«\(header.type), fields:\(fieldDescription)»"
     }
 }
