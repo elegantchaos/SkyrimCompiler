@@ -22,4 +22,11 @@ extension Decoder {
         guard let header = decoder.header else { return false }
         return header.flags.contains2(.includeDirectoryNames)
     }
+    
+    var isBSACompressed: Bool {
+        guard let decoder = self as? BSADecoder else { return false }
+        guard let header = decoder.header else { return false }
+        return header.flags.contains2(.compressed)
+    }
+
 }
