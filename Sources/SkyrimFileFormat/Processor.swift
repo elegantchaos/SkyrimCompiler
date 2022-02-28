@@ -227,39 +227,12 @@ private extension Processor {
         binaryEncoder.userInfo[.configurationUserInfoKey] = configuration
 
         for record in records {
-            try save(record, using: binaryEncoder)
+            try record.binaryEncode(to: binaryEncoder)
         }
         
         return binaryEncoder.data
     }
-    
-    func save(_ record: RecordProtocol, using encoder: BinaryEncoder) throws {
-        if record.isGroup {
-            let childEncoder = DataEncoder()
-            for child in record._children {
-                try child.encode(to: childEncoder)
-            }
-            
-            let group = BinaryGroupRecord(header: record._header, children: childEncoder.data)
-            try group.binaryEncode(to: encoder)
-        } else {
-            try record.binaryEncode(to: encoder)
-        }
-    }
-    
-//    func encode(_ record: RecordProtocol, using encoder: BinaryEncoder) throws {
-//        let type = record.header.type
-//        let fields = try configuration.fields(forRecord: type)
-//        let recordEncoder = RecordEncoder(fields: fields)
-//        try record.encode(to: recordEncoder)
-//        let encoded = recordEncoder.data
-//
-//        try type.binaryEncode(to: encoder)
-//        let size = encoded.count - RecordHeader.binaryEncodedSize + (record.isGroup ? 24 : 0)
-//        try UInt32(size).encode(to: encoder)
-//        try encoded.encode(to: encoder)
-//    }
-    
+        
     enum Error: Swift.Error {
         case wrongFileExtension
     }
