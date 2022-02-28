@@ -23,9 +23,12 @@ class BSATests: XCTestCase {
         XCTAssertEqual(bsa.header.totalFileNameLength, 14)
         XCTAssertEqual(bsa.header.fileFlags, 0)
         XCTAssertEqual(bsa.header.padding, 0)
-
-
-
-
+    }
+    
+    func testExtraction() throws {
+        let url = Bundle.module.url(forResource: "Example", withExtension: "bsa")!
+        let bsa = try BSArchive(url: url)
+        let output = outputDirectory().appendingPathComponent("Example")
+        try bsa.extract(to: output)
     }
 }

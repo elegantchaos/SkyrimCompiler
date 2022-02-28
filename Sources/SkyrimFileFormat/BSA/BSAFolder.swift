@@ -10,7 +10,7 @@ public struct BSAFolder: BinaryCodable {
     let name: String?
     let nameHash: UInt64
     let offset: UInt32
-    let files: [BSAFile]
+    var files: [BSAFile]
     
     public init(fromBinary decoder: BinaryDecoder) throws {
         var container = try decoder.unkeyedContainer()
@@ -22,7 +22,10 @@ public struct BSAFolder: BinaryCodable {
         
         if decoder.decodeBSADirectoryNames {
             let length = try container.decode(UInt8.self)
-            let chars = try container.decodeArray(of: UInt8.self, count: length)
+            var chars = try container.decodeArray(of: UInt8.self, count: length)
+            if chars.last == 0 {
+                chars.removeLast()
+            }
             self.name = String(bytes: chars, encoding: decoder.stringEncoding)
         } else {
             self.name = nil
@@ -32,7 +35,7 @@ public struct BSAFolder: BinaryCodable {
         for _ in 0..<count {
             files.append(try container.decode(BSAFile.self))
         }
-        
+
         self.files = files
     }
     

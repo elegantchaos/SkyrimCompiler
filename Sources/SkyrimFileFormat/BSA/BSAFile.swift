@@ -7,6 +7,7 @@ import BinaryCoding
 import Foundation
 
 public struct BSAFile: BinaryCodable {
+    var name: String?
     let nameHash: UInt64
     let rawSize: UInt32
     let offset: UInt32
