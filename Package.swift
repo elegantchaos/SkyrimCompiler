@@ -10,7 +10,7 @@ import PackageDescription
 let package = Package(
     name: "SkyrimFileFormat",
     platforms: [
-        .macOS(.v12), .iOS(.v15), .tvOS(.v15), .watchOS(.v8)
+        .macOS(.v12)
     ],
     products: [
         .library(
@@ -34,7 +34,7 @@ let package = Package(
                 "BinaryCoding",
                 "Bytes",
                 "Coercion",
-                "ElegantStrings"
+                "ElegantStrings",
             ],
             resources: [
             ]
