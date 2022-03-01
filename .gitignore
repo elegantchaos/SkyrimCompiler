@@ -49,3 +49,4 @@ Backup[ ]of[ ]*.numbers/
 
 # compiled python
 *.pyc
+Extras/Samples
