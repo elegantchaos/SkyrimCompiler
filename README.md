@@ -16,4 +16,16 @@
 
 # SkyrimFileFormat
 
+This is a very early work-in-progress.
+
+The objective is to product a library (and command line tool), which can take a directory structure composed of text "source" files, and compile it into an `.esp` file. The reverse direction (`.esp` to source) is also an essential step and will be supported.
+
+Given the complexity of the format, the initial goal is not to support direct editing of every single record type.
+
+Parsing of specific record and field types will be slowly expanded, but a fallback option will take the binary content of unknown fields and convert them to/from hex-encoded text.
+
+The advantage of this approach is that round-tripping can be implemented quite cheaply (it is already working, in fact), whereas full support for every single field and record type will take months or years of work.
+
+
+
 File format reference: https://en.uesp.net/wiki/Skyrim_Mod:Mod_File_Format
