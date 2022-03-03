@@ -57,5 +57,9 @@ All of this is really a means to an end - in that there are other tools that I w
 
 (* because that's what I use in my day job)
 
+### Not Just Skyrim
 
+I'm initially focussed on Skyrim SE/AE, because that's what I play. In theory though this tool could support the whole family of games using `.esp` files.
+
+In particular, adopting a tool like this for OpenMW might make a lot more sense than trying to reproduce CreationKit warts-and-all.
 File format reference: https://en.uesp.net/wiki/Skyrim_Mod:Mod_File_Format
