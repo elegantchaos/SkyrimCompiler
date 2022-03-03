@@ -57,6 +57,16 @@ All of this is really a means to an end - in that there are other tools that I w
 
 (* because that's what I use in my day job)
 
+### File Format
+
+This is currently JSON based, with a file for each record, and directories for (sub)groups. 
+
+The choice of JSON is not final, but it was easy to start with. 
+
+The primary objective for the file format is not human-readability, but that doesn't mean that it wouldn't be nice.
+
+I am also considering an embedded DSL, since Swift has good support for such things. I don't really want people to be reliant on the Swift toolchain however, which pushes me heavily away from that direction.
+
 ### Not Just Skyrim
 
 I'm initially focussed on Skyrim SE/AE, because that's what I play. In theory though this tool could support the whole family of games using `.esp` files.
