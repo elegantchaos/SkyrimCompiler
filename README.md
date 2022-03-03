@@ -43,5 +43,19 @@ which can:
 
 This should make it easier to develop small focussed tools that have a specific purpose. Hopefully that will lower the entry barrier for tool development, which is currently pretty high (tools like xEdit or CreationKit are enourmous monsters).
 
+# Secondary Goals
+
+The code is written in Swift*, which is primarily known as a language used to develop iOS/macOS apps. I aim to make it fully cross-platform however. This may be of more interest in the context of OpenMW than it is for Skyrim modders, but as a relatively low-level library, there seems no reason why it couldn't be platform neutral.
+
+The hope is that tools can just read/write the text format, and then invoke this compiler. However, it also makes sense to supply the functionality as a shared library / dll, so I aim to do that.
+
+Where possible, the textual file format will aim to hide complexity of the underlying binary file format. As a trivial example, if you've got an array of something, the binary format will probably also have a count stored alongside it; the textual file format won't need this, and can generate the count during compilation. 
+
+There are far more complex examples where the binary format changes based on context (version number, for example). In this case the text format will hide the complexity where it can, and provide a higher-level abstraction which can be decompiled/recompiled. Hopefully a side-effect of this will be a clean way to upgrade an old ESP to use the newest binary encoding.
+
+All of this is really a means to an end - in that there are other tools that I want to write which will sit on top of this. As such, I aim to make the code in this library as accessible as possible, whilst still trying to keep the scope as narrow as possible.
+
+(* because that's what I use in my day job)
+
 
 File format reference: https://en.uesp.net/wiki/Skyrim_Mod:Mod_File_Format
