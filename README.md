@@ -26,6 +26,22 @@ Parsing of specific record and field types will be slowly expanded, but a fallba
 
 The advantage of this approach is that round-tripping can be implemented quite cheaply (it is already working, in fact), whereas full support for every single field and record type will take months or years of work.
 
+## Primary Goals
+
+One motivation for this tool is to enable esp development to be managed by source control.
+
+Another is to allow a simple way to perform small manual edits to an esp.
+
+However, probably the primary motivation is to enable easier development of other tools.
+
+By removing the need to parse and understand the binary format, it should be simpler to produce tools
+which can:
+
+- generate esps
+- extract items from esps
+- modify specific record types
+
+This should make it easier to develop small focussed tools that have a specific purpose. Hopefully that will lower the entry barrier for tool development, which is currently pretty high (tools like xEdit or CreationKit are enourmous monsters).
 
 
 File format reference: https://en.uesp.net/wiki/Skyrim_Mod:Mod_File_Format
