@@ -62,4 +62,18 @@ All of this is really a means to an end - in that there are other tools that I w
 I'm initially focussed on Skyrim SE/AE, because that's what I play. In theory though this tool could support the whole family of games using `.esp` files.
 
 In particular, adopting a tool like this for OpenMW might make a lot more sense than trying to reproduce CreationKit warts-and-all.
+
+### Similar Projects
+
+There are at least a couple of projects aiming at similar things:
+
+- https://github.com/Greatness7/tes3conv
+- https://gitlab.com/bmwinger/delta-plugin
+
+I didn't know about them when I started mine, and of course we all have our own agendas, motivations, areas of expertise and language preferences. 
+
+That said, I'd be up for collaborating if we could figure out some places where it would make sense.
+
+### References
+
 File format reference: https://en.uesp.net/wiki/Skyrim_Mod:Mod_File_Format
