@@ -43,7 +43,7 @@ which can:
 
 This should make it easier to develop small focussed tools that have a specific purpose. Hopefully that will lower the entry barrier for tool development, which is currently pretty high (tools like xEdit or CreationKit are enourmous monsters).
 
-# Secondary Goals
+## Secondary Goals
 
 The code is written in Swift*, which is primarily known as a language used to develop iOS/macOS apps. I aim to make it fully cross-platform however. This may be of more interest in the context of OpenMW than it is for Skyrim modders, but as a relatively low-level library, there seems no reason why it couldn't be platform neutral.
 
@@ -56,6 +56,22 @@ There are far more complex examples where the binary format changes based on con
 All of this is really a means to an end - in that there are other tools that I want to write which will sit on top of this. As such, I aim to make the code in this library as accessible as possible, whilst still trying to keep the scope as narrow as possible.
 
 (* because that's what I use in my day job)
+
+### See Also
+
+The ultimate reason for doing all of this is to make some tools.
+
+As part of that work, I'm also making [a library to pack/unpack BSA files](https://github.com/elegantchaos/BSA).
+
+There are a number of tools that I have in mind, but the main one right now is something that provides a better way to install clothing/armour packs.
+
+The idea is to make a new way for authors to package up and publish just the basic resources for a piece of clothing or armour (models, textures, presets, etc). 
+
+The user of the tool will then be able to install as many of these packs as they want. They will be able to select which items to include in the game. In addition the tool will take over responsibility for choosing how the items are delivered to the user, whether they are craftable, added to levelled lists, and so on.
+
+Once the user has made their choices, the tool will compile all of the clothing data into a single mod which can be installed/enabled in the normal way.
+
+This idea has some similarities to the way EasyNPC works, but with the addition of being a distribution platform.
 
 ### File Format
 
