@@ -71,7 +71,7 @@ The user of the tool will then be able to install as many of these packs as they
 
 Once the user has made their choices, the tool will compile all of the clothing data into a single mod which can be installed/enabled in the normal way.
 
-This idea has some similarities to the way EasyNPC works, but with the addition of being a distribution platform.
+This idea has some similarities to the way [EasyNPC](https://github.com/focustense/easymod/tree/master/Focus.Apps.EasyNpc) works, but with the addition of being a distribution platform.
 
 ### File Format
 
