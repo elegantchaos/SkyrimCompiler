@@ -25,6 +25,7 @@ struct INFORecord: PartialRecord {
     let responseEdits: [String]
     let responseSpeakerIdeAnims: [FormID]
     let responseListenerIdleAnims: [FormID]
+    let conditions: [ConditionField]
     let response: String?
     let speaker: FormID?
     let walkAwayTopic: FormID?
@@ -44,6 +45,7 @@ struct INFORecord: PartialRecord {
         (.responseEdits, \.responseEdits, "NAM3"),
         (.responseSpeakerIdeAnims, \.responseSpeakerIdeAnims, "SNAM"),
         (.responseListenerIdleAnims, \.responseListenerIdleAnims, "LNAM"),
+        (.conditions, \.conditions, "CTDA"),
         (.response, \.response, "RNAM"),
         (.speaker, \.speaker, "ANAM"),
         (.walkAwayTopic, \.walkAwayTopic, "TWAT"),
@@ -61,21 +63,15 @@ struct INFORecord: PartialRecord {
         let resetTime: UInt16
     }
     
-    struct Junk: BinaryCodable {
-        let junk1: UInt8
-        let junk2: UInt8
-        let junk3: UInt8
-    }
-    
     struct ResponseField: BinaryCodable {
         let emotionType: UInt32
         let emotionValue: UInt32
         let unknown1: UInt32
         let responseID: UInt8
-        let junk1: Junk
+        let junk1: Padding3
         let soundFile: FormID
         let useEmoAnim: UInt8
-        let junk2: Junk
+        let junk2: Padding3
     }
 }
 
