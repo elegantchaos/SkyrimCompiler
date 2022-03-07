@@ -1,0 +1,17 @@
+{
+  "flags" : [
+    "master",
+    "bit2",
+    "constant",
+    "mustUpdateAnims",
+    "questItem",
+    "bit15",
+    "compressed",
+    "cantWait",
+    "bit23",
+    "navMeshGen"
+  ],
+  "timestamp" : 10573,
+  "type" : "GRUP",
+  "version" : 0
+}

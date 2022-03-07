@@ -1,0 +1,16 @@
+{
+  "flags" : [
+    "bit2",
+    "bit4",
+    "initiallyDisabled",
+    "ignored",
+    "bit14",
+    "bit15",
+    "visibleWhenDistant",
+    "randomAnimationStart"
+  ],
+  "id" : 7,
+  "timestamp" : 10573,
+  "type" : "GRUP",
+  "version" : 0
+}

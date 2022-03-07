@@ -149,9 +149,6 @@ private extension Processor {
             
             return GroupRecord(header: record.header, children: children)
         } else {
-            if record.type == "CELL" {
-                print("blah")
-            }
             let fields = try await decodedFields(type: record.type, header: record.header, data: record.data)
             let recordClass = configuration.recordClass(for: record.type)
             let decoder = RecordDecoder(header: record.header, fields: fields)

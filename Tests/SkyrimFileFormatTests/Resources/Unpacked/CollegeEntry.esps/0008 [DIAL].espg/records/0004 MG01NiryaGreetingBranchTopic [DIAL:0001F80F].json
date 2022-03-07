@@ -1,0 +1,27 @@
+{
+  "_fields" : {
+    "BNAM" : [
+      "5B1F0700"
+    ],
+    "DATA" : [
+      "00000000"
+    ],
+    "PNAM" : [
+      "00004842"
+    ],
+    "QNAM" : [
+      "51F20100"
+    ],
+    "SNAM" : [
+      "43555354"
+    ],
+    "TIFC" : [
+      "08000000"
+    ]
+  },
+  "_header" : {
+    "id" : 129039,
+    "type" : "DIAL"
+  },
+  "editorID" : "MG01NiryaGreetingBranchTopic"
+}
