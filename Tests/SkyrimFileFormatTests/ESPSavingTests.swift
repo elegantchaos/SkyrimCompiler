@@ -20,4 +20,21 @@ final class ESPSavingTests: ProcessorTestCase {
     func testUnpackDialogue() async throws {
         try await saveExample(named: "Dialogue")
     }
+
+    func testUnpackAngisCampTweaks() async throws {
+        try await saveExample(named: "AngisCampTweaks")
+    }
+
+    func testUnpackCollegeEntry() async throws {
+        try await saveExample(named: "CollegeEntry")
+    }
+
+    func testUnpackDiplomaticImmunity() async throws {
+        try await saveExample(named: "DiplomaticImmunity")
+    }
+
+    func testUnpackThugsNotAssassins() async throws {
+        try await saveExample(named: "ThugsNotAssassins")
+    }
+
 }

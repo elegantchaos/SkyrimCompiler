@@ -31,4 +31,14 @@ class ESPLoadingTests: ProcessorTestCase {
         XCTAssertEqual(header?.type, TES4Record.tag)
         XCTAssertEqual(header?.info.version, 1.7)
     }
+
+    func testCollegeEntry() async throws {
+        let records = try await loadExample(named: "CollegeEntry")
+        XCTAssertEqual(records.count, 6)
+
+        let header = records.header
+        XCTAssertEqual(header?.type, TES4Record.tag)
+        XCTAssertEqual(header?.info.version, 1.7)
+    }
+
 }

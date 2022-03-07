@@ -103,3 +103,7 @@ That said, I'd be up for collaborating if we could figure out some places where 
 ### References
 
 File format reference: https://en.uesp.net/wiki/Skyrim_Mod:Mod_File_Format
+
+### Example Data
+
+The example data in this repo is taken from [Parapets](https://www.nexusmods.com/skyrimspecialedition/users/39501725), who helpful makes all their mods available under an MIT license.
