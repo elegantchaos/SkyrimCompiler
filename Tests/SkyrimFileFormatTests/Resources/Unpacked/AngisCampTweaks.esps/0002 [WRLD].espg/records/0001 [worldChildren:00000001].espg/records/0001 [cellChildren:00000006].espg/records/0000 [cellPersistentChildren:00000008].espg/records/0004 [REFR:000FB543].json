@@ -1,0 +1,24 @@
+{
+  "_fields" : {
+    "DATA" : [
+      "86EBC4C6020CCAC7CD673A46000000000000008011CFC63F"
+    ],
+    "EDID" : [
+      "64756E41726368657252696768745461726765744D61726B657200"
+    ],
+    "NAME" : [
+      "3B000000"
+    ],
+    "XLRL" : [
+      "A25B0F00"
+    ]
+  },
+  "_header" : {
+    "flags" : [
+      "questItem"
+    ],
+    "id" : 1029443,
+    "type" : "REFR",
+    "versionControlInfo2" : 1
+  }
+}

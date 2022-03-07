@@ -1,0 +1,16 @@
+{
+  "flags" : [
+    "deletedGroup",
+    "constant",
+    "mustUpdateAnims",
+    "bit15",
+    "randomAnimationStart",
+    "dangerous",
+    "bit23",
+    "bit25",
+    "obstacle"
+  ],
+  "timestamp" : 10363,
+  "type" : "GRUP",
+  "version" : 0
+}

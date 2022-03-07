@@ -1,0 +1,20 @@
+{
+  "_header" : {
+    "type" : "TES4"
+  },
+  "author" : "Parapets",
+  "info" : {
+    "nextID" : 33721,
+    "number" : 55,
+    "version" : 1.7000000476837158
+  },
+  "masterData" : [
+    0,
+    0
+  ],
+  "masters" : [
+    "Skyrim.esm",
+    "Update.esm"
+  ],
+  "tagifiedStringCount" : 1
+}

@@ -1,0 +1,15 @@
+{
+  "flags" : [
+    "bit3",
+    "constant",
+    "questItem",
+    "initiallyDisabled",
+    "bit15",
+    "dangerous",
+    "bit23",
+    "obstacle"
+  ],
+  "timestamp" : 10363,
+  "type" : "GRUP",
+  "version" : 0
+}

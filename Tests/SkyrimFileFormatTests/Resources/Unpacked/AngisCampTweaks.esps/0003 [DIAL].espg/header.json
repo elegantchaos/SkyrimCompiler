@@ -1,0 +1,15 @@
+{
+  "flags" : [
+    "bit3",
+    "constant",
+    "mustUpdateAnims",
+    "initiallyDisabled",
+    "bit15",
+    "randomAnimationStart",
+    "bit23",
+    "navMeshGen"
+  ],
+  "timestamp" : 10812,
+  "type" : "GRUP",
+  "version" : 0
+}

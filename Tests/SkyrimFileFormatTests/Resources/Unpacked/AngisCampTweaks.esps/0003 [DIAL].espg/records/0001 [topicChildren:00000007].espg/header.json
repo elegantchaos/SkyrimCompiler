@@ -1,0 +1,16 @@
+{
+  "flags" : [
+    "bit4",
+    "deletedGroup",
+    "mustUpdateAnims",
+    "light",
+    "bit15",
+    "visibleWhenDistant",
+    "compressed",
+    "cantWait"
+  ],
+  "id" : 7,
+  "timestamp" : 10812,
+  "type" : "GRUP",
+  "version" : 0
+}

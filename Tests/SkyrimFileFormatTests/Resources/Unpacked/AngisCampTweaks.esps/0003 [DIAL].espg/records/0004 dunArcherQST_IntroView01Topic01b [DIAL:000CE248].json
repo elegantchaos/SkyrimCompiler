@@ -1,0 +1,28 @@
+{
+  "_fields" : {
+    "BNAM" : [
+      "6FE20C00"
+    ],
+    "DATA" : [
+      "00000000"
+    ],
+    "PNAM" : [
+      "00004842"
+    ],
+    "QNAM" : [
+      "3CAB0C00"
+    ],
+    "SNAM" : [
+      "43555354"
+    ],
+    "TIFC" : [
+      "01000000"
+    ]
+  },
+  "_header" : {
+    "id" : 844360,
+    "type" : "DIAL",
+    "versionControlInfo2" : 1
+  },
+  "editorID" : "dunArcherQST_IntroView01Topic01b"
+}

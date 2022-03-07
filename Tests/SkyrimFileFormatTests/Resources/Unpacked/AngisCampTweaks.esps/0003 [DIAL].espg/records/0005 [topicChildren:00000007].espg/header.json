@@ -1,0 +1,16 @@
+{
+  "flags" : [
+    "bit4",
+    "constant",
+    "light",
+    "bit14",
+    "bit15",
+    "visibleWhenDistant",
+    "compressed",
+    "cantWait"
+  ],
+  "id" : 7,
+  "timestamp" : 10812,
+  "type" : "GRUP",
+  "version" : 0
+}

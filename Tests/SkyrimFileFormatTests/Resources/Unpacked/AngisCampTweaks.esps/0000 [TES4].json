@@ -1,0 +1,25 @@
+{
+  "_header" : {
+    "flags" : [
+      "light"
+    ],
+    "type" : "TES4"
+  },
+  "author" : "Parapets",
+  "info" : {
+    "nextID" : 146723,
+    "number" : 30,
+    "version" : 1.7000000476837158
+  },
+  "masterData" : [
+    0,
+    0,
+    0
+  ],
+  "masters" : [
+    "Skyrim.esm",
+    "Update.esm",
+    "Dawnguard.esm"
+  ],
+  "tagifiedStringCount" : 1
+}
