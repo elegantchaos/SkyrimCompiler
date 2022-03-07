@@ -6,7 +6,9 @@
 import AsyncSequenceReader
 import BinaryCoding
 import Bytes
+import Compression
 import Foundation
+import SWCompression
 
 protocol ProcessorProtocol {
     associatedtype BaseIterator: AsyncIteratorProtocol where BaseIterator.Element == Byte
@@ -100,8 +102,53 @@ private extension Processor {
             let type = try await Tag(stream.read(UInt32.self))
             let size = try await stream.read(UInt32.self)
             let header = try await RecordHeader(type: type, stream)
-            let payloadSize = Int(type == GroupRecord.tag ? size - 24 : size)
-            let data = LoadedRecordData(data: try await stream.read(count: payloadSize))
+            let isGroup = type == GroupRecord.tag
+            let data: LoadedRecordData
+            if !isGroup, let flags = header.flags, flags.contains2(.compressed) {
+                let decompressedSize = try await stream.read(UInt32.self)
+                
+                func decompress1() async throws -> LoadedRecordData {
+                    var decompressed = Data()
+                    let decompressor = try OutputFilter(.decompress, using: .zlib) { data in
+                        if let data = data {
+                            decompressed.append(data)
+                        }
+                    }
+                    
+                    do {
+                        var index = 0
+                        var remaining = Int(size) - 4
+                        while remaining > 0 {
+                            let blockSize = min(32768, remaining)
+                            let bytes = try await stream.read(count: blockSize)
+                            try decompressor.write(Data(bytes))
+                            index += blockSize
+                            remaining -= blockSize
+                        }
+                        try decompressor.finalize()
+                    } catch {
+                        print(error)
+                        throw error
+                    }
+                    let data = LoadedRecordData(data: decompressed.littleEndianBytes)
+                    assert(data.data.count == decompressedSize)
+                    return data
+                }
+                
+                func decompress2() async throws -> LoadedRecordData {
+                    let bytes = try await stream.read(count: Int(size))
+                    let decompressed = try ZlibArchive.unarchive(archive: Data(bytes: bytes, count: bytes.count))
+                    let data = LoadedRecordData(data: decompressed.littleEndianBytes)
+                    assert(data.data.count == decompressedSize)
+                    return data
+                }
+                
+                data = try await decompress2()
+            } else {
+                let payloadSize = Int(isGroup ? size - 24 : size)
+                let bytes = try await stream.read(count: payloadSize)
+                data = LoadedRecordData(data: bytes)
+            }
             iterator = stream.iterator
 
             return try await RecordData(type: type, header: header, data: data)
@@ -109,7 +156,10 @@ private extension Processor {
 
         return records
     }
-
+//
+//    func decompressedData<I>(size: UInt32, stream: AsyncDataStream) async throws -> LoadedRecordData where I: AsyncBufferedIterator<>, I.Element == Byte {
+//
+//    }
     func records<I: AsyncByteSequence>(bytes: I, processChildren: Bool) -> AsyncThrowingMapSequence<AsyncThrowingIteratorMapSequence<I, RecordData>, RecordProtocol> {
         let wrapped = recordData(bytes: bytes).map { recordData in
             try await self.record(from: recordData, processChildren: processChildren)
