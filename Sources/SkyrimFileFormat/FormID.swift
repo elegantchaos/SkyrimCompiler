@@ -11,6 +11,11 @@ struct FormID: Codable {
     let id: UInt32
     let name: String
     
+    init(id: UInt32 = 0) {
+        self.id = id
+        self.name = ""
+    }
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         if let int = try? container.decode(UInt32.self) {
