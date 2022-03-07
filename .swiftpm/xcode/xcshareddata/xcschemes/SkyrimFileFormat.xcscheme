@@ -72,6 +72,29 @@
                BlueprintName = "SkyrimFileFormatTests"
                ReferencedContainer = "container:">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "ESPLoadingTests">
+               </Test>
+               <Test
+                  Identifier = "ESPPackingTests">
+               </Test>
+               <Test
+                  Identifier = "ESPRoundTripTests">
+               </Test>
+               <Test
+                  Identifier = "EnumDecodingTests">
+               </Test>
+               <Test
+                  Identifier = "FieldCodingTests">
+               </Test>
+               <Test
+                  Identifier = "PartNodeTests">
+               </Test>
+               <Test
+                  Identifier = "ProcessorTestCase">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>
