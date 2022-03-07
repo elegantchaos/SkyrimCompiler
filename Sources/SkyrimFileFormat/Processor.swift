@@ -100,50 +100,18 @@ private extension Processor {
         let records = bytes.iteratorMap { iterator -> RecordData in
             let stream = AsyncDataStream(iterator: iterator)
             let type = try await Tag(stream.read(UInt32.self))
+            print(type)
             let size = try await stream.read(UInt32.self)
             let header = try await RecordHeader(type: type, stream)
             let isGroup = type == GroupRecord.tag
             let data: LoadedRecordData
             if !isGroup, let flags = header.flags, flags.contains2(.compressed) {
+                print("Decompressing data for \(type)")
                 let decompressedSize = try await stream.read(UInt32.self)
-                
-                func decompress1() async throws -> LoadedRecordData {
-                    var decompressed = Data()
-                    let decompressor = try OutputFilter(.decompress, using: .zlib) { data in
-                        if let data = data {
-                            decompressed.append(data)
-                        }
-                    }
-                    
-                    do {
-                        var index = 0
-                        var remaining = Int(size) - 4
-                        while remaining > 0 {
-                            let blockSize = min(32768, remaining)
-                            let bytes = try await stream.read(count: blockSize)
-                            try decompressor.write(Data(bytes))
-                            index += blockSize
-                            remaining -= blockSize
-                        }
-                        try decompressor.finalize()
-                    } catch {
-                        print(error)
-                        throw error
-                    }
-                    let data = LoadedRecordData(data: decompressed.littleEndianBytes)
-                    assert(data.data.count == decompressedSize)
-                    return data
-                }
-                
-                func decompress2() async throws -> LoadedRecordData {
-                    let bytes = try await stream.read(count: Int(size))
-                    let decompressed = try ZlibArchive.unarchive(archive: Data(bytes: bytes, count: bytes.count))
-                    let data = LoadedRecordData(data: decompressed.littleEndianBytes)
-                    assert(data.data.count == decompressedSize)
-                    return data
-                }
-                
-                data = try await decompress2()
+                let bytes = try await stream.read(count: Int(size - 4))
+                let decompressed = try ZlibArchive.unarchive(archive: Data(bytes: bytes, count: bytes.count))
+                data = LoadedRecordData(data: decompressed.littleEndianBytes)
+                assert(data.data.count == decompressedSize)
             } else {
                 let payloadSize = Int(isGroup ? size - 24 : size)
                 let bytes = try await stream.read(count: payloadSize)
@@ -156,10 +124,7 @@ private extension Processor {
 
         return records
     }
-//
-//    func decompressedData<I>(size: UInt32, stream: AsyncDataStream) async throws -> LoadedRecordData where I: AsyncBufferedIterator<>, I.Element == Byte {
-//
-//    }
+
     func records<I: AsyncByteSequence>(bytes: I, processChildren: Bool) -> AsyncThrowingMapSequence<AsyncThrowingIteratorMapSequence<I, RecordData>, RecordProtocol> {
         let wrapped = recordData(bytes: bytes).map { recordData in
             try await self.record(from: recordData, processChildren: processChildren)
@@ -172,13 +137,21 @@ private extension Processor {
         if record.isGroup {
             var children: [RecordProtocol] = []
             if processChildren {
-                for try await child in recordData(bytes: record.data.asyncBytes) {
-                    children.append(try await self.record(from: child, processChildren: processChildren))
+                do {
+                    for try await child in recordData(bytes: record.data.asyncBytes) {
+                        children.append(try await self.record(from: child, processChildren: processChildren))
+                    }
+                } catch {
+                    print("Error decoding children of \(record.header)")
+                    print(error)
                 }
             }
             
             return GroupRecord(header: record.header, children: children)
         } else {
+            if record.type == "CELL" {
+                print("blah")
+            }
             let fields = try await decodedFields(type: record.type, header: record.header, data: record.data)
             let recordClass = configuration.recordClass(for: record.type)
             let decoder = RecordDecoder(header: record.header, fields: fields)
