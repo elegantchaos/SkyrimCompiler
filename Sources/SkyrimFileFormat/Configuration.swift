@@ -36,6 +36,7 @@ struct Configuration {
         ARMORecord.self,
         ARMARecord.self,
         DIALRecord.self,
+        INFORecord.self,
         LVLIRecord.self,
         OTFTRecord.self,
         QUSTRecord.self,

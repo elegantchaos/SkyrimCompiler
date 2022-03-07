@@ -13,10 +13,32 @@ struct DIALRecord: IdentifiedRecord, PartialRecord {
     let _fields: UnpackedFields?
 
     let editorID: String
+    let playerDialogue: UInt32
+    let priority: Float32
+    let owningBranch: FormID?
+    let owningQuest: FormID
+    let data: DATAField?
+    let subtype: UInt32
+    let infoCount: UInt32
     
     static var fieldMap = FieldTypeMap(paths: [
         (CodingKeys.editorID, \Self.editorID, "EDID"),
+        (.playerDialogue, \.playerDialogue, "FULL"),
+        (.priority, \.priority, "PNAM"),
+        (.owningBranch, \.owningBranch, "BNAM"),
+        (.owningQuest, \.owningQuest, "QNAM"),
+        (.playerDialogue, \.playerDialogue, "DATA"),
+        (.subtype, \.subtype, "SNAM"),
+        (.infoCount, \.infoCount, "TIFC"),
+
     ])
+    
+    struct DATAField: BinaryCodable {
+        let unknown: UInt8
+        let dialogueTab: UInt8
+        let subtypeID: UInt8
+        let unused2: UInt8
+    }
 }
 
 
