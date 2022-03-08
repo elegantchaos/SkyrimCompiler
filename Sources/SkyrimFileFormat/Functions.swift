@@ -6,12 +6,13 @@
 import Foundation
 
 enum ArgType {
-    case actor
-    case container
+    case actor(String = "")
+    case container(String = "")
     case integer(String = "")
-    case float
-    case topic
-    case quest
+    case string(String = "")
+    case float(String = "")
+    case topic(String = "")
+    case quest(String = "")
     case unknown(Int, String)
 }
 
