@@ -49,7 +49,11 @@ struct FormID: Codable {
     }
     
     var expressionValue: String {
-        return String(format: "Form(0x%0X)", id)
+        if name.isEmpty {
+            return String(format: "0x%06X", id)
+        } else {
+            return String(format: "Form(0x%0X, \"\(name)\")", id)
+        }
     }
 }
 

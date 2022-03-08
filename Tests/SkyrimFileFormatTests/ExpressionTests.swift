@@ -9,22 +9,24 @@ import SkyrimFileFormat
 class ExpressionTests: XCTestCase {
     func testGetVMQuestVariable() {
         let expression = Expression(function: 629, val: 0, op: .equals, flags: [], parameters: [219994, 2547345624])
-        XCTAssertEqual(expression.rawValue, "GetVMQuestVariable(Form(0x35B5A), Variable(0x97D568D8)) == 0.0")
+        XCTAssertEqual(expression.rawValue, "GetVMQuestVariable(0x035B5A, Variable(0x97D568D8)) == 0.0")
     }
     
     func testGetStage() {
         let expression = Expression(function: 58, val: 1092616192, op: .equals, flags: [], parameters: [219994, 0])
-        XCTAssertEqual(expression.rawValue, "GetStage(Form(0x35B5A)) == 10.0")
+        XCTAssertEqual(expression.rawValue, "GetStage(0x035B5A) == 10.0")
     }
     
     func testGetIsAliasRef() {
         let expression = Expression(function: 566, val: 1065353216, op: .equals, flags: [], parameters: [1, 0])
-        XCTAssertEqual(expression.rawValue, "GetIsAliasRef(QuestAlias(0x1)) == 1.0")
+        XCTAssertEqual(expression.rawValue, "GetIsAliasRef(0x1) == 1.0")
     }
-        
-        /*
+     
+    func testIsScenePlaying() {
         let expression = Expression(function: 248, val: 0, op: .equals, flags: [], parameters: [220000, 0])
-        XCTAssertEqual(expression.rawValue, "IsScenePlaying(unknown(67, "Scene ")) == 0.0")
+        XCTAssertEqual(expression.rawValue, "IsScenePlaying(0x035B60) == 0.0")
+    }
+        /*
         let expression = Expression(function: 654, val: 1065353216, op: .equals, flags: [], parameters: [0, 0])
         XCTAssertEqual(expression.rawValue, "GetBribeSuccess() == 1.0")
         let expression = Expression(function: 629, val: 0, op: .equals, flags: [], parameters: [219994, 2547345640])

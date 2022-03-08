@@ -14,6 +14,7 @@ enum ArgType {
     case topic(String? = nil)
     case quest
     case questAlias
+    case scene
     case variable
     case unknown(Int, String)
     

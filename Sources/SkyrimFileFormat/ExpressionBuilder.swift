@@ -38,11 +38,16 @@ public struct Expression: RawRepresentable {
                         let raw = Float32(bitPattern: parameters.removeFirst())
                         args.append(name.map({ "\($0): \(raw)" }) ?? "\(raw)")
 
-                    case .variable, .questAlias:
+                    case .variable:
                         let raw = parameters.removeFirst()
                         args.append(String(format: "\(arg.cast)(0x%0X)", raw))
+
+                    case .questAlias:
+                        // TODO: look up quest alias and use name?
+                        let raw = parameters.removeFirst()
+                        args.append(String(format: "0x%0X", raw))
                         
-                    case .quest:
+                    case .quest, .scene:
                         let raw = parameters.removeFirst()
                         let form = FormID(id: raw)
                         args.append(form.expressionValue)
