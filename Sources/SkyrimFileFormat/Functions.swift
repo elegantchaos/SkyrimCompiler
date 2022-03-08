@@ -13,6 +13,8 @@ enum ArgType {
     case float(String? = nil)
     case topic(String? = nil)
     case quest
+    case questAlias
+    case variable
     case unknown(Int, String)
     
     static var integer: Self { .integer()}
@@ -21,6 +23,13 @@ enum ArgType {
     static var actor: Self { .actor()}
     static var container: Self { .container()}
     static var topic: Self { .topic() }
+    
+    var cast: String {
+        switch self {
+            case .questAlias: return "QuestAlias"
+            default: return "\(self)".capitalized
+        }
+    }
 }
 
 //struct Function: RawRepresentable, BinaryCodable {

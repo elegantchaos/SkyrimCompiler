@@ -104,30 +104,6 @@
                   Identifier = "ESPRoundTripTests/testRoundTripEmpty()">
                </Test>
                <Test
-                  Identifier = "ESPSavingTests">
-               </Test>
-               <Test
-                  Identifier = "ESPSavingTests/testUnpackAngisCampTweaks()">
-               </Test>
-               <Test
-                  Identifier = "ESPSavingTests/testUnpackArmour()">
-               </Test>
-               <Test
-                  Identifier = "ESPSavingTests/testUnpackCollegeEntry()">
-               </Test>
-               <Test
-                  Identifier = "ESPSavingTests/testUnpackDialogue()">
-               </Test>
-               <Test
-                  Identifier = "ESPSavingTests/testUnpackDiplomaticImmunity()">
-               </Test>
-               <Test
-                  Identifier = "ESPSavingTests/testUnpackEmpty()">
-               </Test>
-               <Test
-                  Identifier = "ESPSavingTests/testUnpackThugsNotAssassins()">
-               </Test>
-               <Test
                   Identifier = "EnumDecodingTests">
                </Test>
                <Test

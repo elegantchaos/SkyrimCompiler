@@ -18,7 +18,7 @@ public struct Expression: RawRepresentable {
         let value: String
         if flags.contains2(.useGlobal) {
             let form = FormID(id: val)
-            value = "Form(\(form.id))"
+            value = form.expressionValue
         } else {
             let float = Float32(bitPattern: val)
             value = "\(float)"
@@ -33,6 +33,14 @@ public struct Expression: RawRepresentable {
                     case .integer(let name):
                         let raw = parameters.removeFirst()
                         args.append(name.map({ "\($0): \(raw)" }) ?? "\(raw)")
+
+                    case .float(let name):
+                        let raw = Float32(bitPattern: parameters.removeFirst())
+                        args.append(name.map({ "\($0): \(raw)" }) ?? "\(raw)")
+
+                    case .variable, .questAlias:
+                        let raw = parameters.removeFirst()
+                        args.append(String(format: "\(arg.cast)(0x%0X)", raw))
                         
                     case .quest:
                         let raw = parameters.removeFirst()
@@ -40,7 +48,8 @@ public struct Expression: RawRepresentable {
                         args.append(form.expressionValue)
                         
                     default:
-                        args.append("\(arg)")
+                        let raw = parameters.removeFirst()
+                        args.append("\(raw)")
                 }
             }
             
