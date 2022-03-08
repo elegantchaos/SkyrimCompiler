@@ -47,6 +47,10 @@ struct FormID: Codable {
         case id
         case name
     }
+    
+    var expressionValue: String {
+        return String(format: "Form(0x%0X)", id)
+    }
 }
 
 extension FormID: BinaryCodable {

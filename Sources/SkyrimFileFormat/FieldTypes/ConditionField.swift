@@ -46,50 +46,6 @@ struct ConditionField: Codable {
             try container.encode(expression.rawValue)
         }
     }
-    
-    var testString: String {
-        let flags = raw.flags
-        let op = raw.op
-        
-        let value: String
-        if flags.contains2(.useGlobal) {
-            let form = FormID(id: raw.value)
-            value = "Form(\(form.id))"
-        } else {
-            let float = Float32(bitPattern: raw.value)
-            value = "\(float)"
-        }
-
-        let expression = Expression(function: raw.function, val: raw.value, op: raw.op, flags: raw.flags, parameters: raw.params)
-        return expression.rawValue
-//        let index = FunctionIndex.instance
-//        if let f = index.function(for: raw.function) {
-//            var parameters = raw.params
-//            var args: [String] = []
-//            for arg in f.arguments {
-//                switch arg {
-//                    case .integer(let name):
-//                        let raw = parameters.removeFirst()
-//                        args.append(name.map({ "\($0): \(raw)" }) ?? "\(raw)")
-//
-//                    case .quest(let name):
-//                        let raw = parameters.removeFirst()
-//                        let label = name ?? "quest"
-//                        args.append("\(label): \(raw)")
-//
-//                    default:
-//                        args.append("\(arg)")
-//                }
-//            }
-//
-//            return "\(f.name)(\(args.joined(separator: ", "))) \(op.keyword) \(value)"
-//        } else {
-//            let name = "UnknownFunc<\(raw.function + 4096)>"
-//            return "\(name)(\(raw.param1), \(raw.param2)) \(op.keyword) \(value)"
-//        }
-        
-    }
-    
 }
 
 extension ConditionField: BinaryCodable {

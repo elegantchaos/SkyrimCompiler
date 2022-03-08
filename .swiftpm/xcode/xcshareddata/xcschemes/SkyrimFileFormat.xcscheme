@@ -77,19 +77,88 @@
                   Identifier = "ESPLoadingTests">
                </Test>
                <Test
+                  Identifier = "ESPLoadingTests/testArmour()">
+               </Test>
+               <Test
+                  Identifier = "ESPLoadingTests/testCollegeEntry()">
+               </Test>
+               <Test
+                  Identifier = "ESPLoadingTests/testEmpty()">
+               </Test>
+               <Test
                   Identifier = "ESPPackingTests">
+               </Test>
+               <Test
+                  Identifier = "ESPPackingTests/testEncoding()">
                </Test>
                <Test
                   Identifier = "ESPRoundTripTests">
                </Test>
                <Test
+                  Identifier = "ESPRoundTripTests/testRoundTripArmour()">
+               </Test>
+               <Test
+                  Identifier = "ESPRoundTripTests/testRoundTripDialogue()">
+               </Test>
+               <Test
+                  Identifier = "ESPRoundTripTests/testRoundTripEmpty()">
+               </Test>
+               <Test
+                  Identifier = "ESPSavingTests">
+               </Test>
+               <Test
+                  Identifier = "ESPSavingTests/testUnpackAngisCampTweaks()">
+               </Test>
+               <Test
+                  Identifier = "ESPSavingTests/testUnpackArmour()">
+               </Test>
+               <Test
+                  Identifier = "ESPSavingTests/testUnpackCollegeEntry()">
+               </Test>
+               <Test
+                  Identifier = "ESPSavingTests/testUnpackDialogue()">
+               </Test>
+               <Test
+                  Identifier = "ESPSavingTests/testUnpackDiplomaticImmunity()">
+               </Test>
+               <Test
+                  Identifier = "ESPSavingTests/testUnpackEmpty()">
+               </Test>
+               <Test
+                  Identifier = "ESPSavingTests/testUnpackThugsNotAssassins()">
+               </Test>
+               <Test
                   Identifier = "EnumDecodingTests">
+               </Test>
+               <Test
+                  Identifier = "EnumDecodingTests/testCoding()">
+               </Test>
+               <Test
+                  Identifier = "EnumDecodingTests/testDecoding()">
                </Test>
                <Test
                   Identifier = "FieldCodingTests">
                </Test>
                <Test
+                  Identifier = "FieldCodingTests/testAlternateTexture()">
+               </Test>
+               <Test
+                  Identifier = "FieldCodingTests/testAlternateTextures()">
+               </Test>
+               <Test
+                  Identifier = "FieldCodingTests/testBOD2Field()">
+               </Test>
+               <Test
+                  Identifier = "FieldCodingTests/testDecalData()">
+               </Test>
+               <Test
+                  Identifier = "FieldCodingTests/testMODTField()">
+               </Test>
+               <Test
                   Identifier = "PartNodeTests">
+               </Test>
+               <Test
+                  Identifier = "PartNodeTests/testRoundtrip()">
                </Test>
                <Test
                   Identifier = "ProcessorTestCase">

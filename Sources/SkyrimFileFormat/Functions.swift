@@ -12,7 +12,7 @@ enum ArgType {
     case string(String? = nil)
     case float(String? = nil)
     case topic(String? = nil)
-    case quest(String? = nil)
+    case quest
     case unknown(Int, String)
     
     static var integer: Self { .integer()}
@@ -21,7 +21,6 @@ enum ArgType {
     static var actor: Self { .actor()}
     static var container: Self { .container()}
     static var topic: Self { .topic() }
-    static var quest: Self { .quest()}
 }
 
 //struct Function: RawRepresentable, BinaryCodable {

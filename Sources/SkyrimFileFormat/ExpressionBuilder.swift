@@ -34,10 +34,10 @@ public struct Expression: RawRepresentable {
                         let raw = parameters.removeFirst()
                         args.append(name.map({ "\($0): \(raw)" }) ?? "\(raw)")
                         
-                    case .quest(let name):
+                    case .quest:
                         let raw = parameters.removeFirst()
-                        let label = name ?? "quest"
-                        args.append("\(label): \(raw)")
+                        let form = FormID(id: raw)
+                        args.append(form.expressionValue)
                         
                     default:
                         args.append("\(arg)")
@@ -51,5 +51,7 @@ public struct Expression: RawRepresentable {
             self.rawValue = "\(name)(\(params)) \(op.keyword) \(value)"
         }
         
+        print("let expression = Expression(function: \(function), val: \(val), op: .\(op), flags: [\(flags)], parameters: \(rawParameters))")
+        print("XCTAssertEqual(expression.rawValue, \"\(self.rawValue)\")")
     }
 }
