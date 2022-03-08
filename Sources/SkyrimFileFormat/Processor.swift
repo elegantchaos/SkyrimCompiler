@@ -100,13 +100,11 @@ private extension Processor {
         let records = bytes.iteratorMap { iterator -> RecordData in
             let stream = AsyncDataStream(iterator: iterator)
             let type = try await Tag(stream.read(UInt32.self))
-            print(type)
             let size = try await stream.read(UInt32.self)
             let header = try await RecordHeader(type: type, stream)
             let isGroup = type == GroupRecord.tag
             let data: LoadedRecordData
             if !isGroup, let flags = header.flags, flags.contains2(.compressed) {
-                print("Decompressing data for \(type)")
                 let decompressedSize = try await stream.read(UInt32.self)
                 let bytes = try await stream.read(count: Int(size - 4))
                 let decompressed = try ZlibArchive.unarchive(archive: Data(bytes: bytes, count: bytes.count))

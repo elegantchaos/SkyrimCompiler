@@ -1,11 +1,12 @@
-//
-//  File.swift
-//  
-//
-//  Created by Sam Deane on 08/03/2022.
-//
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+//  Created by Sam Deane on 08/03/22.
+//  All code (c) 2022 - present day, Elegant Chaos Limited.
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import Foundation
+import Logger
+
+let expressionTestChannel = Channel("Expression Tests")
 
 public struct Expression: RawRepresentable {
     public let rawValue: String
@@ -14,14 +15,20 @@ public struct Expression: RawRepresentable {
         self.rawValue = rawValue
     }
     
-    public init(function: UInt16, val: UInt32, op: ComparisonOperator, flags: ConditionFlags, parameters rawParameters: [UInt32]) {
-        let value: String
+    public init(function: UInt16, value: UInt32, comparison: ComparisonOperator, flags: ConditionFlags, parameters rawParameters: [UInt32], runOn: ConditionTarget) {
+        let formattedValue: String
+        let prefix = runOn.conditionPrefix
+
         if flags.contains2(.useGlobal) {
-            let form = FormID(id: val)
-            value = form.expressionValue
+            let form = FormID(id: value)
+            if form.name.isEmpty {
+                formattedValue = String(format: "Global(0x%06X)", form.id)
+            } else {
+                formattedValue = form.expressionValue
+            }
         } else {
-            let float = Float32(bitPattern: val)
-            value = "\(float)"
+            let float = Float32(bitPattern: value)
+            formattedValue = "\(float)"
         }
 
         let index = FunctionIndex.instance
@@ -58,14 +65,19 @@ public struct Expression: RawRepresentable {
                 }
             }
             
-            self.rawValue = "\(f.name)(\(args.joined(separator: ", "))) \(op.keyword) \(value)"
+            self.rawValue = "\(prefix).\(f.name)(\(args.joined(separator: ", "))) \(comparison.keyword) \(formattedValue)"
         } else {
             let name = "UnknownFunc<\(function + 4096)>"
             let params = rawParameters.map({"\($0)"}).joined(separator: ", ")
-            self.rawValue = "\(name)(\(params)) \(op.keyword) \(value)"
+            self.rawValue = "\(prefix).\(name)(\(params)) \(comparison.keyword) \(formattedValue)"
         }
-        
-        print("let expression = Expression(function: \(function), val: \(val), op: .\(op), flags: [\(flags)], parameters: \(rawParameters))")
-        print("XCTAssertEqual(expression.rawValue, \"\(self.rawValue)\")")
+
+        expressionTestChannel.debug("""
+            
+            let expression = Expression(function: \(function), val: \(value), op: .\(comparison), flags: [\(flags)], parameters: \(rawParameters), runOn: .\(runOn)")
+            XCTAssertEqual(expression.rawValue, \"\(self.rawValue)\")"
+            
+            """
+        )
     }
 }

@@ -7,22 +7,6 @@ import Foundation
 import BinaryCoding
 
 
-public struct ConditionFlags: OptionSetFromEnum {
-    public enum Options: String, EnumForOptionSet {
-        case or
-        case useAliases
-        case useGlobal
-        case usePackData
-        case swapSubjectAndTarget
-    }
-    
-    public let rawValue: UInt8
-    
-    public init(rawValue: UInt8) {
-        self.rawValue = rawValue
-    }
-}
-
 struct ConditionField: Codable {
     public enum CodingKeys: CodingKey {
         case test
@@ -36,7 +20,7 @@ struct ConditionField: Codable {
     }
 
     func encode(to encoder: Encoder) throws {
-        let expression = Expression(function: raw.function, val: raw.value, op: raw.op, flags: raw.flags, parameters: raw.params)
+        let expression = Expression(function: raw.function, value: raw.value, comparison: raw.op, flags: raw.flags, parameters: raw.params, runOn: raw.runOn)
         if raw.flags.rawValue != 0 {
             var container = encoder.container(keyedBy: Self.CodingKeys)
             try container.encode(expression.rawValue, forKey: .test)
@@ -61,14 +45,6 @@ extension ConditionField: BinaryCodable {
     }
 }
 
-struct FormIDOrFloat: BinaryCodable {
-    let raw: UInt32
-}
-
-struct FormIDOrInt: BinaryCodable {
-    let raw: UInt32
-}
-
 struct RawConditionField: BinaryCodable {
     let opCode: UInt8
     let padding1: Padding3
@@ -77,7 +53,7 @@ struct RawConditionField: BinaryCodable {
     let padding2: UInt16
     let param1: UInt32
     let param2: UInt32
-    let runOnType: UInt32
+    let runOn: ConditionTarget
     let reference: FormID
     let unknown: UInt32
     
@@ -103,52 +79,3 @@ struct RawConditionField: BinaryCodable {
         return ConditionFlags(rawValue: opCode & 0x1F)
     }
 }
-
-
-
-//        let code = try container.decode(UInt16.self)
-//        self.function = Function(rawValue: code + 4096)
-//        let _ = try container.decode(UInt16.self)
-//        var parameters: [UInt32] = []
-//        if function == .GetEventData {
-//            parameters.append(UInt32(try container.decode(UInt16.self)))
-//            parameters.append(UInt32(try container.decode(UInt16.self)))
-//            parameters.append(try container.decode(UInt32.self))
-//        } else {
-//            parameters.append(try container.decode(UInt32.self))
-//            parameters.append(try container.decode(UInt32.self))
-//        }
-//        self.parameters = parameters
-//
-//        self.runOnType = try container.decode(UInt32.self)
-//        self.reference = try container.decode(FormID.self)
-//        self.unknown = try container.decode(UInt32.self)
-
-//        let index = Operator.allCases.firstIndex(of: op)!
-//        let rawOp = (UInt8(index) << 5) | (flags?.rawValue ?? 0)
-//        let raw = RawConditionField(op: rawOp, padding1: Padding3(), value: 0, function: 0, padding2: 0, param1: 0, param2: 0, runOnType: 0, reference: FormID(), unknown: 0)
-//        try container.encode(op)
-//        try container.encode(Padding3())
-//        try container.encode(value)
-//        try container.encode(function)
-//        try container.encode(UInt16(0))
-//        if function == .GetEventData {
-//                try container.encode(UInt16(parameters[0]))
-//                try container.encode(UInt16(parameters[1]))
-//                try container.encode(parameters[2])
-//        } else {
-//                for param in parameters {
-//                    try container.encode(param)
-//                }
-//        }
-//        try container.encode(runOnType)
-//        try container.encode(reference)
-//        try container.encode(unknown)
-
-
-//    let value: FormIDOrFloat
-//    let function: Function
-//    let parameters: [UInt32]
-//    let runOnType: UInt32
-//    let reference: FormID
-//    let unknown: UInt32

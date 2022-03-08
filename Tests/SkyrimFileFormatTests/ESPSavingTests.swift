@@ -26,6 +26,7 @@ final class ESPSavingTests: ProcessorTestCase {
     }
 
     func testUnpackCollegeEntry() async throws {
+        expressionTestChannel.enabled = true
         try await saveExample(named: "CollegeEntry")
     }
 

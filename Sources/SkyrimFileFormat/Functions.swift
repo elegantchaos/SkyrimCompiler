@@ -7,17 +7,20 @@ import Foundation
 
 enum ArgType {
     case actor(String? = nil)
+    case actorValue
     case container(String? = nil)
-    case integer(String? = nil)
-    case string(String? = nil)
+    case faction
     case float(String? = nil)
+    case integer(String? = nil)
     case topic(String? = nil)
     case quest
     case questAlias
     case scene
+    case string(String? = nil)
     case variable
+
     case unknown(Int, String)
-    
+
     static var integer: Self { .integer()}
     static var float: Self { .float()}
     static var string: Self { .string()}
