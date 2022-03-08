@@ -1,0 +1,14 @@
+{
+  "_header" : {
+    "id" : 221651,
+    "type" : "DIAL",
+    "versionControlInfo2" : 5
+  },
+  "editorID" : "MQ201DelphineMetMalbornYes",
+  "infoCount" : 1,
+  "owningBranch" : "0x000361EB",
+  "owningQuest" : "0x00035D5F",
+  "playerDialogue" : 0,
+  "priority" : 50,
+  "subtype" : 1414747459
+}

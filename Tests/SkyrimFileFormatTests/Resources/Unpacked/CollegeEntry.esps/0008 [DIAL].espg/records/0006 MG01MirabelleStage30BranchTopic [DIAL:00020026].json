@@ -1,30 +1,13 @@
 {
-  "_fields" : {
-    "BNAM" : [
-      "2E000200"
-    ],
-    "DATA" : [
-      "00000000"
-    ],
-    "FULL" : [
-      "492077617320746F6C6420746F20636F6D652073656520796F752E00"
-    ],
-    "PNAM" : [
-      "0000B442"
-    ],
-    "QNAM" : [
-      "51F20100"
-    ],
-    "SNAM" : [
-      "43555354"
-    ],
-    "TIFC" : [
-      "02000000"
-    ]
-  },
   "_header" : {
     "id" : 131110,
     "type" : "DIAL"
   },
-  "editorID" : "MG01MirabelleStage30BranchTopic"
+  "editorID" : "MG01MirabelleStage30BranchTopic",
+  "infoCount" : 2,
+  "owningBranch" : "0x0002002E",
+  "owningQuest" : "0x0001F251",
+  "playerDialogue" : 0,
+  "priority" : 90,
+  "subtype" : 1414747459
 }

@@ -16,7 +16,25 @@ struct ConditionField: Codable {
     let raw: RawConditionField
     
     init(from decoder: Decoder) throws {
-        throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "not implemented yet"))
+        let test: String
+        let flags: ConditionFlags
+        
+        if let container = try? decoder.container(keyedBy: Self.CodingKeys) {
+            flags = try container.decode(ConditionFlags.self, forKey: .flags)
+            test = try container.decode(String.self, forKey: .test)
+        } else {
+            var container = try decoder.unkeyedContainer()
+            flags = []
+            test = try container.decode(String.self)
+        }
+        
+        let expression = ConditionExpression(rawValue: test)
+        guard let expression = expression.parse(flags: flags) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "Couldn't decode expression"))
+            
+        }
+        
+        self.raw = RawConditionField(flags: flags, expression: expression)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -56,6 +74,19 @@ struct RawConditionField: BinaryCodable {
     let runOn: ConditionTarget
     let reference: FormID
     let unknown: UInt32
+    
+    init(flags: ConditionFlags, expression: RawExpression) {
+        self.opCode = expression.comparison.flags | flags.rawValue
+        self.padding1 = Padding3()
+        self.value = expression.value
+        self.function = expression.function
+        self.padding2 = 0
+        self.param1 = expression.parameters[0]
+        self.param2 = expression.parameters[1]
+        self.runOn = expression.runOn
+        self.reference = FormID() // TODO:
+        self.unknown = 0
+    }
     
     var params: [UInt32] {
         var parameters: [UInt32] = []

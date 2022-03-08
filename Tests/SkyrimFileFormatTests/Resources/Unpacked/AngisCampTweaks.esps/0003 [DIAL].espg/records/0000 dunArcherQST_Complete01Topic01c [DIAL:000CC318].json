@@ -1,28 +1,14 @@
 {
-  "_fields" : {
-    "BNAM" : [
-      "91C30C00"
-    ],
-    "DATA" : [
-      "00000000"
-    ],
-    "PNAM" : [
-      "00004842"
-    ],
-    "QNAM" : [
-      "3CAB0C00"
-    ],
-    "SNAM" : [
-      "43555354"
-    ],
-    "TIFC" : [
-      "01000000"
-    ]
-  },
   "_header" : {
     "id" : 836376,
     "type" : "DIAL",
     "versionControlInfo2" : 2
   },
-  "editorID" : "dunArcherQST_Complete01Topic01c"
+  "editorID" : "dunArcherQST_Complete01Topic01c",
+  "infoCount" : 1,
+  "owningBranch" : "0x000CC391",
+  "owningQuest" : "0x000CAB3C",
+  "playerDialogue" : 0,
+  "priority" : 50,
+  "subtype" : 1414747459
 }

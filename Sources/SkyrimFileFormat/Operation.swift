@@ -6,12 +6,12 @@
 import Foundation
 
 public enum ComparisonOperator: String, CaseIterable {
-    case equals
-    case notEquals
-    case greaterThan
-    case greaterThanOrEqual
-    case lessThan
-    case lessThanOrEqual
+    case equals = "=="
+    case notEquals = "!="
+    case greaterThan = ">"
+    case greaterThanOrEqual = ">="
+    case lessThan = "<"
+    case lessThanOrEqual = "<="
     
     var keyword: String {
         switch self {
@@ -43,5 +43,10 @@ public enum ComparisonOperator: String, CaseIterable {
         }
         
         return nil
+    }
+    
+    var flags: UInt8 {
+        guard let index = Self.allCases.firstIndex(of: self) else { return 0 }
+        return UInt8(index) << 5
     }
 }

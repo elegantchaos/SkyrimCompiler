@@ -3,32 +3,6 @@
     "CIS2" : [
       "76486173416E794974656D7300"
     ],
-    "CNAM" : [
-      "00"
-    ],
-    "CTDA" : [
-      "000000000000803F3602000001000000000000000000000000000000FFFFFFFF",
-      "000000000000803F750200005A5B0300D068D5970000000000000000FFFFFFFF",
-      "6400000053190D000E00000011000000000000000100000000000000FFFFFFFF"
-    ],
-    "ENAM" : [
-      "01000000"
-    ],
-    "NAM1" : [
-      "4F682E204D79206D697374616B652E00"
-    ],
-    "NAM2" : [
-      "00"
-    ],
-    "NAM3" : [
-      "00"
-    ],
-    "PNAM" : [
-      "00000000"
-    ],
-    "TRDT" : [
-      "060000003200000000000000010000000000000001000000"
-    ],
     "VMAD" : [
       "0500020001001800544E415F5449465F5F50657273756164655375636365737300010014004469616C6F6775654661766F7247656E6572696301010000FFFFDCA6050002011800544E415F5449465F5F506572737561646553756363657373011800544E415F5449465F5F5065727375616465537563636573730A00467261676D656E745F30"
     ]
@@ -36,5 +10,59 @@
   "_header" : {
     "id" : 33556503,
     "type" : "INFO"
-  }
+  },
+  "conditions" : [
+    [
+      "Subject.GetIsAliasRef(0x1) == 1.0"
+    ],
+    [
+      "Subject.GetVMQuestVariable(0x035B5A, Variable(0x97D568D0)) == 1.0"
+    ],
+    {
+      "flags" : [
+        "useGlobal"
+      ],
+      "test" : "Target.GetActorValue(17) >= Global(0x0D1953)"
+    }
+  ],
+  "enam" : {
+    "flags" : 1,
+    "resetTime" : 0
+  },
+  "favourLevel" : 0,
+  "previousInfo" : "0x00000000",
+  "responseEdits" : [
+    ""
+  ],
+  "responseListenerIdleAnims" : [
+
+  ],
+  "responseNotes" : [
+    ""
+  ],
+  "responses" : [
+    {
+      "emotionType" : 6,
+      "emotionValue" : 50,
+      "junk1" : {
+
+      },
+      "junk2" : {
+
+      },
+      "responseID" : 1,
+      "soundFile" : "0x00000000",
+      "unknown1" : 0,
+      "useEmoAnim" : 1
+    }
+  ],
+  "responseSpeakerIdeAnims" : [
+
+  ],
+  "responseText" : [
+    539912271
+  ],
+  "topicLinks" : [
+
+  ]
 }

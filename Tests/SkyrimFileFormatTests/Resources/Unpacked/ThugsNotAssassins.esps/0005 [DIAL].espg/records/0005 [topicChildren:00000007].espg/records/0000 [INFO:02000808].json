@@ -1,29 +1,5 @@
 {
   "_fields" : {
-    "CNAM" : [
-      "00"
-    ],
-    "CTDA" : [
-      "000000000000803F3602000001000000000000000000000000000000FFFFFFFF"
-    ],
-    "ENAM" : [
-      "01000000"
-    ],
-    "NAM1" : [
-      "436F6D65206261636B20686572652100"
-    ],
-    "NAM2" : [
-      "00"
-    ],
-    "NAM3" : [
-      "00"
-    ],
-    "PNAM" : [
-      "00000000"
-    ],
-    "TRDT" : [
-      "010000003200000000000000010000000000000001000000"
-    ],
     "VMAD" : [
       "0500020001001100544E415F5449465F5F57616C6B4177617900000002021100544E415F5449465F5F57616C6B41776179011100544E415F5449465F5F57616C6B417761790A00467261676D656E745F30"
     ]
@@ -31,5 +7,50 @@
   "_header" : {
     "id" : 33556488,
     "type" : "INFO"
-  }
+  },
+  "conditions" : [
+    [
+      "Subject.GetIsAliasRef(0x1) == 1.0"
+    ]
+  ],
+  "enam" : {
+    "flags" : 1,
+    "resetTime" : 0
+  },
+  "favourLevel" : 0,
+  "previousInfo" : "0x00000000",
+  "responseEdits" : [
+    ""
+  ],
+  "responseListenerIdleAnims" : [
+
+  ],
+  "responseNotes" : [
+    ""
+  ],
+  "responses" : [
+    {
+      "emotionType" : 1,
+      "emotionValue" : 50,
+      "junk1" : {
+
+      },
+      "junk2" : {
+
+      },
+      "responseID" : 1,
+      "soundFile" : "0x00000000",
+      "unknown1" : 0,
+      "useEmoAnim" : 1
+    }
+  ],
+  "responseSpeakerIdeAnims" : [
+
+  ],
+  "responseText" : [
+    1701670723
+  ],
+  "topicLinks" : [
+
+  ]
 }

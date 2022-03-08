@@ -1,28 +1,14 @@
 {
-  "_fields" : {
-    "BNAM" : [
-      "81C30C00"
-    ],
-    "DATA" : [
-      "00000000"
-    ],
-    "PNAM" : [
-      "0000F041"
-    ],
-    "QNAM" : [
-      "3CAB0C00"
-    ],
-    "SNAM" : [
-      "43555354"
-    ],
-    "TIFC" : [
-      "01000000"
-    ]
-  },
   "_header" : {
     "id" : 836404,
     "type" : "DIAL",
     "versionControlInfo2" : 2
   },
-  "editorID" : "dunArcherQST_Training01Topic01"
+  "editorID" : "dunArcherQST_Training01Topic01",
+  "infoCount" : 1,
+  "owningBranch" : "0x000CC381",
+  "owningQuest" : "0x000CAB3C",
+  "playerDialogue" : 0,
+  "priority" : 30,
+  "subtype" : 1414747459
 }

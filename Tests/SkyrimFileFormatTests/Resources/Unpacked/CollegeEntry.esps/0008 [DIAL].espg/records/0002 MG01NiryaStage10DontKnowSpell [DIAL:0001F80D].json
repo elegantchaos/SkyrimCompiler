@@ -1,30 +1,13 @@
 {
-  "_fields" : {
-    "BNAM" : [
-      "5B1F0700"
-    ],
-    "DATA" : [
-      "00000000"
-    ],
-    "FULL" : [
-      "4920646F6E2774206B6E6F7720746865207370656C6C2E00"
-    ],
-    "PNAM" : [
-      "00008C42"
-    ],
-    "QNAM" : [
-      "51F20100"
-    ],
-    "SNAM" : [
-      "43555354"
-    ],
-    "TIFC" : [
-      "0A000000"
-    ]
-  },
   "_header" : {
     "id" : 129037,
     "type" : "DIAL"
   },
-  "editorID" : "MG01NiryaStage10DontKnowSpell"
+  "editorID" : "MG01NiryaStage10DontKnowSpell",
+  "infoCount" : 10,
+  "owningBranch" : "0x00071F5B",
+  "owningQuest" : "0x0001F251",
+  "playerDialogue" : 0,
+  "priority" : 70,
+  "subtype" : 1414747459
 }

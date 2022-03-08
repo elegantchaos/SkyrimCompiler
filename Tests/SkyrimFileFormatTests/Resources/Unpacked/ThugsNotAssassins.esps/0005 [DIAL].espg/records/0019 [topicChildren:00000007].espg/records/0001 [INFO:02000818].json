@@ -3,21 +3,6 @@
     "CIS2" : [
       "76486173416E794974656D7300"
     ],
-    "CNAM" : [
-      "00"
-    ],
-    "CTDA" : [
-      "000000000000803F750200005A5B0300A868D5970000000000000000FFFFFFFF"
-    ],
-    "DNAM" : [
-      "C30C0E00"
-    ],
-    "ENAM" : [
-      "01000000"
-    ],
-    "PNAM" : [
-      "17080002"
-    ],
     "VMAD" : [
       "0500020001001500544E415F5449465F5F50657273756164654661696C0001000B0041747461636B5363656E6501010000FFFF605B030002021500544E415F5449465F5F50657273756164654661696C011500544E415F5449465F5F50657273756164654661696C0A00467261676D656E745F30"
     ]
@@ -25,5 +10,38 @@
   "_header" : {
     "id" : 33556504,
     "type" : "INFO"
-  }
+  },
+  "conditions" : [
+    [
+      "Subject.GetVMQuestVariable(0x035B5A, Variable(0x97D568A8)) == 1.0"
+    ]
+  ],
+  "enam" : {
+    "flags" : 1,
+    "resetTime" : 0
+  },
+  "favourLevel" : 0,
+  "previousInfo" : "0x02000817",
+  "responseEdits" : [
+
+  ],
+  "responseListenerIdleAnims" : [
+
+  ],
+  "responseNotes" : [
+
+  ],
+  "responses" : [
+
+  ],
+  "responseSpeakerIdeAnims" : [
+
+  ],
+  "responseText" : [
+
+  ],
+  "sharedInfo" : "0x000E0CC3",
+  "topicLinks" : [
+
+  ]
 }

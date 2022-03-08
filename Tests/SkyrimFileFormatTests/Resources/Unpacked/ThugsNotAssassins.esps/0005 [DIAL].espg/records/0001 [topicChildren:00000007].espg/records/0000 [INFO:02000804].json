@@ -1,30 +1,5 @@
 {
   "_fields" : {
-    "CNAM" : [
-      "00"
-    ],
-    "CTDA" : [
-      "00000000000020413A0000005A5B0300000000000000000000000000FFFFFFFF",
-      "000000000000803F3602000001000000000000000000000000000000FFFFFFFF",
-      "0000000000000000F8000000605B0300000000000000000000000000FFFFFFFF"
-    ],
-    "DNAM" : [
-      "585B0300"
-    ],
-    "ENAM" : [
-      "80010000"
-    ],
-    "PNAM" : [
-      "00000000"
-    ],
-    "TCLT" : [
-      "09080002",
-      "05080002",
-      "07080002"
-    ],
-    "TWAT" : [
-      "07080002"
-    ],
     "VMAD" : [
       "0500020001001200544E415F5449465F5F54687567426567696E00000002011200544E415F5449465F5F54687567426567696E011200544E415F5449465F5F54687567426567696E0A00467261676D656E745F30"
     ]
@@ -32,5 +7,47 @@
   "_header" : {
     "id" : 33556484,
     "type" : "INFO"
-  }
+  },
+  "conditions" : [
+    [
+      "Subject.GetStage(0x035B5A) == 10.0"
+    ],
+    [
+      "Subject.GetIsAliasRef(0x1) == 1.0"
+    ],
+    [
+      "Subject.IsScenePlaying(0x035B60) == 0.0"
+    ]
+  ],
+  "enam" : {
+    "flags" : 384,
+    "resetTime" : 0
+  },
+  "favourLevel" : 0,
+  "previousInfo" : "0x00000000",
+  "responseEdits" : [
+
+  ],
+  "responseListenerIdleAnims" : [
+
+  ],
+  "responseNotes" : [
+
+  ],
+  "responses" : [
+
+  ],
+  "responseSpeakerIdeAnims" : [
+
+  ],
+  "responseText" : [
+
+  ],
+  "sharedInfo" : "0x00035B58",
+  "topicLinks" : [
+    "0x02000809",
+    "0x02000805",
+    "0x02000807"
+  ],
+  "walkAwayTopic" : "0x02000807"
 }

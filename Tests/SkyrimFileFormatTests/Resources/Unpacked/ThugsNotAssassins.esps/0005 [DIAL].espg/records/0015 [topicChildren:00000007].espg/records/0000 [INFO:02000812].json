@@ -1,20 +1,5 @@
 {
   "_fields" : {
-    "CNAM" : [
-      "00"
-    ],
-    "CTDA" : [
-      "000000000000803F8E02000000000000000000000000000000000000FFFFFFFF"
-    ],
-    "DNAM" : [
-      "C20C0E00"
-    ],
-    "ENAM" : [
-      "01000000"
-    ],
-    "PNAM" : [
-      "00000000"
-    ],
     "VMAD" : [
       "0500020001001500544E415F5449465F5F42726962655375636365737300010014004469616C6F6775654661766F7247656E6572696301010000FFFFDCA6050002011500544E415F5449465F5F427269626553756363657373011500544E415F5449465F5F4272696265537563636573730A00467261676D656E745F30"
     ]
@@ -22,5 +7,38 @@
   "_header" : {
     "id" : 33556498,
     "type" : "INFO"
-  }
+  },
+  "conditions" : [
+    [
+      "Subject.GetBribeSuccess() == 1.0"
+    ]
+  ],
+  "enam" : {
+    "flags" : 1,
+    "resetTime" : 0
+  },
+  "favourLevel" : 0,
+  "previousInfo" : "0x00000000",
+  "responseEdits" : [
+
+  ],
+  "responseListenerIdleAnims" : [
+
+  ],
+  "responseNotes" : [
+
+  ],
+  "responses" : [
+
+  ],
+  "responseSpeakerIdeAnims" : [
+
+  ],
+  "responseText" : [
+
+  ],
+  "sharedInfo" : "0x000E0CC2",
+  "topicLinks" : [
+
+  ]
 }

@@ -3,39 +3,66 @@
     "CIS2" : [
       "3A3A4E69727961536B696C6C5661725F76617200",
       "3A3A4E697279615370656C6C536F6C645F76617200"
-    ],
-    "CNAM" : [
-      "00"
-    ],
-    "CTDA" : [
-      "000000000000803F360200000B000000000000000000000000000000FFFFFFFF",
-      "00000000000000002F000000EC260A00000000000100000000000000FFFFFFFF",
-      "00000000000000002F000000FA260A00000000000100000000000000FFFFFFFF",
-      "000000000000000008010000C3040200000000000100000000000000FFFFFFFF",
-      "000000000000000008010000D5E50700000000000100000000000000FFFFFFFF",
-      "00000000000000407502000051F2010048F8619B0000000000000000FFFFFFFF",
-      "00000000000000007502000051F2010040F8619B0000000000000000FFFFFFFF",
-      "000000000000803F4A000000800D0003000000000000000000000000FFFFFFFF"
-    ],
-    "DNAM" : [
-      "5AA20E00"
-    ],
-    "ENAM" : [
-      "00000000"
-    ],
-    "PNAM" : [
-      "12F80100"
-    ],
-    "RNAM" : [
-      "4920646F6E2774206B6E6F772074686174207370656C6C2E00"
-    ],
-    "TCLT" : [
-      "0CF80100",
-      "0AF80100"
     ]
   },
   "_header" : {
     "id" : 1020766,
     "type" : "INFO"
-  }
+  },
+  "conditions" : [
+    [
+      "Subject.GetIsAliasRef(0xB) == 1.0"
+    ],
+    [
+      "Target.GetItemCount(665324) == 0.0"
+    ],
+    [
+      "Target.GetItemCount(665338) == 0.0"
+    ],
+    [
+      "Target.HasSpell(132291) == 0.0"
+    ],
+    [
+      "Target.HasSpell(517589) == 0.0"
+    ],
+    [
+      "Subject.GetVMQuestVariable(0x01F251, Variable(0x9B61F848)) == 2.0"
+    ],
+    [
+      "Subject.GetVMQuestVariable(0x01F251, Variable(0x9B61F840)) == 0.0"
+    ],
+    [
+      "Subject.GetGlobalValue(50335104) == 1.0"
+    ]
+  ],
+  "enam" : {
+    "flags" : 0,
+    "resetTime" : 0
+  },
+  "favourLevel" : 0,
+  "previousInfo" : "0x0001F812",
+  "response" : "I don't know that spell.",
+  "responseEdits" : [
+
+  ],
+  "responseListenerIdleAnims" : [
+
+  ],
+  "responseNotes" : [
+
+  ],
+  "responses" : [
+
+  ],
+  "responseSpeakerIdeAnims" : [
+
+  ],
+  "responseText" : [
+
+  ],
+  "sharedInfo" : "0x000EA25A",
+  "topicLinks" : [
+    "0x0001F80C",
+    "0x0001F80A"
+  ]
 }

@@ -3,37 +3,60 @@
     "CIS2" : [
       "3A3A4E69727961536B696C6C5661725F76617200",
       "3A3A4E697279615370656C6C536F6C645F76617200"
-    ],
-    "CNAM" : [
-      "00"
-    ],
-    "CTDA" : [
-      "00000000000000002F00000012270A00000000000100000000000000FFFFFFFF",
-      "000000000000000008010000EADE0400000000000100000000000000FFFFFFFF",
-      "00000000000080407502000051F2010028F8619B0000000000000000FFFFFFFF",
-      "000000000000803F360200000B000000000000000000000000000000FFFFFFFF",
-      "00000000000000007502000051F2010020F8619B0000000000000000FFFFFFFF",
-      "000000000000803F4A000000800D0003000000000000000000000000FFFFFFFF"
-    ],
-    "DNAM" : [
-      "5AA20E00"
-    ],
-    "ENAM" : [
-      "00000000"
-    ],
-    "PNAM" : [
-      "5F930F00"
-    ],
-    "RNAM" : [
-      "4920646F6E2774206B6E6F772074686174207370656C6C2E00"
-    ],
-    "TCLT" : [
-      "0CF80100",
-      "0AF80100"
     ]
   },
   "_header" : {
     "id" : 1020768,
     "type" : "INFO"
-  }
+  },
+  "conditions" : [
+    [
+      "Target.GetItemCount(665362) == 0.0"
+    ],
+    [
+      "Target.HasSpell(319210) == 0.0"
+    ],
+    [
+      "Subject.GetVMQuestVariable(0x01F251, Variable(0x9B61F828)) == 4.0"
+    ],
+    [
+      "Subject.GetIsAliasRef(0xB) == 1.0"
+    ],
+    [
+      "Subject.GetVMQuestVariable(0x01F251, Variable(0x9B61F820)) == 0.0"
+    ],
+    [
+      "Subject.GetGlobalValue(50335104) == 1.0"
+    ]
+  ],
+  "enam" : {
+    "flags" : 0,
+    "resetTime" : 0
+  },
+  "favourLevel" : 0,
+  "previousInfo" : "0x000F935F",
+  "response" : "I don't know that spell.",
+  "responseEdits" : [
+
+  ],
+  "responseListenerIdleAnims" : [
+
+  ],
+  "responseNotes" : [
+
+  ],
+  "responses" : [
+
+  ],
+  "responseSpeakerIdeAnims" : [
+
+  ],
+  "responseText" : [
+
+  ],
+  "sharedInfo" : "0x000EA25A",
+  "topicLinks" : [
+    "0x0001F80C",
+    "0x0001F80A"
+  ]
 }

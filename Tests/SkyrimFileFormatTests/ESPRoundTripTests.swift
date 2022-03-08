@@ -80,4 +80,16 @@ class ESPRoundTripTests: ProcessorTestCase {
         try await roundTripExample(named: "Dialogue")
     }
 
+    func testRoundTripCollegeEntry() async throws {
+        try await roundTripExample(named: "CollegeEntry")
+    }
+
+    func testRoundTripDiplomaticImmunity() async throws {
+        try await roundTripExample(named: "DiplomaticImmunity")
+    }
+
+    func testRoundTripThugsNotAssassins() async throws {
+        try await roundTripExample(named: "ThugsNotAssassins")
+    }
+
 }

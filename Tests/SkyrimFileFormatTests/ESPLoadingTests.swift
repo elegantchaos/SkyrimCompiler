@@ -34,7 +34,25 @@ class ESPLoadingTests: ProcessorTestCase {
 
     func testCollegeEntry() async throws {
         let records = try await loadExample(named: "CollegeEntry")
-        XCTAssertEqual(records.count, 6)
+        XCTAssertEqual(records.count, 15)
+
+        let header = records.header
+        XCTAssertEqual(header?.type, TES4Record.tag)
+        XCTAssertEqual(header?.info.version, 1.7)
+    }
+
+    func testDiplomaticImmunity() async throws {
+        let records = try await loadExample(named: "DiplomaticImmunity")
+        XCTAssertEqual(records.count, 3)
+
+        let header = records.header
+        XCTAssertEqual(header?.type, TES4Record.tag)
+        XCTAssertEqual(header?.info.version, 1.7)
+    }
+    
+    func testThugsNotAssassins() async throws {
+        let records = try await loadExample(named: "ThugsNotAssassins")
+        XCTAssertEqual(records.count, 12)
 
         let header = records.header
         XCTAssertEqual(header?.type, TES4Record.tag)

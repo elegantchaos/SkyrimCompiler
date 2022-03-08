@@ -3,25 +3,6 @@
     "CIS2" : [
       "3A3A4E69727961536B696C6C5661725F76617200"
     ],
-    "CNAM" : [
-      "00"
-    ],
-    "CTDA" : [
-      "000000000000803F360200000B000000000000000000000000000000FFFFFFFF",
-      "00000000000000002F0000001E270A00000000000100000000000000FFFFFFFF",
-      "000000000000000008010000F2D30400000000000100000000000000FFFFFFFF",
-      "600000000000F0412F0000000F000000000000000100000000000000FFFFFFFF",
-      "000000000000A0407502000051F2010060F8619B0000000000000000FFFFFFFF"
-    ],
-    "DNAM" : [
-      "5BA20E00"
-    ],
-    "ENAM" : [
-      "01000000"
-    ],
-    "PNAM" : [
-      "17F80100"
-    ],
     "VMAD" : [
       "0500020001000D005449465F5F30303031463831380002000E004865616C4F746865725370656C6C01010000FFFFF2D304000400476F6C6401010000FFFF0F00000002020D005449465F5F3030303146383138010D005449465F5F30303031463831380A00467261676D656E745F30"
     ]
@@ -29,5 +10,50 @@
   "_header" : {
     "id" : 129048,
     "type" : "INFO"
-  }
+  },
+  "conditions" : [
+    [
+      "Subject.GetIsAliasRef(0xB) == 1.0"
+    ],
+    [
+      "Target.GetItemCount(665374) == 0.0"
+    ],
+    [
+      "Target.HasSpell(316402) == 0.0"
+    ],
+    [
+      "Target.GetItemCount(15) >= 30.0"
+    ],
+    [
+      "Subject.GetVMQuestVariable(0x01F251, Variable(0x9B61F860)) == 5.0"
+    ]
+  ],
+  "enam" : {
+    "flags" : 1,
+    "resetTime" : 0
+  },
+  "favourLevel" : 0,
+  "previousInfo" : "0x0001F817",
+  "responseEdits" : [
+
+  ],
+  "responseListenerIdleAnims" : [
+
+  ],
+  "responseNotes" : [
+
+  ],
+  "responses" : [
+
+  ],
+  "responseSpeakerIdeAnims" : [
+
+  ],
+  "responseText" : [
+
+  ],
+  "sharedInfo" : "0x000EA25B",
+  "topicLinks" : [
+
+  ]
 }

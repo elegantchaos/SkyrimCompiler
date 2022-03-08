@@ -96,8 +96,9 @@ public struct ConditionExpression: RawRepresentable {
         let regex = try! NSRegularExpression(pattern: pattern)
         
         var result = Capture()
-        if regex.firstMatch(in: rawValue, capturing: [\Capture.destination: 1, \.function: 2, \.arguments: 3, \.op: 4, \.value: 5], into: &result) {
-            print(result)
+        guard regex.firstMatch(in: rawValue, capturing: [\Capture.destination: 1, \.function: 2, \.arguments: 3, \.op: 4, \.value: 5], into: &result) else {
+            print("Couldn't parse expression")
+            return nil
         }
 
         let value: UInt32

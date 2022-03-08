@@ -1,27 +1,13 @@
 {
-  "_fields" : {
-    "BNAM" : [
-      "5B1F0700"
-    ],
-    "DATA" : [
-      "00000000"
-    ],
-    "PNAM" : [
-      "00004842"
-    ],
-    "QNAM" : [
-      "51F20100"
-    ],
-    "SNAM" : [
-      "43555354"
-    ],
-    "TIFC" : [
-      "08000000"
-    ]
-  },
   "_header" : {
     "id" : 129039,
     "type" : "DIAL"
   },
-  "editorID" : "MG01NiryaGreetingBranchTopic"
+  "editorID" : "MG01NiryaGreetingBranchTopic",
+  "infoCount" : 8,
+  "owningBranch" : "0x00071F5B",
+  "owningQuest" : "0x0001F251",
+  "playerDialogue" : 0,
+  "priority" : 50,
+  "subtype" : 1414747459
 }

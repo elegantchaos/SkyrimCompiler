@@ -1,0 +1,13 @@
+{
+  "_header" : {
+    "id" : 33556495,
+    "type" : "DIAL"
+  },
+  "editorID" : "WIAddItem03GiveUpTopic",
+  "infoCount" : 1,
+  "owningBranch" : "0x02000802",
+  "owningQuest" : "0x00035B5A",
+  "playerDialogue" : 0,
+  "priority" : 50,
+  "subtype" : 1414747459
+}

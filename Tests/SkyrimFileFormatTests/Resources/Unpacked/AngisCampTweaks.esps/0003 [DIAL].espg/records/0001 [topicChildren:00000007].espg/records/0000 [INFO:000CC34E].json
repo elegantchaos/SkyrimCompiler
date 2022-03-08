@@ -1,24 +1,5 @@
 {
   "_fields" : {
-    "CNAM" : [
-      "00"
-    ],
-    "CTDA" : [
-      "000000000000803F480000002FAB0C00000000000000000000000000FFFFFFFF",
-      "00000000000096423A0000003CAB0C00000000000000000000000000FFFFFFFF"
-    ],
-    "DNAM" : [
-      "1AAB0C00"
-    ],
-    "ENAM" : [
-      "01000000"
-    ],
-    "PNAM" : [
-      "00000000"
-    ],
-    "RNAM" : [
-      "4C6F6F6B73206C696B6520796F75277265206E6F206C6F6E676572206E65656465642E2054696D6520746F206469652E00"
-    ],
     "VMAD" : [
       "0500020001000D005449465F5F303030434333344500000002020D005449465F5F3030304343333445010D005449465F5F30303043433334450A00467261676D656E745F30"
     ]
@@ -27,5 +8,42 @@
     "id" : 836430,
     "type" : "INFO",
     "versionControlInfo2" : 3
-  }
+  },
+  "conditions" : [
+    [
+      "Subject.GetIsID(830255) == 1.0"
+    ],
+    [
+      "Subject.GetStage(0x0CAB3C) == 75.0"
+    ]
+  ],
+  "enam" : {
+    "flags" : 1,
+    "resetTime" : 0
+  },
+  "favourLevel" : 0,
+  "previousInfo" : "0x00000000",
+  "response" : "Looks like you're no longer needed. Time to die.",
+  "responseEdits" : [
+
+  ],
+  "responseListenerIdleAnims" : [
+
+  ],
+  "responseNotes" : [
+
+  ],
+  "responses" : [
+
+  ],
+  "responseSpeakerIdeAnims" : [
+
+  ],
+  "responseText" : [
+
+  ],
+  "sharedInfo" : "0x000CAB1A",
+  "topicLinks" : [
+
+  ]
 }

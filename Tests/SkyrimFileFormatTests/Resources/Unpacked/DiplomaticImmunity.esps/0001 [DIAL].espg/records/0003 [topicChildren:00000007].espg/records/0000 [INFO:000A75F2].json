@@ -1,34 +1,59 @@
 {
-  "_fields" : {
-    "CNAM" : [
-      "00"
-    ],
-    "CTDA" : [
-      "000000000000803F4800000078340100000000000000000000000000FFFFFFFF",
-      "600000000000B4423A0000005F5D0300000000000000000000000000FFFFFFFF",
-      "800000000000C8423A0000005F5D0300000000000000000000000000FFFFFFFF",
-      "000000000000803FAA0200005D860A00000000000100000000000000FFFFFFFF",
-      "000000000000803FAA02000012CD1000000000000100000000000000FFFFFFFF",
-      "0000000000000000AA020000D2BB0600000000000100000000000000FFFFFFFF",
-      "0000000000000000AA020000D3BB0600000000000100000000000000FFFFFFFF"
-    ],
-    "DNAM" : [
-      "F1750A00"
-    ],
-    "ENAM" : [
-      "00000000"
-    ],
-    "PNAM" : [
-      "00000000"
-    ],
-    "TCLT" : [
-      "D4610300",
-      "D5610300"
-    ]
-  },
   "_header" : {
     "id" : 685554,
     "type" : "INFO",
     "versionControlInfo2" : 2
-  }
+  },
+  "conditions" : [
+    [
+      "Subject.GetIsID(78968) == 1.0"
+    ],
+    [
+      "Subject.GetStage(0x035D5F) >= 90.0"
+    ],
+    [
+      "Subject.GetStage(0x035D5F) < 100.0"
+    ],
+    [
+      "Target.WornHasKeyword(689757) == 1.0"
+    ],
+    [
+      "Target.WornHasKeyword(1101074) == 1.0"
+    ],
+    [
+      "Target.WornHasKeyword(441298) == 0.0"
+    ],
+    [
+      "Target.WornHasKeyword(441299) == 0.0"
+    ]
+  ],
+  "enam" : {
+    "flags" : 0,
+    "resetTime" : 0
+  },
+  "favourLevel" : 0,
+  "previousInfo" : "0x00000000",
+  "responseEdits" : [
+
+  ],
+  "responseListenerIdleAnims" : [
+
+  ],
+  "responseNotes" : [
+
+  ],
+  "responses" : [
+
+  ],
+  "responseSpeakerIdeAnims" : [
+
+  ],
+  "responseText" : [
+
+  ],
+  "sharedInfo" : "0x000A75F1",
+  "topicLinks" : [
+    "0x000361D4",
+    "0x000361D5"
+  ]
 }
