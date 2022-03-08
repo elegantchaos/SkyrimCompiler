@@ -104,6 +104,9 @@
                   Identifier = "ESPRoundTripTests/testRoundTripEmpty()">
                </Test>
                <Test
+                  Identifier = "ESPSavingTests">
+               </Test>
+               <Test
                   Identifier = "EnumDecodingTests">
                </Test>
                <Test

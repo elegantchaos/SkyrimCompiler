@@ -9,28 +9,38 @@
 import Foundation
 
 struct FunctionIndex {
-    let index: [Int:Function]
+    let idIndex: [Int:Function]
+    let nameIndex: [String:Function]
     
     static var instance = FunctionIndex()
     
     init() {
-        var index: [Int:Function] = [:]
-        for f in Self.events {
-            index[f.id] = f
+        var idIndex: [Int:Function] = [:]
+        var nameIndex: [String:Function] = [:]
+        
+        func index(_ functions: [Function]) {
+            for f in functions {
+                idIndex[f.id] = f
+                nameIndex[f.name] = f
+            }
         }
-        for f in Self.console {
-            index[f.id] = f
-        }
-        for f in Self.functions {
-            index[f.id] = f
-        }
-        self.index = index
+        
+        index(Self.events)
+        index(Self.console)
+        index(Self.functions)
+        
+        self.idIndex = idIndex
+        self.nameIndex = nameIndex
     }
     
     func function(for code: UInt16) -> Function? {
-        return index[Int(code) + 4096]
+        return idIndex[Int(code) + 4096]
     }
 
+    func function(for name: String) -> Function? {
+        return nameIndex[name]
+    }
+    
     static let events: [Function] = [
         
         // events

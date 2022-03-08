@@ -20,8 +20,8 @@ struct ConditionField: Codable {
     }
 
     func encode(to encoder: Encoder) throws {
-        let expression = Expression(function: raw.function, value: raw.value, comparison: raw.op, flags: raw.flags, parameters: raw.params, runOn: raw.runOn)
-        if raw.flags.rawValue != 0 {
+        let expression = ConditionExpression(from: raw.expression)
+        if !raw.flags.isEmpty {
             var container = encoder.container(keyedBy: Self.CodingKeys)
             try container.encode(expression.rawValue, forKey: .test)
             try container.encode(raw.flags, forKey: .flags)
@@ -78,4 +78,28 @@ struct RawConditionField: BinaryCodable {
     var flags: ConditionFlags {
         return ConditionFlags(rawValue: opCode & 0x1F)
     }
+    
+    var expression: RawExpression {
+        return .init(function: function, value: value, comparison: op, flags: flags, parameters: params, runOn: runOn)
+    }
 }
+
+public struct RawExpression {
+    let function: UInt16
+    let value: UInt32
+    let comparison: ComparisonOperator
+    let flags: ConditionFlags
+    let parameters: [UInt32]
+    let runOn: ConditionTarget
+
+    public init(function: UInt16, value: UInt32, comparison: ComparisonOperator, flags: ConditionFlags, parameters: [UInt32], runOn: ConditionTarget) {
+        self.function = function
+        self.value = value
+        self.comparison = comparison
+        self.flags = flags
+        self.parameters = parameters
+        self.runOn = runOn
+    }
+}
+
+extension RawExpression: Equatable { }

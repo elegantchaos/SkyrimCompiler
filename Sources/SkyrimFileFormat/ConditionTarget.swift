@@ -4,8 +4,9 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import Foundation
+import Compression
 
-public enum ConditionTarget: UInt32, Codable {
+public enum ConditionTarget: UInt32, Codable, CaseIterable {
     case subject
     case target
     case reference
@@ -24,5 +25,16 @@ public enum ConditionTarget: UInt32, Codable {
             case .eventData: return "Event"
             default: return "\(self)".capitalized
         }
+    }
+    
+    init?(_ string: String) {
+        for c in Self.allCases {
+            if string == c.conditionPrefix {
+                self = c
+                return
+            }
+        }
+        
+        return nil
     }
 }

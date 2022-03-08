@@ -33,4 +33,15 @@ public enum ComparisonOperator: String, CaseIterable {
     init(flags: UInt8) {
         self = Self.allCases[Int(flags >> 5)]
     }
+    
+    init?(keyword: String) {
+        for c in Self.allCases {
+            if c.keyword == keyword {
+                self = c
+                return
+            }
+        }
+        
+        return nil
+    }
 }

@@ -34,6 +34,30 @@ enum ArgType {
             default: return "\(self)".capitalized
         }
     }
+    
+    func raw(from string: String) -> UInt32 {
+        switch self {
+            case .variable:
+                if string.starts(with: "Variable(") && string.ends(with: ")"){
+                    let stripped = string.dropFirst(9).dropLast()
+                    if let hex = String(stripped).hexValue {
+                        return UInt32(hex)
+                    }
+
+                }
+            default:
+                if let hex = string.hexValue {
+                    return UInt32(hex)
+                }
+
+                if let float = Float(string) {
+                    return float.bitPattern
+                }
+
+        }
+
+        return 0
+    }
 }
 
 //struct Function: RawRepresentable, BinaryCodable {
