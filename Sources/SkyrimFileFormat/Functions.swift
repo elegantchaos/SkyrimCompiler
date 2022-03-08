@@ -46,12 +46,12 @@ enum ArgType {
 
                 }
             default:
-                if let hex = string.hexValue {
+                if string.starts(with: "0x"), let hex = string.hexValue {
                     return UInt32(hex)
                 }
 
-                if let float = Float(string) {
-                    return float.bitPattern
+                if let value = UInt32(string) {
+                    return value
                 }
 
         }

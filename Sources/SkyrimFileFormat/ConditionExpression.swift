@@ -100,9 +100,17 @@ public struct ConditionExpression: RawRepresentable {
             print(result)
         }
 
+        let value: UInt32
+        if let global = result.value.stripCast("Global"), global.starts(with: "0x"), let hex = global.hexValue {
+            value = UInt32(hex)
+        } else if let float = Float(result.value) {
+            value = float.bitPattern
+        } else {
+            return nil
+        }
+        
         guard let destination = ConditionTarget(result.destination),
               let function = FunctionIndex.instance.function(for: result.function),
-              let value = Float(result.value),
               let comparison =  ComparisonOperator(keyword: result.op)
         else {
             return nil
@@ -114,9 +122,20 @@ public struct ConditionExpression: RawRepresentable {
             let string = argValues.removeFirst().trimmingCharacters(in: .whitespaces)
             parameters.append(param.raw(from: string))
         }
+        while parameters.count < 2 {
+            parameters.append(0)
+        }
         
-        return RawExpression(function: UInt16(function.id - 4096), value: value.bitPattern, comparison: comparison, flags: flags, parameters: parameters, runOn: destination)
+        return RawExpression(function: UInt16(function.id - 4096), value: value, comparison: comparison, flags: flags, parameters: parameters, runOn: destination)
     }
         
 }
 
+
+extension String {
+    func stripCast(_ cast: String) -> String? {
+        guard starts(with: "\(cast)(") && ends(with: ")") else { return nil }
+        let stripped = dropFirst(cast.count + 1).dropLast().trimmingCharacters(in: .whitespaces)
+        return stripped
+    }
+}
