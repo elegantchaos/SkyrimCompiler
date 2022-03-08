@@ -24,7 +24,7 @@ struct Padding3: BinaryCodable {
     }
     
     func binaryEncode(to encoder: BinaryEncoder) throws {
-        var container = try encoder.unkeyedContainer()
+        var container = encoder.unkeyedContainer()
         try container.encode(UInt8(0))
         try container.encode(UInt8(0))
         try container.encode(UInt8(0))
