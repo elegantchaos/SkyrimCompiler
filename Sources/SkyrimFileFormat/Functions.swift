@@ -4,12 +4,15 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import Foundation
+
 enum ArgType {
-case actor
-case container
-case integer
-case float
-case unknown(Int, String)
+    case actor
+    case container
+    case integer(String = "")
+    case float
+    case topic
+    case quest
+    case unknown(Int, String)
 }
 
 //struct Function: RawRepresentable, BinaryCodable {
@@ -19,12 +22,12 @@ case unknown(Int, String)
 //}
 
 struct Function {
-let id: Int
-let name: String
-
-init(_ id: Int, ref: Bool = false, _ name: String, args: [ArgType]..., description: String) {
-self.id = id
-self.name = name
-}
+    let id: Int
+    let name: String
+    
+    init(_ id: Int, ref: Bool = false, _ name: String, _ args: ArgType..., description: String? = nil) {
+        self.id = id
+        self.name = name
+    }
 }
 

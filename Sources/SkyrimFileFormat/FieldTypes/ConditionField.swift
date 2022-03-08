@@ -6,11 +6,6 @@
 import Foundation
 import BinaryCoding
 
-struct Function: RawRepresentable, BinaryCodable {
-    let rawValue: UInt16
-    
-    static let GetEventData = Self(rawValue: 4672)
-}
 
 enum Operator: String, BinaryCodable, CaseIterable {
     case equals
