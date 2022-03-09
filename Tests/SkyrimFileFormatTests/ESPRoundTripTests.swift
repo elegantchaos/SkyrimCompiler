@@ -30,11 +30,11 @@ class ESPRoundTripTests: ProcessorTestCase {
             try await roundTripByRecordExample(named: name)
         } else {
             print("Binary encoding for \(name) differs - something is broken")
-            compareBundleRecords(bundle: decoded, expected: bundle)
+            try compareBundleRecords(name: name, bundle: decoded, expected: bundle)
         }
     }
 
-    func compareBundleRecords(bundle: ESPBundle, expected: ESPBundle) {
+    func compareBundleRecords(name: String, bundle: ESPBundle, expected: ESPBundle) throws {
         for key in bundle.index.keys {
             let originals = bundle.index[key]!
             let expecteds = expected.index[key]!
@@ -44,9 +44,16 @@ class ESPRoundTripTests: ProcessorTestCase {
             }
 
             let pairs = zip(originals, expecteds)
+            var n = 1
             for (original, expected) in pairs {
-                if original._meta.originalData?.count != expected._meta.originalData?.count {
-                    XCTFail("\(original) ≠ \(expected)")
+                let recordName = "\(name) \(original) #\(n)"
+                n = n + 1
+                if let od = original._meta.originalData, let ed = expected._meta.originalData, od.count != ed.count {
+                    let originalURL = outputFile(named: "\(recordName)-original", extension: "data")
+                    try Data(bytes: od, count: od.count).write(to: originalURL)
+                    let encodedURL = outputFile(named: "\(recordName)-expected", extension: "data")
+                    try Data(bytes: ed, count: ed.count).write(to: encodedURL)
+                    XCTFail("Binary coding for \(od.count) vs \(ed.count)")
                 }
             }
         }
