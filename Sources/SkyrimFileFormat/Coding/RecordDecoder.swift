@@ -3,20 +3,23 @@
 //  All code (c) 2022 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import Bytes
 import Foundation
 
 class RecordDecoder: Decoder {
     let header: RecordHeader
     let fields: DecodedFields
+    let data: RecordDataProvider?
     
     enum Error: Swift.Error {
         case missingValue
         case wrongTypeOfValue
     }
     
-    internal init(header: RecordHeader, fields: DecodedFields) {
+    internal init(header: RecordHeader, fields: DecodedFields, data: RecordDataProvider) {
         self.header = header
         self.fields = fields
+        self.data = data // TODO: this is for debugging only: maybe don't store this in release builds?
         self.codingPath = []
         self.userInfo = [:]
     }
@@ -72,7 +75,13 @@ class RecordDecoder: Decoder {
                     assert(type == RecordMetadata.self)
                     
                     let fields = decoder.fields.unproccessedFields
-                    let meta = RecordMetadata(header: decoder.header, fields: fields.count > 0 ? fields : nil)
+                    let data: Bytes?
+                    if let provider = decoder.data as? LoadedRecordData {
+                        data = provider.data
+                    } else {
+                        data = nil
+                    }
+                    let meta = RecordMetadata(header: decoder.header, fields: fields.count > 0 ? fields : nil, originalData: data)
                     return meta as! T
 
                 default:
@@ -97,7 +106,8 @@ class RecordDecoder: Decoder {
                         
                     } else if fields.count == 0 {
                         print("no fields for \(key.stringValue) type \(T.self)")
-                        throw Error.missingValue
+                        throw DecodingError.valueNotFound(T.self, .init(codingPath: codingPath, debugDescription: "\(key.stringValue) (\(T.self)) is required but missing"))
+//                        throw Error.missingValue
                     } else {
                         print("wrong type for \(key.stringValue) type \(T.self)")
                         throw Error.wrongTypeOfValue

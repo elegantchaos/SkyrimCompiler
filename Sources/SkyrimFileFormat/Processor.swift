@@ -108,6 +108,7 @@ private extension Processor {
             let isGroup = type == GroupRecord.tag
             let data: LoadedRecordData
             if !isGroup, header.isCompressed {
+                // TODO: defer decompression - move it into RecordData
                 let decompressedSize = try await stream.read(UInt32.self)
                 let bytes = try await stream.read(count: Int(size - 4))
                 compressionChannel.log("Unarchiving data for \(type) (\(decompressedSize) bytes)")
@@ -147,6 +148,7 @@ private extension Processor {
                     }
                 } catch {
                     print("Error decoding children of \(record.header)")
+                    print("Managed to decode: \(children.map({ $0.description }).joined(separator: ", "))")
                     print(error)
                 }
             }
@@ -155,7 +157,7 @@ private extension Processor {
         } else {
             let fields = try await decodedFields(type: record.type, header: record.header, data: record.data)
             let recordClass = configuration.recordClass(for: record.type)
-            let decoder = RecordDecoder(header: record.header, fields: fields)
+            let decoder = RecordDecoder(header: record.header, fields: fields, data: record.data)
             return try recordClass.init(from: decoder)
         }
     }

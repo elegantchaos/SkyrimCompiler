@@ -4,6 +4,7 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import BinaryCoding
+import Bytes
 import Foundation
 import SWCompression
 
@@ -13,7 +14,7 @@ struct RecordMetadata: Codable {
     
     let header: RecordHeader
     let fields: UnpackedFields?
-    let originalData: Data?
+    let originalData: Bytes?
     let children: [RecordProtocol]? // TODO: make this an iterator so that we can defer loading of children
 
     public enum CodingsKeys: CodingKey {
@@ -24,7 +25,7 @@ struct RecordMetadata: Codable {
         self.init(header: .init(type: type))
     }
     
-    init(header: RecordHeader, fields: UnpackedFields? = nil, originalData: Data? = nil, children: [RecordProtocol]? = nil) {
+    init(header: RecordHeader, fields: UnpackedFields? = nil, originalData: Bytes? = nil, children: [RecordProtocol]? = nil) {
         self.header = header
         self.fields = fields
         self.originalData = originalData
@@ -87,9 +88,7 @@ extension RecordProtocol {
 }
 
 extension RecordProtocol {
-    var description: String {
-        "«\(type)»"
-    }
+    var description: String { return _meta.header.description }
 }
 
 extension CodingUserInfoKey {
