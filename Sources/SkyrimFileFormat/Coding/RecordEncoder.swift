@@ -45,6 +45,7 @@ class RecordEncoder: DataEncoder {
         mutating func encode<T>(_ value: T, forKey key: K) throws where T : Encodable {
             encoder.debugKey(value, key: key)
             encoder.pushPath(key)
+
             switch key.stringValue {
                 case RecordMetadata.propertyName:
                     let meta = value as! RecordMetadata
@@ -70,6 +71,7 @@ class RecordEncoder: DataEncoder {
                     let binaryEncoder = DataEncoder()
 
                     if let array = value as? FieldCodableArray {
+                        // TODO: can implement this as FieldCodableArray.binaryEncode now?
                         // if the type is an array, we need to write out each of its elements
                         // separately with the same field tag
                         for encoded in try array.elements(encodedWith: binaryEncoder) {
