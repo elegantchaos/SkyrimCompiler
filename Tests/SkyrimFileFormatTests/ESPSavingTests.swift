@@ -9,6 +9,10 @@ import XCTestExtensions
 @testable import SkyrimFileFormat
 
 final class ESPSavingTests: ProcessorTestCase {
+    override class func setUp() {
+        expressionTestChannel.enabled = false
+    }
+    
     func testSaveEmpty() async throws {
         try await saveExample(named: "Empty")
     }
@@ -26,7 +30,6 @@ final class ESPSavingTests: ProcessorTestCase {
     }
 
     func testSaveCollegeEntry() async throws {
-        expressionTestChannel.enabled = true
         try await saveExample(named: "CollegeEntry")
     }
 
