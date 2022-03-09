@@ -11,7 +11,7 @@ struct OTFTRecord: IdentifiedRecord {
     
     let _meta: RecordMetadata
 
-    let editorID: String
+    let editorID: String?
     let items: SingleFieldArray<FormID>
 
     static var fieldMap = FieldTypeMap(paths: [

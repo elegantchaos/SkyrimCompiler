@@ -11,7 +11,7 @@ struct TXSTRecord: Codable, IdentifiedRecord {
     
     let _meta: RecordMetadata
 
-    let editorID: String
+    let editorID: String?
     let bounds: OBNDField
     let colorMap: String
     let normalMap: String?

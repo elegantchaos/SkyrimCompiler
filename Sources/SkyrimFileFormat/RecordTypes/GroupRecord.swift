@@ -45,9 +45,3 @@ struct GroupRecord: RecordProtocol {
         _meta = .init(header: try container.decode(RecordHeader.self))
     }
 }
-
-extension GroupRecord: CustomStringConvertible {
-    var description: String {
-        return "«group of \(header.label)»"
-    }
-}

@@ -11,7 +11,7 @@ struct ARMARecord: IdentifiedRecord {
     
     let _meta: RecordMetadata
     
-    let editorID: String
+    let editorID: String?
     let bodyTemplate: BOD2Field
     let primaryRace: FormID
     let unknown: DNAMField

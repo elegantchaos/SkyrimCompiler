@@ -11,7 +11,7 @@ struct QUSTRecord: IdentifiedRecord {
 
     let _meta: RecordMetadata
 
-    let editorID: String
+    let editorID: String?
     
     static var fieldMap = FieldTypeMap(paths: [
         (CodingKeys.editorID, \Self.editorID, "EDID"),

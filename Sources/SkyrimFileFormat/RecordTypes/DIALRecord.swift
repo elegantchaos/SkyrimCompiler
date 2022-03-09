@@ -11,7 +11,7 @@ struct DIALRecord: IdentifiedRecord {
 
     let _meta: RecordMetadata
 
-    let editorID: String
+    let editorID: String?
     let playerDialogue: UInt32
     let priority: Float32
     let owningBranch: FormID?

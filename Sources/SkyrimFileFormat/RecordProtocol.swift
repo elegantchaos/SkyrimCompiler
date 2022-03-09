@@ -135,5 +135,5 @@ extension RecordProtocol {
 }
 
 protocol IdentifiedRecord: RecordProtocol {
-    var editorID: String { get }
+    var editorID: String? { get }
 }
