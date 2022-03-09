@@ -19,10 +19,8 @@ class ESPRoundTripTests: ProcessorTestCase {
 
         if encoded == original {
             print("Binary encoding for \(name) is identical.")
-        } else {
-            print("Binary encoding for \(name) differs - we may have re-ordered some fields")
-            XCTAssertEqual(encoded.count, original.count)
-            
+        } else if encoded.count == original.count {
+            print("Binary encoding for \(name) differs but is the same size - we may have re-ordered some fields")
             let originalURL = outputFile(named: "\(name)-original", extension: "data")
             try original.write(to: originalURL)
             let encodedURL = outputFile(named: "\(name)-encoded", extension: "data")
@@ -30,19 +28,30 @@ class ESPRoundTripTests: ProcessorTestCase {
 
             print("Testing equality per-record:")
             try await roundTripByRecordExample(named: name)
+        } else {
+            print("Binary encoding for \(name) differs - something is broken")
+            compareBundleRecords(bundle: decoded, expected: bundle)
+        }
+    }
+
+    func compareBundleRecords(bundle: ESPBundle, expected: ESPBundle) {
+        for key in bundle.index.keys {
+            let originals = bundle.index[key]!
+            let expecteds = expected.index[key]!
             
-            for key in bundle.index.keys {
-                let originals = bundle.index[key]!
-                let decodeds = decoded.index[key]!
-                XCTAssertEqual(originals.count, decodeds.count)
-                let pairs = zip(originals, decodeds)
-                for (original, decoded) in pairs {
-                    XCTAssertEqual(original.header, decoded.header)
+            if originals.count != expecteds.count {
+                XCTFail("Bundle has \(originals.count) records, expecting \(expecteds.count).")
+            }
+
+            let pairs = zip(originals, expecteds)
+            for (original, expected) in pairs {
+                if original._meta.originalData?.count != expected._meta.originalData?.count {
+                    XCTFail("\(original) ≠ \(expected)")
                 }
             }
         }
     }
-
+    
     func roundTripByRecordExample(named name: String) async throws {
         let bundle = try await unpackExample(named: name)
         for record in bundle.records {
