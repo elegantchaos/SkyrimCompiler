@@ -7,7 +7,10 @@ import Bytes
 import BinaryCoding
 import Foundation
 
-struct RawGroup: RecordProtocol {
+/// An un-parsed group record.
+/// For now, this is used for non-top group data.
+/// Eventually it will be obsolete.
+struct RawGroupRecord: RecordProtocol {
     static var tag = Tag("rawG")
     
     let _meta: RecordMetadata

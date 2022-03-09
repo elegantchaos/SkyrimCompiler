@@ -156,7 +156,7 @@ private extension Processor {
                 
                 return GroupRecord(header: record.header, children: children)
             } else {
-                return try RawGroup(header: record.header, data: record.data)
+                return try RawGroupRecord(header: record.header, data: record.data)
             }
         } else {
             let fields = try await decodedFields(type: record.type, header: record.header, data: record.data)
