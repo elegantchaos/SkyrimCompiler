@@ -57,7 +57,9 @@ class Processor {
     /// Returns the URL to the saved directory.
     @discardableResult public func save(_ bundle: ESPBundle, to folder: URL) async throws -> URL {
         let url = folder.appendingPathComponent(bundle.name).appendingPathExtension("esps")
-        try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+        let fm = FileManager.default
+        try? fm.removeItem(at: url)
+        try? fm.createDirectory(at: url, withIntermediateDirectories: true)
         try await save(records: bundle.records, to: url)
         return url
     }
