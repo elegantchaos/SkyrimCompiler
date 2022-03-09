@@ -7,7 +7,7 @@ import BinaryCoding
 import Foundation
 
 struct RawRecord: RecordProtocol {
-    static var tag = Tag("????")
+    static var tag = Tag("rawR")
 
     let _meta: RecordMetadata
     
@@ -25,3 +25,4 @@ extension RawRecord: CustomStringConvertible {
         return "«\(header.type), fields:\(fieldDescription)»"
     }
 }
+
