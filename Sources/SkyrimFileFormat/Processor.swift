@@ -140,20 +140,24 @@ private extension Processor {
 
     func record(from record: RecordData, processChildren: Bool) async throws -> RecordProtocol {
         if record.isGroup {
-            var children: [RecordProtocol] = []
-            if processChildren {
-                do {
-                    for try await child in recordData(bytes: record.data.asyncBytes) {
-                        children.append(try await self.record(from: child, processChildren: processChildren))
+            if record.header.groupType == .top {
+                var children: [RecordProtocol] = []
+                if processChildren {
+                    do {
+                        for try await child in recordData(bytes: record.data.asyncBytes) {
+                            children.append(try await self.record(from: child, processChildren: processChildren))
+                        }
+                    } catch {
+                        print("Error decoding children of \(record.header)")
+                        print("Managed to decode: \(children.map({ $0.description }).joined(separator: ", "))")
+                        print(error)
                     }
-                } catch {
-                    print("Error decoding children of \(record.header)")
-                    print("Managed to decode: \(children.map({ $0.description }).joined(separator: ", "))")
-                    print(error)
                 }
+                
+                return GroupRecord(header: record.header, children: children)
+            } else {
+                return try RawGroup(header: record.header, data: record.data)
             }
-            
-            return GroupRecord(header: record.header, children: children)
         } else {
             let fields = try await decodedFields(type: record.type, header: record.header, data: record.data)
             let recordClass = configuration.recordClass(for: record.type)
@@ -165,8 +169,12 @@ private extension Processor {
     func fields<I>(bytes: inout I, types: FieldTypeMap, inRecord recordType: Tag, withHeader recordHeader: RecordHeader) -> AsyncThrowingIteratorMapSequence<I, Field> where I: AsyncSequence, I.Element == Byte {
         let sequence = bytes.iteratorMap { iterator -> Field in
             let header = try await Field.Header(&iterator)
-            let data = try await iterator.next(bytes: Bytes.self, count: Int(header.size))
-            return try await self.inflate(header: header, data: data, types: types, inRecord: recordType, withHeader: recordHeader)
+            do {
+                let data = try await iterator.next(bytes: Bytes.self, count: Int(header.size))
+                return try await self.inflate(header: header, data: data, types: types, inRecord: recordType, withHeader: recordHeader)
+            } catch {
+                throw error
+            }
         }
         
         return sequence
