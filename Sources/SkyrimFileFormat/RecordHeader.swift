@@ -44,6 +44,11 @@ struct RecordHeader: Codable {
         flags?.contains2(.compressed) ?? false
     }
     
+    var groupType: GroupType? {
+        guard type == GroupRecord.tag, let groupType = GroupType(rawValue: id ?? 0) else { return nil }
+        return groupType
+    }
+    
     var groupLabel: String? {
         guard type == GroupRecord.tag, let groupType = GroupType(rawValue: id ?? 0) else { return nil }
         switch groupType {
