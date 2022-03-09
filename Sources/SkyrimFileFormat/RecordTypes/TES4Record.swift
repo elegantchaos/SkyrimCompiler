@@ -9,7 +9,7 @@ import Foundation
 struct TES4Record: Codable, RecordProtocol {
     static var tag = Tag("TES4")
     
-    let _header: RecordHeader
+    let _meta: RecordMetadata
 
     var info: TES4HeaderField
     var author: String?
@@ -20,7 +20,7 @@ struct TES4Record: Codable, RecordProtocol {
     var unknownCounter: UInt32?
     
     init(description: String? = nil, author: String? = nil) {
-        self._header = .init(type: Self.tag)
+        self._meta = .init(type: Self.tag)
         self.info = .init(version: 1.7, number: 0, nextID: 0)
         self.desc = description
         self.author = author

@@ -6,11 +6,10 @@
 import BinaryCoding
 import Foundation
 
-struct QUSTRecord: IdentifiedRecord, PartialRecord {
+struct QUSTRecord: IdentifiedRecord {
     static var tag = Tag("QUST")
 
-    let _header: RecordHeader
-    let _fields: UnpackedFields?
+    let _meta: RecordMetadata
 
     let editorID: String
     

@@ -6,15 +6,13 @@
 import BinaryCoding
 import Foundation
 
-struct RawRecord: RecordProtocol, PartialRecord {
+struct RawRecord: RecordProtocol {
     static var tag = Tag("????")
 
-    let _header: RecordHeader
-    let _fields: UnpackedFields?
+    let _meta: RecordMetadata
     
     init(header: RecordHeader, fields: DecodedFields) throws {
-        self._header = header
-        self._fields = fields.unproccessedFields
+        self._meta = .init(header: header, fields: fields.unproccessedFields)
     }
 
     static var fieldMap = FieldTypeMap()
@@ -22,7 +20,7 @@ struct RawRecord: RecordProtocol, PartialRecord {
 
 extension RawRecord: CustomStringConvertible {
     var description: String {
-        let fields = _fields ?? [:]
+        let fields = _meta.fields ?? [:]
         let fieldDescription = Set(fields.keys).joined(separator: ", ")
         return "«\(header.type), fields:\(fieldDescription)»"
     }

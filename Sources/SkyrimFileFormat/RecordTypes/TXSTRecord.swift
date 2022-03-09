@@ -6,11 +6,10 @@
 import BinaryCoding
 import Foundation
 
-struct TXSTRecord: Codable, IdentifiedRecord, PartialRecord {
+struct TXSTRecord: Codable, IdentifiedRecord {
     static var tag = Tag("TXST")
     
-    let _header: RecordHeader
-    let _fields: UnpackedFields?
+    let _meta: RecordMetadata
 
     let editorID: String
     let bounds: OBNDField

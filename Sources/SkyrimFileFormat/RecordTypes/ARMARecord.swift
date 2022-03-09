@@ -6,11 +6,10 @@
 import BinaryCoding
 import Foundation
 
-struct ARMARecord: IdentifiedRecord, PartialRecord {
+struct ARMARecord: IdentifiedRecord {
     static var tag = Tag("ARMA")
     
-    let _header: RecordHeader
-    let _fields: UnpackedFields?
+    let _meta: RecordMetadata
     
     let editorID: String
     let bodyTemplate: BOD2Field

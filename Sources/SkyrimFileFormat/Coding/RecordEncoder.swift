@@ -46,20 +46,22 @@ class RecordEncoder: DataEncoder {
             encoder.debugKey(value, key: key)
             encoder.pushPath(key)
             switch key.stringValue {
-                case "_header":
-                    try encoder.writeEncodable(value)
+                case RecordMetadata.propertyName:
+                    let meta = value as! RecordMetadata
+                    try encoder.writeEncodable(meta.header)
 
-                case "_fields":
-                    let fields = value as! UnpackedFields
-                    for (type,list) in fields {
-                        for field in list {
-                            if let data = field.hexData {
-                                let header = Field.Header(type: Tag(type), size: UInt16(data.count))
-                                try encoder.writeEncodable(header)
-                                try encoder.writeEncodable(data)
+                    if let fields = meta.fields {
+                        for (type,list) in fields {
+                            for field in list {
+                                if let data = field.hexData {
+                                    let header = Field.Header(type: Tag(type), size: UInt16(data.count))
+                                    try encoder.writeEncodable(header)
+                                    try encoder.writeEncodable(data)
+                                }
                             }
                         }
                     }
+                    
                 default:
                     guard let tag = encoder.fieldMap.fieldTag(forKey: key) else {
                         throw RecordEncodingError.unknownField

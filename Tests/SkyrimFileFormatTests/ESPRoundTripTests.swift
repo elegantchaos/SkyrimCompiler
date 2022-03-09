@@ -22,6 +22,7 @@ class ESPRoundTripTests: ProcessorTestCase {
         } else {
             print("Binary encoding for \(name) differs - we may have re-ordered some fields")
             XCTAssertEqual(encoded.count, original.count)
+            
             let originalURL = outputFile(named: "\(name)-original", extension: "data")
             try original.write(to: originalURL)
             let encodedURL = outputFile(named: "\(name)-encoded", extension: "data")
@@ -29,6 +30,16 @@ class ESPRoundTripTests: ProcessorTestCase {
 
             print("Testing equality per-record:")
             try await roundTripByRecordExample(named: name)
+            
+            for key in bundle.index.keys {
+                let originals = bundle.index[key]!
+                let decodeds = decoded.index[key]!
+                XCTAssertEqual(originals.count, decodeds.count)
+                let pairs = zip(originals, decodeds)
+                for (original, decoded) in pairs {
+                    XCTAssertEqual(original.header, decoded.header)
+                }
+            }
         }
     }
 

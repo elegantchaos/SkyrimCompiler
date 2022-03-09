@@ -9,32 +9,32 @@ import XCTestExtensions
 @testable import SkyrimFileFormat
 
 final class ESPSavingTests: ProcessorTestCase {
-    func testUnpackEmpty() async throws {
+    func testSaveEmpty() async throws {
         try await saveExample(named: "Empty")
     }
 
-    func testUnpackArmour() async throws {
+    func testSaveArmour() async throws {
         try await saveExample(named: "Armour")
     }
 
-    func testUnpackDialogue() async throws {
+    func testSaveDialogue() async throws {
         try await saveExample(named: "Dialogue")
     }
 
-    func testUnpackAngisCampTweaks() async throws {
+    func testSaveAngisCampTweaks() async throws {
         try await saveExample(named: "AngisCampTweaks")
     }
 
-    func testUnpackCollegeEntry() async throws {
+    func testSaveCollegeEntry() async throws {
         expressionTestChannel.enabled = true
         try await saveExample(named: "CollegeEntry")
     }
 
-    func testUnpackDiplomaticImmunity() async throws {
+    func testSaveDiplomaticImmunity() async throws {
         try await saveExample(named: "DiplomaticImmunity")
     }
 
-    func testUnpackThugsNotAssassins() async throws {
+    func testSaveThugsNotAssassins() async throws {
         try await saveExample(named: "ThugsNotAssassins")
     }
 

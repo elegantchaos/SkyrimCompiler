@@ -6,11 +6,10 @@
 import BinaryCoding
 import Foundation
 
-struct LVLIRecord: IdentifiedRecord, PartialRecord {
+struct LVLIRecord: IdentifiedRecord {
     static var tag = Tag("LVLI")
 
-    let _header: RecordHeader
-    let _fields: UnpackedFields?
+    let _meta: RecordMetadata
 
     let editorID: String
     let bounds: OBNDField

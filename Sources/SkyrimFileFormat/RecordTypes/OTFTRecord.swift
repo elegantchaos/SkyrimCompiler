@@ -6,11 +6,10 @@
 import BinaryCoding
 import Foundation
 
-struct OTFTRecord: IdentifiedRecord, PartialRecord {
+struct OTFTRecord: IdentifiedRecord {
     static var tag = Tag("OTFT")
     
-    let _header: RecordHeader
-    let _fields: UnpackedFields?
+    let _meta: RecordMetadata
 
     let editorID: String
     let items: SingleFieldArray<FormID>

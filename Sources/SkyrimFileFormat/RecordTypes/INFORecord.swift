@@ -6,11 +6,10 @@
 import BinaryCoding
 import Foundation
 
-struct INFORecord: PartialRecord {
+struct INFORecord: RecordProtocol {
     static var tag = Tag("INFO")
 
-    let _header: RecordHeader
-    let _fields: UnpackedFields?
+    let _meta: RecordMetadata
 
     let editorID: String?
     let data: DATAField?

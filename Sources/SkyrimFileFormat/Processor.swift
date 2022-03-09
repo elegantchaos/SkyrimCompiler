@@ -7,8 +7,11 @@ import AsyncSequenceReader
 import BinaryCoding
 import Bytes
 import Compression
+import Logger
 import Foundation
 import SWCompression
+
+let compressionChannel = Channel("Compression")
 
 protocol ProcessorProtocol {
     associatedtype BaseIterator: AsyncIteratorProtocol where BaseIterator.Element == Byte
@@ -104,12 +107,15 @@ private extension Processor {
             let header = try await RecordHeader(type: type, stream)
             let isGroup = type == GroupRecord.tag
             let data: LoadedRecordData
-            if !isGroup, let flags = header.flags, flags.contains2(.compressed) {
+            if !isGroup, header.isCompressed {
                 let decompressedSize = try await stream.read(UInt32.self)
                 let bytes = try await stream.read(count: Int(size - 4))
+                compressionChannel.log("Unarchiving data for \(type) (\(decompressedSize) bytes)")
                 let decompressed = try ZlibArchive.unarchive(archive: Data(bytes: bytes, count: bytes.count))
                 data = LoadedRecordData(data: decompressed.littleEndianBytes)
-                assert(data.data.count == decompressedSize)
+                if data.data.count != decompressedSize {
+                    compressionChannel.log("Size mismatch: only got \(data.data.count) bytes, expected \(decompressedSize).")
+                }
             } else {
                 let payloadSize = Int(isGroup ? size - 24 : size)
                 let bytes = try await stream.read(count: payloadSize)
@@ -271,7 +277,7 @@ private extension Processor {
             } else {
                 let data = try Data(contentsOf: url)
                 let stub = try decoder.decode(RecordStub.self, from: data)
-                let type = configuration.recordClass(for: stub._header.type)
+                let type = configuration.recordClass(for: stub._meta.type)
                 do {
                     let decoded = try type.fromJSON(data, with: self)
                     loaded.append(decoded)
@@ -287,5 +293,5 @@ private extension Processor {
 }
 
 struct RecordStub: Codable {
-    let _header: RecordHeader
+    let _meta: RecordHeader
 }

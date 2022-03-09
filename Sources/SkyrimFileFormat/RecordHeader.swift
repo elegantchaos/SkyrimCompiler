@@ -40,6 +40,10 @@ struct RecordHeader: Codable {
         self.versionControlInfo2 = try await stream.readNonZero(UInt16.self)
     }
     
+    var isCompressed: Bool {
+        flags?.contains2(.compressed) ?? false
+    }
+    
     var groupLabel: String? {
         guard type == GroupRecord.tag, let groupType = GroupType(rawValue: id ?? 0) else { return nil }
         switch groupType {
@@ -55,6 +59,8 @@ struct RecordHeader: Codable {
         return groupLabel ?? type.description
     }
 }
+
+extension RecordHeader: Equatable { }
 
 extension RecordHeader: BinaryEncodable {
     func binaryEncode(to encoder: BinaryEncoder) throws {

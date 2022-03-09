@@ -11,19 +11,17 @@ struct GroupRecord: RecordProtocol {
     static let tag = Tag("GRUP")
     static let fileExtension = "espg"
     
-    let _header: RecordHeader
-    let _children: [RecordProtocol]
+    let _meta: RecordMetadata
     
     init(header: RecordHeader, children: [RecordProtocol]) {
-        self._header = header
-        self._children = children
+        self._meta = .init(header: header, children: children)
     }
 
     static var fieldMap = FieldTypeMap()
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
-        try container.encode(_header) // TODO: re-interpret header using group flags?
+        try container.encode(_meta.header) // TODO: re-interpret header using group flags?
     }
 
     func binaryEncode(to encoder: BinaryEncoder) throws {
@@ -36,16 +34,15 @@ struct GroupRecord: RecordProtocol {
         }
 
         var container = encoder.unkeyedContainer()
-        try container.encode(_header.type)
+        try container.encode(_meta.header.type)
         try container.encode(UInt32(childEncoder.data.count + 24))
-        try container.encode(_header) // TODO: re-interpret header using group flags?
+        try container.encode(_meta.header) // TODO: re-interpret header using group flags?
         try container.encode(childEncoder.data)
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
-        _header = try container.decode(RecordHeader.self)
-        _children = []
+        _meta = .init(header: try container.decode(RecordHeader.self))
     }
 }
 

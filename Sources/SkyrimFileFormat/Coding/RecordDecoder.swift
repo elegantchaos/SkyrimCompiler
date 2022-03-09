@@ -68,13 +68,12 @@ class RecordDecoder: Decoder {
         
         func decode<T>(_ type: T.Type, forKey key: K) throws -> T where T : Decodable {
             switch key.stringValue {
-                case "_header":
-                    assert(type == RecordHeader.self)
-                    return decoder.header as! T
+                case RecordMetadata.propertyName:
+                    assert(type == RecordMetadata.self)
                     
-                case "_fields":
-                    assert(type == UnpackedFields.self)
-                    return decoder.fields.unproccessedFields as! T
+                    let fields = decoder.fields.unproccessedFields
+                    let meta = RecordMetadata(header: decoder.header, fields: fields.count > 0 ? fields : nil)
+                    return meta as! T
 
                 default:
                     let fields = decoder.fields.values(forKey: key) ?? []

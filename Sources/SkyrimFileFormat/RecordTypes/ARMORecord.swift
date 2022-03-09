@@ -8,11 +8,10 @@ import Bytes
 import Foundation
 
 
-struct ARMORecord: Codable, IdentifiedRecord, PartialRecord {
+struct ARMORecord: Codable, IdentifiedRecord {
     static var tag = Tag("ARMO")
     
-    let _header: RecordHeader
-    let _fields: UnpackedFields?
+    let _meta: RecordMetadata
 
     let editorID: String
     let bounds: OBNDField

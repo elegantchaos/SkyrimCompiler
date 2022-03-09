@@ -1,20 +1,20 @@
 {
-  "_fields" : {
-    "DATA" : [
-      "3DFBCE4433AE62449F12DDC300000000000000009096A840"
-    ],
-    "NAME" : [
-      "D5840400"
-    ],
-    "XLRL" : [
-      "EBBC0200"
-    ],
-    "XSCL" : [
-      "1F85AB3F"
-    ]
-  },
-  "_header" : {
+  "_meta" : {
     "id" : 715246,
+    "rawFields" : {
+      "DATA" : [
+        "3DFBCE4433AE62449F12DDC300000000000000009096A840"
+      ],
+      "NAME" : [
+        "D5840400"
+      ],
+      "XLRL" : [
+        "EBBC0200"
+      ],
+      "XSCL" : [
+        "1F85AB3F"
+      ]
+    },
     "type" : "REFR"
   }
 }

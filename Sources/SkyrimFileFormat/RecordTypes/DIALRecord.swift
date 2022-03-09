@@ -6,11 +6,10 @@
 import BinaryCoding
 import Foundation
 
-struct DIALRecord: IdentifiedRecord, PartialRecord {
+struct DIALRecord: IdentifiedRecord {
     static var tag = Tag("DIAL")
 
-    let _header: RecordHeader
-    let _fields: UnpackedFields?
+    let _meta: RecordMetadata
 
     let editorID: String
     let playerDialogue: UInt32
