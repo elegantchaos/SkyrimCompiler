@@ -60,6 +60,16 @@ struct RecordHeader: Codable {
     }
 }
 
+extension RecordHeader: CustomStringConvertible {
+    var description: String {
+        if let label = groupLabel {
+            return "«group \(label)»"
+        } else {
+            return "«\(type.description)»"
+        }
+    }
+}
+
 extension RecordHeader: Equatable { }
 
 extension RecordHeader: BinaryEncodable {
@@ -73,8 +83,6 @@ extension RecordHeader: BinaryEncodable {
         try container.encode(versionControlInfo2 ?? 0)
     }
 }
-
-
 
 struct RecordHeaderFlags: OptionSetFromEnum {
     enum Options: String, EnumForOptionSet {
