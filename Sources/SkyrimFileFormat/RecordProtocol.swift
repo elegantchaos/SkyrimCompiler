@@ -9,7 +9,8 @@ import SWCompression
 
 struct RecordMetadata: Codable {
     static let propertyName = "_meta"
-
+    static let fileName = "meta.json"
+    
     let header: RecordHeader
     let fields: UnpackedFields?
     let originalData: Data?

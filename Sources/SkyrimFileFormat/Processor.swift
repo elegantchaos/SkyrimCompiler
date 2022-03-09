@@ -234,7 +234,7 @@ private extension Processor {
         try FileManager.default.createDirectory(at: groupURL, withIntermediateDirectories: true)
 
         let header = group.header
-        let headerURL = groupURL.appendingPathComponent("header.json")
+        let headerURL = groupURL.appendingPathComponent(RecordMetadata.fileName)
         let encoded = try jsonEncoder.encode(header)
         try encoded.write(to: headerURL, options: .atomic)
 
@@ -267,7 +267,7 @@ private extension Processor {
         for url in urls {
             if url.pathExtension == GroupRecord.fileExtension {
                 // handle groups
-                let headerURL = url.appendingPathComponent("header.json")
+                let headerURL = url.appendingPathComponent(RecordMetadata.fileName)
                 let data = try Data(contentsOf: headerURL)
                 let header = try decoder.decode(RecordHeader.self, from: data)
                 let contentURL = url.appendingPathComponent("records")
