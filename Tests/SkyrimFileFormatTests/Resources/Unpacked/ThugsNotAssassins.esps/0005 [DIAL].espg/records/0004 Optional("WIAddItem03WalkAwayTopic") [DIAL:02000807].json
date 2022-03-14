@@ -1,0 +1,23 @@
+{
+  "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "FULL",
+      "PNAM",
+      "BNAM",
+      "QNAM",
+      "DATA",
+      "SNAM",
+      "TIFC"
+    ],
+    "id" : 33556487,
+    "type" : "DIAL"
+  },
+  "editorID" : "WIAddItem03WalkAwayTopic",
+  "infoCount" : 1,
+  "owningBranch" : "0x02000802",
+  "owningQuest" : "0x00035B5A",
+  "playerDialogue" : "",
+  "priority" : 50,
+  "subtype" : 1414747459
+}

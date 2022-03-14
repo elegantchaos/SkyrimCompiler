@@ -1,5 +1,12 @@
 {
   "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "FULL",
+      "DATA",
+      "SNDD",
+      "DNAM"
+    ],
     "id" : 33556506,
     "rawFields" : {
       "DATA" : [

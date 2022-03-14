@@ -1,0 +1,23 @@
+{
+  "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "FULL",
+      "PNAM",
+      "BNAM",
+      "QNAM",
+      "DATA",
+      "SNAM",
+      "TIFC"
+    ],
+    "id" : 959059,
+    "type" : "DIAL"
+  },
+  "editorID" : "MG01FaraldaDontKnowSpellTopic",
+  "infoCount" : 10,
+  "owningBranch" : "0x000EA25D",
+  "owningQuest" : "0x0001F251",
+  "playerDialogue" : "",
+  "priority" : 90,
+  "subtype" : 1414747459
+}

@@ -1,0 +1,18 @@
+{
+  "_meta" : {
+    "fieldOrder" : [
+      "PNAM",
+      "QNAM",
+      "DATA",
+      "SNAM",
+      "TIFC"
+    ],
+    "id" : 151863,
+    "type" : "DIAL"
+  },
+  "infoCount" : 25,
+  "owningQuest" : "0x0001F252",
+  "playerDialogue" : "",
+  "priority" : 50,
+  "subtype" : 1330398536
+}

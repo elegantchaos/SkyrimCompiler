@@ -1,5 +1,8 @@
 {
   "_meta" : {
+    "fieldOrder" : [
+      "EDID"
+    ],
     "id" : 33556480,
     "rawFields" : {
       "EDID" : [

@@ -1,5 +1,13 @@
 {
   "_meta" : {
+    "fieldOrder" : [
+      "HEDR",
+      "CNAM",
+      "SNAM",
+      "MAST",
+      "DATA",
+      "INTV"
+    ],
     "type" : "TES4"
   },
   "author" : "AirChomp",

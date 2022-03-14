@@ -1,0 +1,23 @@
+{
+  "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "PNAM",
+      "BNAM",
+      "QNAM",
+      "DATA",
+      "SNAM",
+      "TIFC"
+    ],
+    "id" : 836376,
+    "type" : "DIAL",
+    "versionControlInfo2" : 2
+  },
+  "editorID" : "dunArcherQST_Complete01Topic01c",
+  "infoCount" : 1,
+  "owningBranch" : "0x000CC391",
+  "owningQuest" : "0x000CAB3C",
+  "playerDialogue" : "",
+  "priority" : 50,
+  "subtype" : 1414747459
+}

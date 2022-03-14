@@ -1,5 +1,11 @@
 {
   "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "DESC",
+      "INAM",
+      "DNAM"
+    ],
     "id" : 50335085,
     "rawFields" : {
       "DESC" : [

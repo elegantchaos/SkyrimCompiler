@@ -18,15 +18,18 @@ struct FieldTypeMap {
     
     private let index: Map
     private let tagToName: [Tag:String]
+    let tagOrder: [Tag]
 
     init() {
         index = [:]
         tagToName = [:]
+        tagOrder = []
     }
     
     init<K, T>(paths map: [(K, PartialKeyPath<T>, String)]) where K: CodingKey {
         var entries = Map()
         var tagToName = NameMap()
+        var tagOrder: [Tag] = []
         
         for (key, path, readKey) in map {
             let t: Any.Type
@@ -39,10 +42,12 @@ struct FieldTypeMap {
             let readTag = Tag(readKey)
             entries[key.stringValue] = Entry(type: t as! BinaryDecodable.Type, readKey: readTag)
             tagToName[readTag] = key.stringValue
+            tagOrder.append(readTag)
         }
     
         self.index = entries
         self.tagToName = tagToName
+        self.tagOrder = tagOrder
     }
 
 

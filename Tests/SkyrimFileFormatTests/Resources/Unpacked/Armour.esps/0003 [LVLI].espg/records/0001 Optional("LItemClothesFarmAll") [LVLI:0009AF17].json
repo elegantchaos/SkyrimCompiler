@@ -1,0 +1,139 @@
+{
+  "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "OBND",
+      "LVLD",
+      "LVLF",
+      "LLCT",
+      "LVLO",
+      "LVLO",
+      "LVLO",
+      "LVLO",
+      "LVLO",
+      "LVLO",
+      "LVLO",
+      "LVLO",
+      "LVLO",
+      "LVLO",
+      "LVLO",
+      "LVLO",
+      "LVLO",
+      "LVLO",
+      "LVLO",
+      "LVLO",
+      "LVLO",
+      "LVLO"
+    ],
+    "id" : 634647,
+    "type" : "LVLI",
+    "versionControlInfo2" : 4
+  },
+  "bounds" : {
+    "x1" : 0,
+    "x2" : 0,
+    "y1" : 0,
+    "y2" : 0,
+    "z1" : 0,
+    "z2" : 0
+  },
+  "count" : 18,
+  "editorID" : "LItemClothesFarmAll",
+  "flags" : [
+    "allLevels",
+    "eachTime"
+  ],
+  "items" : [
+    {
+      "amount" : 1,
+      "item" : "0x000209A5",
+      "level" : 1
+    },
+    {
+      "amount" : 1,
+      "item" : "0x000209AA",
+      "level" : 1
+    },
+    {
+      "amount" : 1,
+      "item" : "0x0001BE1B",
+      "level" : 1
+    },
+    {
+      "amount" : 1,
+      "item" : "0x000261BD",
+      "level" : 1
+    },
+    {
+      "amount" : 1,
+      "item" : "0x0003452F",
+      "level" : 1
+    },
+    {
+      "amount" : 1,
+      "item" : "0x0001BE1A",
+      "level" : 1
+    },
+    {
+      "amount" : 1,
+      "item" : "0x000209A6",
+      "level" : 1
+    },
+    {
+      "amount" : 1,
+      "item" : "0x000261C0",
+      "level" : 1
+    },
+    {
+      "amount" : 1,
+      "item" : "0x00017695",
+      "level" : 1
+    },
+    {
+      "amount" : 1,
+      "item" : "0x00017696",
+      "level" : 1
+    },
+    {
+      "amount" : 1,
+      "item" : "0x0003452E",
+      "level" : 1
+    },
+    {
+      "amount" : 1,
+      "item" : "0x000261C1",
+      "level" : 1
+    },
+    {
+      "amount" : 1,
+      "item" : "0x000330B3",
+      "level" : 1
+    },
+    {
+      "amount" : 1,
+      "item" : "0x000330BC",
+      "level" : 1
+    },
+    {
+      "amount" : 1,
+      "item" : "0x0006C1D9",
+      "level" : 1
+    },
+    {
+      "amount" : 1,
+      "item" : "0x0006C1DA",
+      "level" : 1
+    },
+    {
+      "amount" : 1,
+      "item" : "0x0006C1D8",
+      "level" : 1
+    },
+    {
+      "amount" : 1,
+      "item" : "0x01000D62",
+      "level" : 1
+    }
+  ],
+  "noSpawnChance" : 0
+}

@@ -13,10 +13,65 @@ enum RecordEncodingError: Error {
 
 class RecordEncoder: DataEncoder {
     var fieldMap: FieldTypeMap
+    var fieldOrder: [Tag]
+    var encodedHeader: Data?
+    var encodedFields: [Tag:[Data]]
     
-    init(fields: FieldTypeMap) {
+    init(fields: FieldTypeMap, fieldOrder: [Tag]) {
         self.fieldMap = fields
+        self.encodedFields = [:]
+        self.encodedHeader = nil
+        self.fieldOrder = fieldOrder
         super.init()
+    }
+    
+    func pushHeader() {
+        encodedHeader = data
+        data = Data()
+    }
+    
+    func pushField(_ tag: Tag) {
+        var list = encodedFields[tag] ?? []
+        list.append(data)
+        encodedFields[tag] = list
+        data = Data()
+    }
+
+    var orderedFieldData: Data {
+        var data = Data()
+        data.append(encodedHeader!) // if the header hasn't been written by now, something is badly wrong
+        
+        // use any recorded field order
+        for tag in fieldOrder {
+            if var list = encodedFields[tag], !list.isEmpty {
+                let field = list.removeFirst()
+                data.append(field)
+                if list.isEmpty {
+                    encodedFields.removeValue(forKey: tag)
+                } else {
+                    encodedFields[tag] = list
+                }
+            }
+        }
+        
+        // try to use the map for any remaining fields
+        for tag in fieldMap.tagOrder {
+            if let list = encodedFields[tag] {
+                for field in list {
+                    data.append(field)
+                }
+                encodedFields.removeValue(forKey: tag)
+            }
+        }
+        
+        // encoded any remaining stuff in the order we find it
+        for (_, list) in encodedFields {
+            for field in list {
+                data.append(field)
+            }
+        }
+        
+        return data
     }
     
     override func container<Key>(keyedBy type: Key.Type) -> KeyedEncodingContainer<Key> where Key : CodingKey {
@@ -50,14 +105,17 @@ class RecordEncoder: DataEncoder {
                 case RecordMetadata.propertyName:
                     let meta = value as! RecordMetadata
                     try encoder.writeEncodable(meta.header)
-
+                    encoder.pushHeader()
+                    
                     if let fields = meta.fields {
                         for (type,list) in fields {
                             for field in list {
                                 if let data = field.hexData {
-                                    let header = Field.Header(type: Tag(type), size: UInt16(data.count))
+                                    let tag = Tag(type)
+                                    let header = Field.Header(type: tag, size: UInt16(data.count))
                                     try encoder.writeEncodable(header)
                                     try encoder.writeEncodable(data)
+                                    encoder.pushField(tag)
                                 }
                             }
                         }
@@ -89,6 +147,8 @@ class RecordEncoder: DataEncoder {
                         try encoder.writeEncodable(header)
                         try encoder.writeEncodable(encoded)
                     }
+
+                    encoder.pushField(tag)
             }
             encoder.popPath()
         }

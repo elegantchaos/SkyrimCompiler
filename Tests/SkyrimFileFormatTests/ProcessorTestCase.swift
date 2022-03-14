@@ -27,7 +27,8 @@ class ProcessorTestCase: XCTestCase {
     
     func saveExample(named name: String) async throws {
         let bundle = try await unpackExample(named: name)
-        let url = try await processor.save(bundle, to: outputDirectory())
+        let destination = outputDirectory(appendTestName: false)
+        let url = try await processor.save(bundle, to: destination)
         await show(url)
     }
 }

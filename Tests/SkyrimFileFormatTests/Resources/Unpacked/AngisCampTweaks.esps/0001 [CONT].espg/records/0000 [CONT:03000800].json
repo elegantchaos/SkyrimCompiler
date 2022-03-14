@@ -1,5 +1,13 @@
 {
   "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "OBND",
+      "FULL",
+      "MODL",
+      "MODT",
+      "DATA"
+    ],
     "id" : 50333696,
     "rawFields" : {
       "DATA" : [

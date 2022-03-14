@@ -1,0 +1,23 @@
+{
+  "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "FULL",
+      "PNAM",
+      "BNAM",
+      "QNAM",
+      "DATA",
+      "SNAM",
+      "TIFC"
+    ],
+    "id" : 262422,
+    "type" : "DIAL"
+  },
+  "editorID" : "MG02TolfdirQuestion02BranchTopic",
+  "infoCount" : 1,
+  "owningBranch" : "0x00040122",
+  "owningQuest" : "0x0001F252",
+  "playerDialogue" : "",
+  "priority" : 59,
+  "subtype" : 1414747459
+}

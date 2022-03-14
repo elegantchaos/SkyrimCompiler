@@ -1,5 +1,11 @@
 {
   "_meta" : {
+    "fieldOrder" : [
+      "HEDR",
+      "CNAM",
+      "SNAM",
+      "INTV"
+    ],
     "type" : "TES4"
   },
   "author" : "ScorpioSixNine",

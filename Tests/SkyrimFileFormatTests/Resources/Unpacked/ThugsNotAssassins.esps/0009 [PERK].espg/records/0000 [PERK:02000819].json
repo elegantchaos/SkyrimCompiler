@@ -1,5 +1,20 @@
 {
   "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "FULL",
+      "DESC",
+      "DATA",
+      "PRKE",
+      "DATA",
+      "PRKC",
+      "CTDA",
+      "CTDA",
+      "CIS2",
+      "EPFT",
+      "EPFD",
+      "PRKF"
+    ],
     "id" : 33556505,
     "rawFields" : {
       "CIS2" : [

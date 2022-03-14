@@ -1,5 +1,10 @@
 {
   "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "FNAM",
+      "FLTV"
+    ],
     "id" : 33556509,
     "rawFields" : {
       "EDID" : [

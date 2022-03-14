@@ -1,0 +1,23 @@
+{
+  "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "FULL",
+      "PNAM",
+      "BNAM",
+      "QNAM",
+      "DATA",
+      "SNAM",
+      "TIFC"
+    ],
+    "id" : 1008238,
+    "type" : "DIAL"
+  },
+  "editorID" : "MGR21InitialBranchTopic",
+  "infoCount" : 2,
+  "owningBranch" : "0x000F6274",
+  "owningQuest" : "0x000E0E04",
+  "playerDialogue" : "",
+  "priority" : 50,
+  "subtype" : 1414747459
+}

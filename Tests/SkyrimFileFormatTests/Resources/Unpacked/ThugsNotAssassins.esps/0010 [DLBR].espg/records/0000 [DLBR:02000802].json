@@ -1,5 +1,12 @@
 {
   "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "QNAM",
+      "TNAM",
+      "DNAM",
+      "SNAM"
+    ],
     "id" : 33556482,
     "rawFields" : {
       "DNAM" : [

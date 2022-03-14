@@ -47,8 +47,6 @@ struct RecordMetadata: Codable {
         
         if let fieldOrder = try? container.decode([Tag].self, forKey: .fieldOrder) {
             self.fieldOrder = fieldOrder
-//        } else if let rd = decoder as? RecordDecoder {
-//            self.fieldOrder = rd.fields.order
         } else {
             self.fieldOrder = nil
         }
@@ -120,9 +118,9 @@ extension RecordProtocol {
 
             let type = header.type
             let fields = try configuration.fields(forRecord: type)
-            let recordEncoder = RecordEncoder(fields: fields)
+            let recordEncoder = RecordEncoder(fields: fields, fieldOrder: _meta.fieldOrder ?? [])
             try encode(to: recordEncoder)
-            let recordData = recordEncoder.data
+            let recordData = recordEncoder.orderedFieldData
             let payloadSize = recordData.count
 
             try type.binaryEncode(to: encoder)

@@ -1,0 +1,23 @@
+{
+  "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "FULL",
+      "PNAM",
+      "BNAM",
+      "QNAM",
+      "DATA",
+      "SNAM",
+      "TIFC"
+    ],
+    "id" : 745256,
+    "type" : "DIAL"
+  },
+  "editorID" : "MG06ParatusStage55Eye1",
+  "infoCount" : 1,
+  "owningBranch" : "0x000B5FB3",
+  "owningQuest" : "0x0001F256",
+  "playerDialogue" : "",
+  "priority" : 50,
+  "subtype" : 1414747459
+}

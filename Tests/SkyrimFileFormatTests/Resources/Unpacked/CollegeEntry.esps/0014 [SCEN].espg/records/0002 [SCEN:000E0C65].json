@@ -1,5 +1,35 @@
 {
   "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "FNAM",
+      "HNAM",
+      "NAM0",
+      "NEXT",
+      "NEXT",
+      "WNAM",
+      "HNAM",
+      "ALID",
+      "LNAM",
+      "DNAM",
+      "ANAM",
+      "NAM0",
+      "ALID",
+      "INAM",
+      "FNAM",
+      "SNAM",
+      "ENAM",
+      "DATA",
+      "HTID",
+      "DMAX",
+      "DMIN",
+      "DEMO",
+      "DEVA",
+      "ANAM",
+      "PNAM",
+      "INAM",
+      "VNAM"
+    ],
     "id" : 920677,
     "rawFields" : {
       "ALID" : [

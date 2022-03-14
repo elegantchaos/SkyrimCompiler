@@ -1,0 +1,24 @@
+{
+  "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "FULL",
+      "PNAM",
+      "BNAM",
+      "QNAM",
+      "DATA",
+      "SNAM",
+      "TIFC"
+    ],
+    "id" : 717015,
+    "type" : "DIAL",
+    "versionControlInfo2" : 6
+  },
+  "editorID" : "MG01FaraldaHereResponse1",
+  "infoCount" : 1,
+  "owningBranch" : "0x000AF127",
+  "owningQuest" : "0x0001F251",
+  "playerDialogue" : "",
+  "priority" : 50,
+  "subtype" : 1414747459
+}

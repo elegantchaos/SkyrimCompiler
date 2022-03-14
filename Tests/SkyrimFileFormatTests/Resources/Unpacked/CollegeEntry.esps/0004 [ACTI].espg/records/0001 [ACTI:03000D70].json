@@ -1,5 +1,11 @@
 {
   "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "OBND",
+      "PNAM",
+      "FNAM"
+    ],
     "id" : 50335088,
     "rawFields" : {
       "EDID" : [

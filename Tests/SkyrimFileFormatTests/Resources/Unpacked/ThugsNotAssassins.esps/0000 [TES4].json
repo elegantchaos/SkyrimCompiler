@@ -1,5 +1,14 @@
 {
   "_meta" : {
+    "fieldOrder" : [
+      "HEDR",
+      "CNAM",
+      "MAST",
+      "DATA",
+      "MAST",
+      "DATA",
+      "INTV"
+    ],
     "type" : "TES4"
   },
   "author" : "Parapets",

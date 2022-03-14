@@ -1,0 +1,22 @@
+{
+  "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "PNAM",
+      "BNAM",
+      "QNAM",
+      "DATA",
+      "SNAM",
+      "TIFC"
+    ],
+    "id" : 67112291,
+    "type" : "DIAL"
+  },
+  "editorID" : "ScorpioAFTEditCurrentBranchTopic",
+  "infoCount" : 1,
+  "owningBranch" : "0x04000D62",
+  "owningQuest" : "0x04000800",
+  "playerDialogue" : "",
+  "priority" : 50,
+  "subtype" : 1414747459
+}

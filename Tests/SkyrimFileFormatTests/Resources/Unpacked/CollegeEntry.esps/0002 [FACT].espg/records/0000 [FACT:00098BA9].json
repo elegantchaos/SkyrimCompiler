@@ -1,5 +1,18 @@
 {
   "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "FULL",
+      "DATA",
+      "CRVA",
+      "VEND",
+      "VENC",
+      "VENV",
+      "PLVD",
+      "CITC",
+      "CTDA",
+      "CTDA"
+    ],
     "id" : 625577,
     "rawFields" : {
       "CITC" : [

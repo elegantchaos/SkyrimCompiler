@@ -1,0 +1,23 @@
+{
+  "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "FULL",
+      "PNAM",
+      "BNAM",
+      "QNAM",
+      "DATA",
+      "SNAM",
+      "TIFC"
+    ],
+    "id" : 488024,
+    "type" : "DIAL"
+  },
+  "editorID" : "MG04Stage30QuaranirProblem1Response1",
+  "infoCount" : 1,
+  "owningBranch" : "0x00077279",
+  "owningQuest" : "0x0001F254",
+  "playerDialogue" : "",
+  "priority" : 50,
+  "subtype" : 1414747459
+}

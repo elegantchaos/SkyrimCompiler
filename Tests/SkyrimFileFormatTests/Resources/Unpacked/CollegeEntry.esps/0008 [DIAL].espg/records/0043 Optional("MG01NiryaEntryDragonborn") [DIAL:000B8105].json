@@ -1,0 +1,23 @@
+{
+  "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "FULL",
+      "PNAM",
+      "BNAM",
+      "QNAM",
+      "DATA",
+      "SNAM",
+      "TIFC"
+    ],
+    "id" : 753925,
+    "type" : "DIAL"
+  },
+  "editorID" : "MG01NiryaEntryDragonborn",
+  "infoCount" : 1,
+  "owningBranch" : "0x000AF133",
+  "owningQuest" : "0x0001F251",
+  "playerDialogue" : "",
+  "priority" : 80,
+  "subtype" : 1414747459
+}

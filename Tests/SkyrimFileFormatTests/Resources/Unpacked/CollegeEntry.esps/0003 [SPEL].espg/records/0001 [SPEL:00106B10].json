@@ -1,5 +1,16 @@
 {
   "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "OBND",
+      "FULL",
+      "MDOB",
+      "ETYP",
+      "DESC",
+      "SPIT",
+      "EFID",
+      "EFIT"
+    ],
     "id" : 1075984,
     "rawFields" : {
       "DESC" : [

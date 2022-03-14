@@ -1,5 +1,18 @@
 {
   "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "OBND",
+      "FULL",
+      "MODL",
+      "MODT",
+      "DESC",
+      "KSIZ",
+      "KWDA",
+      "DATA",
+      "INAM",
+      "CNAM"
+    ],
     "id" : 220005,
     "rawFields" : {
       "CNAM" : [

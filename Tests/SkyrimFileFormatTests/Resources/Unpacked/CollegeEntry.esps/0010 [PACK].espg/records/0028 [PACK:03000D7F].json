@@ -1,5 +1,34 @@
 {
   "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "PKDT",
+      "PSDT",
+      "IDLF",
+      "IDLC",
+      "IDLT",
+      "IDLA",
+      "PKCU",
+      "ANAM",
+      "PLDT",
+      "ANAM",
+      "CNAM",
+      "ANAM",
+      "CNAM",
+      "UNAM",
+      "UNAM",
+      "UNAM",
+      "XNAM",
+      "POBA",
+      "INAM",
+      "PDTO",
+      "POEA",
+      "INAM",
+      "PDTO",
+      "POCA",
+      "INAM",
+      "PDTO"
+    ],
     "id" : 50335103,
     "rawFields" : {
       "ANAM" : [

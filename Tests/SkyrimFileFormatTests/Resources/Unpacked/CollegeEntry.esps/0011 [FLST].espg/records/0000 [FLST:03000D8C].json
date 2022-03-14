@@ -1,5 +1,23 @@
 {
   "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "LNAM",
+      "LNAM",
+      "LNAM",
+      "LNAM",
+      "LNAM",
+      "LNAM",
+      "LNAM",
+      "LNAM",
+      "LNAM",
+      "LNAM",
+      "LNAM",
+      "LNAM",
+      "LNAM",
+      "LNAM",
+      "LNAM"
+    ],
     "id" : 50335116,
     "rawFields" : {
       "EDID" : [

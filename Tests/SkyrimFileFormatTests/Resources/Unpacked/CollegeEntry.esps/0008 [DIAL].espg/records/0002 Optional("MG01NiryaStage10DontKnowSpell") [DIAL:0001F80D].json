@@ -1,0 +1,23 @@
+{
+  "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "FULL",
+      "PNAM",
+      "BNAM",
+      "QNAM",
+      "DATA",
+      "SNAM",
+      "TIFC"
+    ],
+    "id" : 129037,
+    "type" : "DIAL"
+  },
+  "editorID" : "MG01NiryaStage10DontKnowSpell",
+  "infoCount" : 10,
+  "owningBranch" : "0x00071F5B",
+  "owningQuest" : "0x0001F251",
+  "playerDialogue" : "",
+  "priority" : 70,
+  "subtype" : 1414747459
+}

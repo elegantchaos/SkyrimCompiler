@@ -1,5 +1,24 @@
 {
   "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "VMAD",
+      "DESC",
+      "DATA",
+      "PRKE",
+      "DATA",
+      "PRKC",
+      "CTDA",
+      "CTDA",
+      "PRKC",
+      "CTDA",
+      "CTDA",
+      "CTDA",
+      "CTDA",
+      "EPFT",
+      "EPF3",
+      "PRKF"
+    ],
     "id" : 50335086,
     "rawFields" : {
       "CTDA" : [

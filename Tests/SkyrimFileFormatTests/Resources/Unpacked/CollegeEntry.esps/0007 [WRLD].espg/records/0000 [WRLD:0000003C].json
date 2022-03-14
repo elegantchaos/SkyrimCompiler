@@ -1,5 +1,24 @@
 {
   "_meta" : {
+    "fieldOrder" : [
+      "EDID",
+      "MHDT",
+      "FULL",
+      "CNAM",
+      "NAM2",
+      "NAM3",
+      "NAM4",
+      "DNAM",
+      "MNAM",
+      "ONAM",
+      "NAMA",
+      "DATA",
+      "NAM0",
+      "NAM9",
+      "ZNAM",
+      "TNAM",
+      "UNAM"
+    ],
     "id" : 60,
     "rawFields" : {
       "CNAM" : [

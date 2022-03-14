@@ -12,7 +12,7 @@ struct DIALRecord: IdentifiedRecord {
     let _meta: RecordMetadata
 
     let editorID: String?
-    let playerDialogue: String
+    let playerDialogue: String?
     let priority: Float32
     let owningBranch: FormID?
     let owningQuest: FormID
@@ -26,7 +26,7 @@ struct DIALRecord: IdentifiedRecord {
         (.priority, \.priority, "PNAM"),
         (.owningBranch, \.owningBranch, "BNAM"),
         (.owningQuest, \.owningQuest, "QNAM"),
-        (.playerDialogue, \.playerDialogue, "DATA"),
+        (.data, \.data, "DATA"),
         (.subtype, \.subtype, "SNAM"),
         (.infoCount, \.infoCount, "TIFC"),
 
