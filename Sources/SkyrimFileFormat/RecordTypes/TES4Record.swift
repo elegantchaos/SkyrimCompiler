@@ -30,14 +30,14 @@ struct TES4Record: Codable, RecordProtocol {
         self.unknownCounter = nil
     }
     
-    static var fieldMap = FieldTypeMap(paths: [
-        (CodingKeys.info, \Self.info, "HEDR"),
-        (.author, \.author, "CNAM"),
-        (.desc, \.desc, "SNAM"),
-        (.masters, \.masters, "MAST"),
-        (.masterData, \.masterData, "DATA"),
-        (.tagifiedStringCount, \.tagifiedStringCount, "INTV"),
-        (.unknownCounter, \.unknownCounter, "INTC")
+    static var fieldMap = FieldTypeMap(fields: [
+        .init(CodingKeys.info, \Self.info, "HEDR"),
+        .init(.author, \.author, "CNAM"),
+        .init(.desc, \.desc, "SNAM"),
+        .init(.masters, \.masters, "MAST", groupWithNext: true),
+        .init(.masterData, \.masterData, "DATA"),
+        .init(.tagifiedStringCount, \.tagifiedStringCount, "INTV"),
+        .init(.unknownCounter, \.unknownCounter, "INTC")
     ])
 }
 

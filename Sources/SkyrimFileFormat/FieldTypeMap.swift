@@ -11,6 +11,7 @@ struct FieldTypeMap {
     struct Entry {
         let type: BinaryDecodable.Type // TODO: Codable may be enough here.
         let readKey: Tag
+        let groupWithNext: Bool
     }
     
     typealias Map = [String:Entry]
@@ -26,28 +27,46 @@ struct FieldTypeMap {
         tagOrder = []
     }
     
-    init<K, T>(paths map: [(K, PartialKeyPath<T>, String)]) where K: CodingKey {
+    struct FieldSpec<K: CodingKey, T> {
+        let codingKey: K
+        let property: PartialKeyPath<T>
+        let tag: Tag
+        let groupWithNext: Bool
+
+        internal init(_ key: K, _ path: PartialKeyPath<T>, _ tag: Tag, groupWithNext: Bool = false) {
+            self.codingKey = key
+            self.property = path
+            self.tag = tag
+            self.groupWithNext = groupWithNext
+        }
+    }
+    
+    init<K, T>(fields map: [FieldSpec<K, T>]) where K: CodingKey {
         var entries = Map()
         var tagToName = NameMap()
         var tagOrder: [Tag] = []
         
-        for (key, path, readKey) in map {
+        for spec in map {
             let t: Any.Type
-            if let p = path as? EnclosingType {
+            if let p = spec.property as? EnclosingType {
                 t = type(of: p).baseType
             } else {
-                t = type(of: path).valueType
+                t = type(of: spec.property).valueType
             }
 
-            let readTag = Tag(readKey)
-            entries[key.stringValue] = Entry(type: t as! BinaryDecodable.Type, readKey: readTag)
-            tagToName[readTag] = key.stringValue
-            tagOrder.append(readTag)
+            entries[spec.codingKey.stringValue] = Entry(type: t as! BinaryDecodable.Type, readKey: spec.tag, groupWithNext: spec.groupWithNext)
+            tagToName[spec.tag] = spec.codingKey.stringValue
+            tagOrder.append(spec.tag)
         }
     
         self.index = entries
         self.tagToName = tagToName
         self.tagOrder = tagOrder
+    }
+    
+    init<K, T>(paths map: [(K, PartialKeyPath<T>, String)]) where K: CodingKey {
+        let specs: [FieldSpec<K, T>] = map.map{ .init($0.0, $0.1, Tag($0.2), groupWithNext: false)}
+        self.init(fields: specs)
     }
 
 

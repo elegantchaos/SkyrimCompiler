@@ -34,7 +34,7 @@ class StreamDecoder<Iterator: AsyncByteIterator>: Decoder {
     var userInfo: [CodingUserInfoKey : Any]
     
     func container<Key>(keyedBy type: Key.Type) throws -> KeyedDecodingContainer<Key> where Key : CodingKey {
-        return KeyedDecodingContainer(KeyedContainer(for: self, path: codingPath))
+        return KeyedDecodingContainer(KeyedContainer(for: self, property: codingPath))
     }
     
     func unkeyedContainer() throws -> UnkeyedDecodingContainer {
@@ -42,7 +42,7 @@ class StreamDecoder<Iterator: AsyncByteIterator>: Decoder {
     }
     
     func singleValueContainer() throws -> SingleValueDecodingContainer {
-        return SingleValueContainer(for: self, path: codingPath)
+        return SingleValueContainer(for: self, property: codingPath)
     }
     
     class KeyedContainer<K>: KeyedDecodingContainerProtocol where K: CodingKey {
@@ -51,88 +51,88 @@ class StreamDecoder<Iterator: AsyncByteIterator>: Decoder {
         var codingPath: [CodingKey]
         let stream: StreamDecoder
         
-        init(for stream: StreamDecoder, path: [CodingKey]) {
+        init(for stream: StreamDecoder, property: [CodingKey]) {
             self.stream = stream
-            self.codingPath = path
+            self.codingPath = property
         }
 
         var allKeys: [K] {
             return []
         }
         
-        func contains(_ key: K) -> Bool {
+        func contains(_ codingKey: K) -> Bool {
             fatalError("to do")
         }
         
-        func decodeNil(forKey key: K) throws -> Bool {
+        func decodeNil(forKey codingKey: K) throws -> Bool {
             fatalError("to do")
         }
         
-        func decode(_ type: Bool.Type, forKey key: K) throws -> Bool {
+        func decode(_ type: Bool.Type, forKey codingKey: K) throws -> Bool {
             fatalError("to do")
         }
         
-        func decode(_ type: String.Type, forKey key: K) throws -> String {
+        func decode(_ type: String.Type, forKey codingKey: K) throws -> String {
             fatalError("to do")
         }
         
-        func decode(_ type: Double.Type, forKey key: K) throws -> Double {
+        func decode(_ type: Double.Type, forKey codingKey: K) throws -> Double {
             fatalError("to do")
         }
         
-        func decode(_ type: Float.Type, forKey key: K) throws -> Float {
+        func decode(_ type: Float.Type, forKey codingKey: K) throws -> Float {
             fatalError("to do")
         }
         
-        func decode(_ type: Int.Type, forKey key: K) throws -> Int {
+        func decode(_ type: Int.Type, forKey codingKey: K) throws -> Int {
             fatalError("to do")
         }
         
-        func decode(_ type: Int8.Type, forKey key: K) throws -> Int8 {
+        func decode(_ type: Int8.Type, forKey codingKey: K) throws -> Int8 {
             fatalError("to do")
         }
         
-        func decode(_ type: Int16.Type, forKey key: K) throws -> Int16 {
+        func decode(_ type: Int16.Type, forKey codingKey: K) throws -> Int16 {
             fatalError("to do")
         }
         
-        func decode(_ type: Int32.Type, forKey key: K) throws -> Int32 {
+        func decode(_ type: Int32.Type, forKey codingKey: K) throws -> Int32 {
             fatalError("to do")
         }
         
-        func decode(_ type: Int64.Type, forKey key: K) throws -> Int64 {
+        func decode(_ type: Int64.Type, forKey codingKey: K) throws -> Int64 {
             fatalError("to do")
         }
         
-        func decode(_ type: UInt.Type, forKey key: K) throws -> UInt {
+        func decode(_ type: UInt.Type, forKey codingKey: K) throws -> UInt {
             fatalError("to do")
         }
         
-        func decode(_ type: UInt8.Type, forKey key: K) throws -> UInt8 {
+        func decode(_ type: UInt8.Type, forKey codingKey: K) throws -> UInt8 {
             fatalError("to do")
         }
         
-        func decode(_ type: UInt16.Type, forKey key: K) throws -> UInt16 {
+        func decode(_ type: UInt16.Type, forKey codingKey: K) throws -> UInt16 {
             fatalError("to do")
         }
         
-        func decode(_ type: UInt32.Type, forKey key: K) throws -> UInt32 {
+        func decode(_ type: UInt32.Type, forKey codingKey: K) throws -> UInt32 {
             fatalError("to do")
         }
         
-        func decode(_ type: UInt64.Type, forKey key: K) throws -> UInt64 {
+        func decode(_ type: UInt64.Type, forKey codingKey: K) throws -> UInt64 {
             fatalError("to do")
         }
         
-        func decode<T>(_ type: T.Type, forKey key: K) throws -> T where T : Decodable {
+        func decode<T>(_ type: T.Type, forKey codingKey: K) throws -> T where T : Decodable {
             fatalError("to do")
         }
         
-        func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type, forKey key: K) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
+        func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type, forKey codingKey: K) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
             fatalError("to do")
         }
         
-        func nestedUnkeyedContainer(forKey key: K) throws -> UnkeyedDecodingContainer {
+        func nestedUnkeyedContainer(forKey codingKey: K) throws -> UnkeyedDecodingContainer {
             fatalError("to do")
         }
         
@@ -140,7 +140,7 @@ class StreamDecoder<Iterator: AsyncByteIterator>: Decoder {
             fatalError("to do")
         }
         
-        func superDecoder(forKey key: K) throws -> Decoder {
+        func superDecoder(forKey codingKey: K) throws -> Decoder {
             fatalError("to do")
         }
     }
@@ -310,9 +310,9 @@ class StreamDecoder<Iterator: AsyncByteIterator>: Decoder {
         
         let stream: StreamDecoder
 
-        init(for stream: StreamDecoder, path: [CodingKey]) {
+        init(for stream: StreamDecoder, property: [CodingKey]) {
             self.stream = stream
-            self.codingPath = path
+            self.codingPath = property
         }
     }
 
