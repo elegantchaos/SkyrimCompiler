@@ -14,7 +14,7 @@ protocol FieldProtocol {
 
 typealias RecordMap = [Tag:RecordProtocol.Type]
 
-struct Configuration {
+public struct Configuration {
     let records: RecordMap
     
     internal init(records: [RecordProtocol.Type]) {
@@ -32,7 +32,7 @@ struct Configuration {
 
     static let defaultFieldsMap = FieldTypeMap()
 
-    static let defaultConfiguration = Configuration(records: [
+    public static let defaultConfiguration = Configuration(records: [
         ARMORecord.self,
         ARMARecord.self,
         DIALRecord.self,

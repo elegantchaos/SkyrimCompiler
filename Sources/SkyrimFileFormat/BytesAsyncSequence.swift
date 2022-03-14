@@ -8,10 +8,10 @@ import Bytes
 import Foundation
 
 
-protocol AsyncByteIterator: AsyncIteratorProtocol where Element == Byte {
+public protocol AsyncByteIterator: AsyncIteratorProtocol where Element == Byte {
 }
 
-protocol AsyncByteSequence: AsyncSequence where AsyncIterator: AsyncByteIterator {
+public protocol AsyncByteSequence: AsyncSequence where AsyncIterator: AsyncByteIterator {
 }
 
 extension URL.AsyncBytes.AsyncIterator: AsyncByteIterator {

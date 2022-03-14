@@ -8,7 +8,7 @@ import Bytes
 import Foundation
 import SWCompression
 
-struct RecordMetadata: Codable {
+public struct RecordMetadata: Codable {
     static let propertyName = "_meta"
     static let fileName = "meta.json"
     
@@ -36,7 +36,7 @@ struct RecordMetadata: Codable {
     }
     
 
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         self.header = try RecordHeader(from: decoder)
         let container = try decoder.container(keyedBy: Self.CodingsKeys)
         if let fields = try? container.decode(UnpackedFields.self, forKey: .rawFields) {
@@ -55,7 +55,7 @@ struct RecordMetadata: Codable {
         self.children = nil
     }
     
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         try header.encode(to: encoder)
         var container = encoder.container(keyedBy: Self.CodingsKeys)
         if let fields = fields {
@@ -67,7 +67,7 @@ struct RecordMetadata: Codable {
     }
 }
 
-protocol RecordProtocol: BinaryCodable, CustomStringConvertible {
+public protocol RecordProtocol: BinaryCodable, CustomStringConvertible {
     static var tag: Tag { get }
     func asJSON(with processor: Processor) throws -> Data
     static func fromJSON(_ data: Data, with processor: Processor) throws -> RecordProtocol
@@ -87,11 +87,11 @@ extension RecordProtocol {
         return String(format: "[%@:%08X]", _meta.header.label, id)
     }
 
-    func asJSON(with processor: Processor) throws -> Data {
+    public func asJSON(with processor: Processor) throws -> Data {
         return try processor.jsonEncoder.encode(self)
     }
     
-    static func fromJSON(_ data: Data, with processor: Processor) throws -> RecordProtocol {
+    public static func fromJSON(_ data: Data, with processor: Processor) throws -> RecordProtocol {
         let decoded = try processor.jsonDecoder.decode(Self.self, from: data)
         return decoded
     }
@@ -110,7 +110,7 @@ extension CodingUserInfoKey {
 }
 
 extension RecordProtocol {
-    func binaryEncode(to encoder: BinaryEncoder) throws {
+    public func binaryEncode(to encoder: BinaryEncoder) throws {
 
         
         if let configuration = encoder.userInfo[.configurationUserInfoKey] as? Configuration {

@@ -6,10 +6,10 @@
 import BinaryCoding
 import Foundation
 
-struct TES4Record: Codable, RecordProtocol {
-    static var tag = Tag("TES4")
+public struct TES4Record: Codable, RecordProtocol {
+    public static var tag = Tag("TES4")
     
-    let _meta: RecordMetadata
+    public let _meta: RecordMetadata
 
     var info: TES4HeaderField
     var author: String?
@@ -30,7 +30,7 @@ struct TES4Record: Codable, RecordProtocol {
         self.unknownCounter = nil
     }
     
-    static var fieldMap = FieldTypeMap(fields: [
+    public static var fieldMap = FieldTypeMap(fields: [
         .init(CodingKeys.info, \Self.info, "HEDR"),
         .init(.author, \.author, "CNAM"),
         .init(.desc, \.desc, "SNAM"),
@@ -42,7 +42,7 @@ struct TES4Record: Codable, RecordProtocol {
 }
 
 extension TES4Record: CustomStringConvertible {
-    var description: String {
+    public var description: String {
         return "«TES4 \(info.version)»"
     }
 }

@@ -6,15 +6,15 @@
 import BinaryCoding
 import Foundation
 
-struct ESPBundle {
-    typealias Index = [Tag:[RecordProtocol]]
+public struct ESPBundle {
+    public typealias Index = [Tag:[RecordProtocol]]
     
-    let name: String
-    var records: [RecordProtocol]
-    var allRecords: [RecordProtocol]
-    var index: Index
-    var count: Int { records.count }
-    var header: TES4Record? {
+    public let name: String
+    public var records: [RecordProtocol]
+    public var allRecords: [RecordProtocol]
+    public var index: Index
+    public var count: Int { records.count }
+    public var header: TES4Record? {
         records.first(where: { $0.type == TES4Record.tag }) as? TES4Record
     }
     

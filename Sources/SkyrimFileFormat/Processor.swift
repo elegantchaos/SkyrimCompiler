@@ -33,8 +33,8 @@ protocol RecordDataIterator: AsyncIteratorProtocol where Element == RecordData {
 /// - unpack: takes an `.esp` file and returns an `ESPBundle` instance
 /// - pack: takes an `ESPBundle` instance and outputs an `.esp` file
 /// 
-class Processor {
-    internal init(configuration: Configuration = .defaultConfiguration) {
+public class Processor {
+    public init(configuration: Configuration = .defaultConfiguration) {
         self.configuration = configuration
         self.jsonEncoder = JSONEncoder()
         self.jsonDecoder = JSONDecoder()

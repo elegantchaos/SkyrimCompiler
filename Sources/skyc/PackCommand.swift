@@ -4,7 +4,9 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import ArgumentParser
+import Files
 import Foundation
+import SkyrimFileFormat
 
 struct PackCommand: ParsableCommand {
     static var configuration = CommandConfiguration(
@@ -16,8 +18,41 @@ struct PackCommand: ParsableCommand {
     @Argument() var output: String
     
     func run() throws {
-        print(bundle)
-        print(output)
+        let outputFile = ThrowingManager.default.file(for: output, pathExtension: "esp")
+        let bundleFolder = ThrowingManager.default.folder(for: bundle)
+        guard bundleFolder.exists else {
+            throw SkyCError.bundleNotFound(bundleFolder.url)
+        }
+        
+        let processor = Processor()
+        let bundle = try processor.load(url: bundleFolder.url)
+        let data = try processor.pack(bundle)
+        outputFile.write(asData: data)
+        print("Packed \(bundle.name) to \(outputFile.name)")
     }
 }
 
+extension ThrowingManager {
+    func file(for path: String, pathExtension: String? = nil) -> ThrowingFile {
+        if path.first == "/" {
+            return file(for: URL(fileURLWithPath: path))
+        } else {
+            var url = manager.workingDirectory().appendingPathComponent(path)
+            if let ext = pathExtension, url.pathExtension != ext {
+                url.appendPathExtension(ext)
+            }
+
+            return file(for: url)
+        }
+    }
+
+    func folder(for path: String) -> ThrowingFolder {
+        if path.first == "/" {
+            return folder(for: URL(fileURLWithPath: path))
+        } else {
+            let url = manager.workingDirectory().appendingPathComponent(path)
+            return folder(for: url)
+        }
+    }
+
+}
