@@ -8,7 +8,7 @@ import Files
 import Foundation
 import SkyrimFileFormat
 
-struct PackCommand: ParsableCommand {
+struct PackCommand: AsyncParsableCommand {
     static var configuration = CommandConfiguration(
         commandName: "pack",
         abstract: "Pack an esps bundle into an esp file."
@@ -17,11 +17,11 @@ struct PackCommand: ParsableCommand {
     @Argument() var bundle: String
     @Argument() var output: String
     
-    func run() throws {
-        let outputFile = ThrowingManager.default.file(for: output, pathExtension: "esp")
-        let bundleFolder = ThrowingManager.default.folder(for: bundle)
+    mutating func run() async throws {
+        let outputFile = ThrowingManager.default.file(output, pathExtension: "esp")
+        let bundleFolder = ThrowingManager.default.folder(bundle)
         guard bundleFolder.exists else {
-            throw SkyCError.bundleNotFound(bundleFolder.url)
+            throw SkyCError.bundleNotFound(bundleFolder)
         }
         
         let processor = Processor()
@@ -33,7 +33,7 @@ struct PackCommand: ParsableCommand {
 }
 
 extension ThrowingManager {
-    func file(for path: String, pathExtension: String? = nil) -> ThrowingFile {
+    func file(_ path: String, pathExtension: String? = nil) -> ThrowingFile {
         if path.first == "/" {
             return file(for: URL(fileURLWithPath: path))
         } else {
@@ -46,7 +46,7 @@ extension ThrowingManager {
         }
     }
 
-    func folder(for path: String) -> ThrowingFolder {
+    func folder(_ path: String) -> ThrowingFolder {
         if path.first == "/" {
             return folder(for: URL(fileURLWithPath: path))
         } else {
@@ -54,5 +54,5 @@ extension ThrowingManager {
             return folder(for: url)
         }
     }
-
 }
+

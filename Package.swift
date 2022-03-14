@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.6
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 //  Created by Sam Deane on 31/01/2022.
@@ -25,15 +25,15 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/elegantchaos/AsyncSequenceReader.git", from: "0.1.0"),
-        .package(url: "https://github.com/elegantchaos/BinaryCoding.git", .branch("main")),
-        .package(url: "https://github.com/elegantchaos/Bytes.git", .branch("float-support")),
+        .package(url: "https://github.com/elegantchaos/BinaryCoding.git", branch: "main"),
+        .package(url: "https://github.com/elegantchaos/Bytes.git", branch: "float-support"),
         .package(url: "https://github.com/elegantchaos/Coercion.git", from: "1.1.3"),
         .package(url: "https://github.com/elegantchaos/ElegantStrings.git", from: "1.1.1"),
         .package(url: "https://github.com/elegantchaos/Expressions.git", from: "1.1.1"),
         .package(url: "https://github.com/elegantchaos/Files.git", from: "1.2.2"),
         .package(url: "https://github.com/elegantchaos/Logger.git", from: "1.7.3"),
         .package(url: "https://github.com/tsolomko/SWCompression.git", .upToNextMajor(from: "4.7.0")),
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "0.5.0"),
+        .package(url: "https://github.com/apple/swift-argument-parser", branch: "async"),
         .package(url: "https://github.com/elegantchaos/XCTestExtensions.git", from: "1.4.5"),
     ],
     

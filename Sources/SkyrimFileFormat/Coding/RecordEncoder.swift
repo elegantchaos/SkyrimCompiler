@@ -60,18 +60,22 @@ class RecordEncoder: DataEncoder {
         // use any recorded field order
         writeFields(fieldOrder)
         
-        // try to use the map for any remaining fields
-        for tag in fieldMap.tagOrder {
-            if let entry = fieldMap.entry(forTag: tag) {
-                let group = entry.groupWith
-                writeFields(group)
+        if encodedFields.count > 0 {
+            // try to use the map for any remaining fields
+            for tag in fieldMap.tagOrder {
+                if let entry = fieldMap.entry(forTag: tag) {
+                    let group = entry.groupWith
+                    writeFields(group)
+                }
             }
         }
         
-        // encoded any remaining stuff in the order we find it
-        for (_, list) in encodedFields {
-            for field in list {
-                data.append(field)
+        if encodedFields.count > 0 {
+            // encoded any remaining stuff in the order we find it
+            for (_, list) in encodedFields {
+                for field in list {
+                    data.append(field)
+                }
             }
         }
         

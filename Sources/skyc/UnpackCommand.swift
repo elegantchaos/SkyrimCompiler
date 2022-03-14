@@ -4,20 +4,31 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 import ArgumentParser
+import Files
 import Foundation
+import SkyrimFileFormat
 
-struct UnpackCommand: ParsableCommand {
+struct UnpackCommand: AsyncParsableCommand {
     static var configuration = CommandConfiguration(
-        commandName: "upack",
+        commandName: "unpack",
         abstract: "Unpack an esp bundle into an esps bundle."
     )
 
     @Argument() var file: String
     @Argument() var output: String
     
-    func run() throws {
-        print(file)
-        print(output)
+    func run() async throws {
+        let outputFolder = ThrowingManager.default.folder(output)
+        let inputFile = ThrowingManager.default.file(file)
+
+        guard inputFile.exists else {
+            throw SkyCError.fileNotFound(inputFile)
+        }
+        
+        let processor = Processor()
+        let bundle = try await processor.unpack(url: inputFile.url)
+        try await processor.save(bundle, to: outputFolder.url)
+        print("Unpacked \(bundle.name) to \(outputFolder.name)")
     }
 }
 

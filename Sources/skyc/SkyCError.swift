@@ -3,9 +3,10 @@
 //  All code (c) 2022 - present day, Elegant Chaos Limited.
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+import Files
 import Foundation
 
 enum SkyCError: Error {
-    case bundleNotFound(URL)
-    case fileNotFound
+    case bundleNotFound(Folder)
+    case fileNotFound(File)
 }
