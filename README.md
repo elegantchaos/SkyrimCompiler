@@ -104,6 +104,7 @@ That said, I'd be up for collaborating if we could figure out some places where 
 
 - ESP File format: https://en.uesp.net/wiki/Skyrim_Mod:Mod_File_Format
 - Data Types: https://en.uesp.net/wiki/Skyrim_Mod:File_Format_Conventions
+- Pyffi definitions (incomplete): https://github.com/niftools/pyffi/blob/develop/pyffi/formats/esp/esp.xml
 
 ### Example Data
 
