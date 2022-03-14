@@ -13,10 +13,15 @@ let package = Package(
         .macOS(.v12)
     ],
     products: [
-        .library(
-            name: "SkyrimFileFormat",
-            targets: ["SkyrimFileFormat"]
+        .executable(
+            name: "skyc",
+            targets: ["SkyC"]
         ),
+        
+            .library(
+                name: "SkyrimFileFormat",
+                targets: ["SkyrimFileFormat"]
+            ),
     ],
     dependencies: [
         .package(url: "https://github.com/elegantchaos/AsyncSequenceReader.git", from: "0.1.0"),
@@ -29,7 +34,15 @@ let package = Package(
         .package(url: "https://github.com/tsolomko/SWCompression.git", .upToNextMajor(from: "4.7.0")),
         .package(url: "https://github.com/elegantchaos/XCTestExtensions.git", from: "1.4.5"),
     ],
+    
     targets: [
+        .target(
+            name: "SkyC",
+            dependencies: [
+                "SkyrimFileFormat"
+            ]
+        ),
+        
         .target(
             name: "SkyrimFileFormat",
             dependencies: [
@@ -45,14 +58,14 @@ let package = Package(
             resources: [
             ]
         ),
-        
-            .testTarget(
-                name: "SkyrimFileFormatTests",
-                dependencies: ["SkyrimFileFormat", "XCTestExtensions"],
-                resources: [
-                    .process("Resources/Examples/"),
-                    .copy("Resources/Unpacked"),
-                ]
-            ),
+    
+        .testTarget(
+            name: "SkyrimFileFormatTests",
+            dependencies: ["SkyrimFileFormat", "XCTestExtensions"],
+            resources: [
+                .process("Resources/Examples/"),
+                .copy("Resources/Unpacked"),
+            ]
+        ),
     ]
 )

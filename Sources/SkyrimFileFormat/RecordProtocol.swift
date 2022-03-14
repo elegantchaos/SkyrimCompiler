@@ -14,7 +14,7 @@ struct RecordMetadata: Codable {
     
     let header: RecordHeader
     let fields: UnpackedFields?
-    let fieldOrder: [Tag]?
+    let fieldOrder: [Tag]?      // TODO: may be able to skip storing fieldOrder for records where all fields are encoded/decoded explicitly
     let originalData: Bytes?
     let children: [RecordProtocol]? // TODO: make this an iterator so that we can defer loading of children
 
