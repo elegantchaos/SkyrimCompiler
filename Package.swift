@@ -32,14 +32,16 @@ let package = Package(
         .package(url: "https://github.com/elegantchaos/Expressions.git", from: "1.1.1"),
         .package(url: "https://github.com/elegantchaos/Logger.git", from: "1.7.3"),
         .package(url: "https://github.com/tsolomko/SWCompression.git", .upToNextMajor(from: "4.7.0")),
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "0.5.0"),
         .package(url: "https://github.com/elegantchaos/XCTestExtensions.git", from: "1.4.5"),
     ],
     
     targets: [
-        .target(
+        .executableTarget(
             name: "SkyC",
             dependencies: [
-                "SkyrimFileFormat"
+                "SkyrimFileFormat",
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
             ]
         ),
         

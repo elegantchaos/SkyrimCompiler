@@ -11,12 +11,30 @@
         }
       },
       {
+        "package": "BinaryCoding",
+        "repositoryURL": "https://github.com/elegantchaos/BinaryCoding.git",
+        "state": {
+          "branch": "main",
+          "revision": "f9225a21effe8aaf32b402fd41def38819393f8c",
+          "version": null
+        }
+      },
+      {
+        "package": "BitByteData",
+        "repositoryURL": "https://github.com/tsolomko/BitByteData",
+        "state": {
+          "branch": null,
+          "revision": "c119e12decae8f56066df3345a4ac1a05b2f06d5",
+          "version": "2.0.1"
+        }
+      },
+      {
         "package": "Bytes",
         "repositoryURL": "https://github.com/elegantchaos/Bytes.git",
         "state": {
-          "branch": null,
-          "revision": "ec15d7f5ee256c3110bea1995471112e5dfd7d95",
-          "version": "0.2.2"
+          "branch": "float-support",
+          "revision": "dfd75eda165e698ec971dafc7a1bf469ca361ac6",
+          "version": null
         }
       },
       {
@@ -29,6 +47,33 @@
         }
       },
       {
+        "package": "ElegantStrings",
+        "repositoryURL": "https://github.com/elegantchaos/ElegantStrings.git",
+        "state": {
+          "branch": null,
+          "revision": "eb90abda935b43cc5dca75d35af8efda0d38cfea",
+          "version": "1.1.1"
+        }
+      },
+      {
+        "package": "Expressions",
+        "repositoryURL": "https://github.com/elegantchaos/Expressions.git",
+        "state": {
+          "branch": null,
+          "revision": "3f1a4caccb9e33d95d0650e9b78350acd3576300",
+          "version": "1.1.1"
+        }
+      },
+      {
+        "package": "Logger",
+        "repositoryURL": "https://github.com/elegantchaos/Logger.git",
+        "state": {
+          "branch": null,
+          "revision": "50da0037cd25c2f9444effbb2afe15bb00f70a98",
+          "version": "1.7.3"
+        }
+      },
+      {
         "package": "Matchable",
         "repositoryURL": "https://github.com/elegantchaos/Matchable.git",
         "state": {
@@ -38,12 +83,30 @@
         }
       },
       {
+        "package": "SWCompression",
+        "repositoryURL": "https://github.com/tsolomko/SWCompression.git",
+        "state": {
+          "branch": null,
+          "revision": "4ad6940f2990f2d9f27b39d013c7a64b602d9c50",
+          "version": "4.8.0"
+        }
+      },
+      {
+        "package": "swift-argument-parser",
+        "repositoryURL": "https://github.com/apple/swift-argument-parser",
+        "state": {
+          "branch": null,
+          "revision": "6b2aa2748a7881eebb9f84fb10c01293e15b52ca",
+          "version": "0.5.0"
+        }
+      },
+      {
         "package": "XCTestExtensions",
         "repositoryURL": "https://github.com/elegantchaos/XCTestExtensions.git",
         "state": {
           "branch": null,
-          "revision": "695ac254d74387c8ec1796e2299a7d8bdc33822d",
-          "version": "1.4.2"
+          "revision": "fe22ce2b52bdfaec1ce62280a21c7c5b23650dc8",
+          "version": "1.4.5"
         }
       }
     ]
