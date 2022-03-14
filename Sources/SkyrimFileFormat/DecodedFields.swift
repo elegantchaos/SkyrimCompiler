@@ -28,6 +28,7 @@ class DecodedFields {
     let map: FieldTypeMap
     let recordType: Tag
     let recordHeader: RecordHeader
+    var order: [Tag]
 
     private var values: [Tag:[Field]]
     private var unprocessed: [Tag:[Field]]
@@ -36,6 +37,7 @@ class DecodedFields {
         self.map = spec
         self.values = [:]
         self.unprocessed = [:]
+        self.order = []
         self.recordType = type
         self.recordHeader = header
     }
@@ -45,6 +47,7 @@ class DecodedFields {
         var list = (values[tag]) ?? []
         list.append(field)
         values[tag] = list
+        order.append(tag)
     }
 
     func moveUnprocesed() {

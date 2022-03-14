@@ -81,7 +81,7 @@ class RecordDecoder: Decoder {
                     } else {
                         data = nil
                     }
-                    let meta = RecordMetadata(header: decoder.header, fields: fields.count > 0 ? fields : nil, originalData: data)
+                    let meta = RecordMetadata(header: decoder.header, fields: fields.count > 0 ? fields : nil, fieldOrder: decoder.fields.order, originalData: data)
                     return meta as! T
 
                 default:

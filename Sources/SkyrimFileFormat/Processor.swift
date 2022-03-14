@@ -184,17 +184,17 @@ private extension Processor {
     
     func decodedFields(type: Tag, header: RecordHeader, data: RecordDataProvider) async throws -> DecodedFields {
         let map = try configuration.fields(forRecord: type)
-        let fp = DecodedFields(map, for: type, header: header)
+        let fields = DecodedFields(map, for: type, header: header)
         
         var bytes = data.asyncBytes
         
-        let fields = fields(bytes: &bytes, types: map, inRecord: type, withHeader: header)
-        for try await field in fields {
-            try fp.add(field)
+        let fieldStream = self.fields(bytes: &bytes, types: map, inRecord: type, withHeader: header)
+        for try await field in fieldStream {
+            try fields.add(field)
         }
-        fp.moveUnprocesed()
+        fields.moveUnprocesed()
         
-        return fp
+        return fields
     }
     
     func inflate(header: Field.Header, data: Bytes, types: FieldTypeMap, inRecord recordType: Tag, withHeader recordHeader: RecordHeader) async throws -> Field {

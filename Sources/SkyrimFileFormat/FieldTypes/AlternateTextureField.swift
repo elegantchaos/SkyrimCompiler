@@ -44,7 +44,7 @@ struct AlternateTextureField: BinaryCodable, Equatable {
         func binaryEncode(to encoder: BinaryEncoder) throws {
             var container = encoder.unkeyedContainer()
             try container.encode(UInt32(name.count))
-            try container.encode(name.data(using: encoder.stringEncoding))
+            try container.encode(name.data(using: encoder.skyrimStringEncoding))
             try container.encode(texture)
             try container.encode(index)
         }

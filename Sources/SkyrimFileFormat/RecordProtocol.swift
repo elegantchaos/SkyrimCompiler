@@ -14,20 +14,23 @@ struct RecordMetadata: Codable {
     
     let header: RecordHeader
     let fields: UnpackedFields?
+    let fieldOrder: [Tag]?
     let originalData: Bytes?
     let children: [RecordProtocol]? // TODO: make this an iterator so that we can defer loading of children
 
     public enum CodingsKeys: CodingKey {
         case rawFields
+        case fieldOrder
     }
 
     init(type: Tag) {
         self.init(header: .init(type: type))
     }
     
-    init(header: RecordHeader, fields: UnpackedFields? = nil, originalData: Bytes? = nil, children: [RecordProtocol]? = nil) {
+    init(header: RecordHeader, fields: UnpackedFields? = nil, fieldOrder: [Tag]? = nil, originalData: Bytes? = nil, children: [RecordProtocol]? = nil) {
         self.header = header
         self.fields = fields
+        self.fieldOrder = fieldOrder
         self.originalData = originalData
         self.children = children
     }
@@ -42,15 +45,26 @@ struct RecordMetadata: Codable {
             self.fields = nil
         }
         
+        if let fieldOrder = try? container.decode([Tag].self, forKey: .fieldOrder) {
+            self.fieldOrder = fieldOrder
+//        } else if let rd = decoder as? RecordDecoder {
+//            self.fieldOrder = rd.fields.order
+        } else {
+            self.fieldOrder = nil
+        }
+        
         self.originalData = nil
         self.children = nil
     }
     
     func encode(to encoder: Encoder) throws {
         try header.encode(to: encoder)
+        var container = encoder.container(keyedBy: Self.CodingsKeys)
         if let fields = fields {
-            var container = encoder.container(keyedBy: Self.CodingsKeys)
             try container.encode(fields, forKey: .rawFields)
+        }
+        if let fieldOrder = fieldOrder {
+            try container.encode(fieldOrder, forKey: .fieldOrder)
         }
     }
 }

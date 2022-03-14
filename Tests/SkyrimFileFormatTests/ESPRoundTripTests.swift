@@ -8,6 +8,7 @@ import XCTest
 import XCTestExtensions
 @testable import SkyrimFileFormat
 
+
 class ESPRoundTripTests: ProcessorTestCase {
     func roundTripExample(named name: String) async throws {
         let bundle = try await unpackExample(named: name)
@@ -21,9 +22,9 @@ class ESPRoundTripTests: ProcessorTestCase {
             print("Binary encoding for \(name) is identical.")
         } else if encoded.count == original.count {
             print("Binary encoding for \(name) differs but is the same size - we may have re-ordered some fields")
-            let originalURL = outputFile(named: "\(name)-original", extension: "data")
+            let originalURL = outputFile(named: "original", extension: "data")
             try original.write(to: originalURL)
-            let encodedURL = outputFile(named: "\(name)-encoded", extension: "data")
+            let encodedURL = outputFile(named: "encoded", extension: "data")
             try encoded.write(to: encodedURL)
 
             print("Testing equality per-record:")
@@ -46,10 +47,12 @@ class ESPRoundTripTests: ProcessorTestCase {
             let pairs = zip(originals, expecteds)
             var n = 1
             for (original, expected) in pairs {
-                let recordName = "\(name) \(original) #\(n)"
+                let recordName = "\(original) #\(n)"
                 n = n + 1
                 if let od = original._meta.originalData, let ed = expected._meta.originalData, od.count != ed.count {
+                    let fm = FileManager.default
                     let originalURL = outputFile(named: "\(recordName)-original", extension: "data")
+                    try? fm.createDirectory(at: originalURL.deletingLastPathComponent(), withIntermediateDirectories: true)
                     try Data(bytes: od, count: od.count).write(to: originalURL)
                     let encodedURL = outputFile(named: "\(recordName)-expected", extension: "data")
                     try Data(bytes: ed, count: ed.count).write(to: encodedURL)
