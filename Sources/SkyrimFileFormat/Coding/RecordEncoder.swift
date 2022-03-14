@@ -41,26 +41,30 @@ class RecordEncoder: DataEncoder {
         var data = Data()
         data.append(encodedHeader!) // if the header hasn't been written by now, something is badly wrong
         
-        // use any recorded field order
-        for tag in fieldOrder {
-            if var list = encodedFields[tag], !list.isEmpty {
-                let field = list.removeFirst()
-                data.append(field)
-                if list.isEmpty {
-                    encodedFields.removeValue(forKey: tag)
+        func writeFields(_ fieldTags: [Tag]) {
+            for tag in fieldTags {
+                if var list = encodedFields[tag], !list.isEmpty {
+                    let field = list.removeFirst()
+                    data.append(field)
+                    if list.isEmpty {
+                        encodedFields.removeValue(forKey: tag)
+                    } else {
+                        encodedFields[tag] = list
+                    }
                 } else {
-                    encodedFields[tag] = list
+                    print("expected field \(tag)")
                 }
             }
         }
         
+        // use any recorded field order
+        writeFields(fieldOrder)
+        
         // try to use the map for any remaining fields
         for tag in fieldMap.tagOrder {
-            if let list = encodedFields[tag] {
-                for field in list {
-                    data.append(field)
-                }
-                encodedFields.removeValue(forKey: tag)
+            if let entry = fieldMap.entry(forTag: tag) {
+                let group = entry.groupWith
+                writeFields(group)
             }
         }
         
@@ -136,6 +140,7 @@ class RecordEncoder: DataEncoder {
                             let header = Field.Header(type: tag, size: UInt16(encoded.count))
                             try encoder.writeEncodable(header)
                             try encoder.writeEncodable(encoded)
+                            encoder.pushField(tag)
                         }
                         
                         
@@ -146,9 +151,9 @@ class RecordEncoder: DataEncoder {
                         let header = Field.Header(type: tag, size: UInt16(encoded.count))
                         try encoder.writeEncodable(header)
                         try encoder.writeEncodable(encoded)
+                        encoder.pushField(tag)
                     }
 
-                    encoder.pushField(tag)
             }
             encoder.popPath()
         }

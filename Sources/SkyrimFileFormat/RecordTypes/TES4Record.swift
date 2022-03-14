@@ -34,8 +34,8 @@ struct TES4Record: Codable, RecordProtocol {
         .init(CodingKeys.info, \Self.info, "HEDR"),
         .init(.author, \.author, "CNAM"),
         .init(.desc, \.desc, "SNAM"),
-        .init(.masters, \.masters, "MAST", groupWithNext: true),
-        .init(.masterData, \.masterData, "DATA"),
+        .init(.masters, \.masters, "MAST"),
+        .init(.masterData, \.masterData, "DATA", groupWith: "MAST"),
         .init(.tagifiedStringCount, \.tagifiedStringCount, "INTV"),
         .init(.unknownCounter, \.unknownCounter, "INTC")
     ])

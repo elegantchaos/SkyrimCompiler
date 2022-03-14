@@ -20,20 +20,22 @@ class ESPRoundTripTests: ProcessorTestCase {
 
         if encoded == original {
             print("Binary encoding for \(name) is identical.")
-        } else if encoded.count == original.count {
-            print("Binary encoding for \(name) differs but is the same size - we may have re-ordered some fields")
-            let originalURL = outputFile(named: "original", extension: "data")
-            print(originalURL)
-            try original.write(to: originalURL)
-            let encodedURL = outputFile(named: "encoded", extension: "data")
-            print(encodedURL)
-            try encoded.write(to: encodedURL)
-
-            print("Testing equality per-record:")
-            try await roundTripByRecordExample(named: name)
         } else {
-            print("Binary encoding for \(name) differs - something is broken")
-            try compareBundleRecords(name: name, bundle: decoded, expected: bundle)
+            XCTAssertEqual(encoded, original)
+            if encoded.count == original.count {
+                
+                print("Binary encoding for \(name) differs but is the same size - we may have re-ordered some fields")
+                let originalURL = outputFile(named: "original", extension: "data")
+                try original.write(to: originalURL)
+                let encodedURL = outputFile(named: "encoded", extension: "data")
+                try encoded.write(to: encodedURL)
+                
+                print("Testing equality per-record:")
+                try await roundTripByRecordExample(named: name)
+            } else {
+                print("Binary encoding for \(name) differs - something is broken")
+                try compareBundleRecords(name: name, bundle: decoded, expected: bundle)
+            }
         }
     }
 
