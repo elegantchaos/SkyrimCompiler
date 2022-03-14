@@ -31,7 +31,7 @@ public struct ESPBundle {
 
         for record in records {
             register(record)
-            for child in record._children {
+            for child in record.children {
                 register(child)
             }
         }

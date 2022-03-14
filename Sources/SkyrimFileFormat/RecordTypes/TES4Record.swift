@@ -39,6 +39,18 @@ public struct TES4Record: Codable, RecordProtocol {
         .init(.tagifiedStringCount, \.tagifiedStringCount, "INTV"),
         .init(.unknownCounter, \.unknownCounter, "INTC")
     ])
+    
+    public var summary: String {
+        var items: [String] = []
+        if let description = desc {
+            items.append(description)
+        }
+        if let author = author {
+            items.append("Author: \(author)")
+        }
+        
+        return items.joined(separator: "\n")
+    }
 }
 
 extension TES4Record: CustomStringConvertible {

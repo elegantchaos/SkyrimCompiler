@@ -7,11 +7,12 @@ import ArgumentParser
 import Foundation
 import Logger
 
-@main struct Command: AsyncParsableCommand {
+@main struct RootCommand: AsyncParsableCommand {
     static var configuration =
     CommandConfiguration(
         abstract: "Skyrim File Compiler.",
         subcommands: [
+            ListCommand.self,
             PackCommand.self,
             UnpackCommand.self
         ],

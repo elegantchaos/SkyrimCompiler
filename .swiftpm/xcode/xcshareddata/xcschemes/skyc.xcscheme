@@ -35,7 +35,8 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
-      useCustomWorkingDirectory = "NO"
+      useCustomWorkingDirectory = "YES"
+      customWorkingDirectory = "/Users/developer/Developer/Projects/SkyrimFileFormat"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
@@ -53,15 +54,23 @@
       <CommandLineArguments>
          <CommandLineArgument
             argument = "pack"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "list"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "arg1"
+            argument = "Tests/SkyrimFileFormatTests/Resources/Examples/ThugsNotAssassins.esp"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "arg2"
-            isEnabled = "YES">
+            argument = "Tests/SkyrimFileFormatTests/Resources/Unpacked/ThugsNotAssassins.esps"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "Output/Packed.esp"
+            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>

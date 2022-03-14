@@ -227,8 +227,8 @@ private extension Processor {
     
     func save(record: RecordProtocol, index: Int, asJSONTo url: URL) async throws {
         var label = record.name
-        if let identified = record as? IdentifiedRecord {
-            label = "\(identified.editorID) \(label)"
+        if let identified = record as? IdentifiedRecord, let id = identified.editorID {
+            label = "\(id) \(label)"
         }
 
         let name = String(format: "%04d %@", index, label)
@@ -253,7 +253,7 @@ private extension Processor {
         let childrenURL = groupURL.appendingPathComponent("records")
         try FileManager.default.createDirectory(at: childrenURL, withIntermediateDirectories: true)
 
-        try await save(records: group._children, to: childrenURL)
+        try await save(records: group.children, to: childrenURL)
     }
     
     func pack(records: [RecordProtocol]) throws -> Data {

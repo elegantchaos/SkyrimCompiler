@@ -80,10 +80,3 @@ struct ARMORecord: Codable, IdentifiedRecord {
         let weight: Float
     }
 }
-
-
-extension ARMORecord: CustomStringConvertible {
-    var description: String {
-        return "«armour \(fullName ?? editorID)»"
-    }
-}

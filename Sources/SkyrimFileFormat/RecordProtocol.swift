@@ -76,15 +76,40 @@ public protocol RecordProtocol: BinaryCodable, CustomStringConvertible {
 }
 
 extension RecordProtocol {
-    var type: Tag { _meta.header.type }
+    public var type: Tag { _meta.header.type }
     
-    var header: RecordHeader { _meta.header }
+    public var header: RecordHeader { _meta.header }
 
-    var isGroup: Bool { _meta.header.type == GroupRecord.tag }
+    public var isGroup: Bool { _meta.header.type == GroupRecord.tag }
     
-    var name: String {
-        guard let id = _meta.header.id, id != 0 else { return "[\(_meta.header.label)]" }
-        return String(format: "[%@:%08X]", _meta.header.label, id)
+    public var typeAndID: String {
+        let suffix: String
+        if let id = _meta.header.id, id != 0 {
+            suffix = String(format: "[%@:%08X]", _meta.header.label, id)
+        } else {
+            suffix = "[\(_meta.header.label)]"
+        }
+        
+        return suffix
+    }
+    
+    public var name: String {
+        return typeAndID
+    }
+    
+    public var fullName: String {
+        if let groupType = header.groupLabel {
+            return "Group of \(children.count) \(groupType) records:"
+        } else if let namedID = namedID {
+            return "\(namedID) \(typeAndID)"
+        } else {
+            return typeAndID
+        }
+    }
+    
+    public var namedID: String? {
+        guard let identified = self as? IdentifiedRecord, let id = identified.editorID else { return nil }
+        return id
     }
 
     public func asJSON(with processor: Processor) throws -> Data {
@@ -96,11 +121,11 @@ extension RecordProtocol {
         return decoded
     }
     
-    var _children: [RecordProtocol] { _meta.children ?? [] }
+    public var children: [RecordProtocol] { _meta.children ?? [] }
 }
 
 extension RecordProtocol {
-    var description: String { return _meta.header.description }
+    var description: String { return "«\(fullName)»" }
 }
 
 extension CodingUserInfoKey {

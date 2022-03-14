@@ -29,7 +29,7 @@ struct GroupRecord: RecordProtocol {
         
         let childEncoder = DataEncoder()
         childEncoder.userInfo = encoder.userInfo
-        for child in _children {
+        for child in children {
             try child.binaryEncode(to: childEncoder)
         }
 

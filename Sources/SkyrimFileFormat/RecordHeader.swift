@@ -7,13 +7,13 @@ import BinaryCoding
 import Bytes
 import Foundation
 
-struct RecordHeader: Codable {
+public struct RecordHeader: Codable {
     static let binaryEncodedSize = 16
     
-    let type: Tag
-    let flags: RecordHeaderFlags?
-    let id: UInt32?
-    let timestamp: UInt16?
+    public let type: Tag
+    public let flags: RecordHeaderFlags?
+    public let id: UInt32?
+    public let timestamp: UInt16?
     let versionControlInfo1: UInt16?
     let version: UInt16?
     let versionControlInfo2: UInt16?
@@ -66,7 +66,7 @@ struct RecordHeader: Codable {
 }
 
 extension RecordHeader: CustomStringConvertible {
-    var description: String {
+    public var description: String {
         if let label = groupLabel {
             return "«group \(label)»"
         } else {
@@ -78,7 +78,7 @@ extension RecordHeader: CustomStringConvertible {
 extension RecordHeader: Equatable { }
 
 extension RecordHeader: BinaryEncodable {
-    func binaryEncode(to encoder: BinaryEncoder) throws {
+    public func binaryEncode(to encoder: BinaryEncoder) throws {
         var container = encoder.unkeyedContainer()
         try container.encode(flags?.rawValue ?? 0)
         try container.encode(id ?? 0)
@@ -89,8 +89,8 @@ extension RecordHeader: BinaryEncodable {
     }
 }
 
-struct RecordHeaderFlags: OptionSetFromEnum {
-    enum Options: String, EnumForOptionSet {
+public struct RecordHeaderFlags: OptionSetFromEnum {
+    public enum Options: String, EnumForOptionSet {
         case master                     // 00000001
         case bit2                       // 00000002
         case bit3                       // 00000004
@@ -120,9 +120,9 @@ struct RecordHeaderFlags: OptionSetFromEnum {
         case navMeshGen                 // 04000000
     }
     
-    let rawValue: UInt32
+    public let rawValue: UInt32
     
-    init(rawValue: UInt32) {
+    public init(rawValue: UInt32) {
         self.rawValue = rawValue
     }
 }
