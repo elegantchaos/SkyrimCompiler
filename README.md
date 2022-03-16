@@ -89,6 +89,8 @@ There are at least a couple of projects aiming at similar things:
 
 I didn't know about them when I started mine, and of course we all have our own agendas, motivations, areas of expertise and language preferences. 
 
+The [Mutagen project](https://github.com/Mutagen-Modding/Mutagen) also looks interesting, and is similar in scope to my [SwiftESP](https://github.com/elegantchaos/SwiftESP), which underpins the skyrim compiler.
+
 That said, I'd be up for collaborating if we could figure out some places where it would make sense.
 
 ### References
