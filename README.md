@@ -42,11 +42,17 @@ All of this is really a means to an end - in that there are other tools that I w
 
 (* because that's what I use in my day job)
 
-### See Also
+## Related Goals
 
-The ultimate reason for doing all of this is to make some tools.
+### Mod Building Workflow
 
-There are a number of tools that I have in mind, but the main one right now is something that provides a better way to install clothing/armour packs.
+One ultimate goal I'm working towards is that an entire mod project (esp records, resources, and scripts) could be contained in a structured source directory, and tools could automatically package them up as BSAs and ESPs, including compiling the scripts.
+
+This project (which itself is pretty large), is one component of that task.
+
+### Specific Tools
+
+Another reason for doing all of this is to make some tools that work with / create ESPs. There are a number of tools that I have in mind, but the main one right now is something that provides a better way to install clothing/armour packs.
 
 The idea is to make a new way for authors to package up and publish just the basic resources for a piece of clothing or armour (models, textures, presets, etc). 
 
@@ -55,6 +61,8 @@ The user of the tool will then be able to install as many of these packs as they
 Once the user has made their choices, the tool will compile all of the clothing data into a single mod which can be installed/enabled in the normal way.
 
 This idea has some similarities to the way [EasyNPC](https://github.com/focustense/easymod/tree/master/Focus.Apps.EasyNpc) works, but with the addition of being a distribution platform.
+
+## Other Notes
 
 ### File Format
 
