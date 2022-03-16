@@ -14,7 +14,7 @@
 
 [comment]: <> (End of ActionStatus Header)
 
-# SkyrimFileFormat
+# SkyrimCompiler
 
 This is a very early work-in-progress.
 
@@ -61,7 +61,7 @@ All of this is really a means to an end - in that there are other tools that I w
 
 The ultimate reason for doing all of this is to make some tools.
 
-As part of that work, I'm also making [a library to pack/unpack BSA files](https://github.com/elegantchaos/BSA).
+As part of that work, I'm also making [a library to pack/unpack BSA files](https://github.com/elegantchaos/SwiftBSA).
 
 There are a number of tools that I have in mind, but the main one right now is something that provides a better way to install clothing/armour packs.
 
