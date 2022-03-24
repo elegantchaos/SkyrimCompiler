@@ -104,8 +104,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-argument-parser",
       "state" : {
-        "branch" : "async",
-        "revision" : "3cad8ef903440142ba35f51db53b3df591156a00"
+        "branch" : "main",
+        "revision" : "82905286cc3f0fa8adc4674bf49437cab65a8373"
       }
     },
     {

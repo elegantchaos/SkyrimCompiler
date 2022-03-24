@@ -21,7 +21,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/elegantchaos/Files.git", from: "1.2.2"),
         .package(url: "https://github.com/elegantchaos/SwiftESP.git", branch: "main"),
-        .package(url: "https://github.com/apple/swift-argument-parser", branch: "async"),
+        .package(url: "https://github.com/apple/swift-argument-parser", branch: "main"),
     ],
     
     targets: [
