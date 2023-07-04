@@ -97,10 +97,11 @@ In particular, adopting a tool like this for OpenMW might make a lot more sense 
 
 ### Similar Projects
 
-There are at least a couple of projects aiming at similar things:
+There are a few projects aiming at similar things:
 
 - https://github.com/Greatness7/tes3conv
 - https://gitlab.com/bmwinger/delta-plugin
+- https://github.com/miere43/plugin2text
 
 I didn't know about them when I started mine, and of course we all have our own agendas, motivations, areas of expertise and language preferences. 
 
